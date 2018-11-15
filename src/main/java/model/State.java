@@ -31,5 +31,18 @@ public class State {
     public String[] getLabel() {
 	return label;
     }
-	
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof State))
+            return false;
+
+        State other = (State) obj;
+        return this.name.equals(other.name);
+    }
 }

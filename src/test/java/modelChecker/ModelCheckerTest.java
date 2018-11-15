@@ -1,16 +1,13 @@
 package modelChecker;
 
-import static org.junit.Assert.*;
+import formula.FormulaParser;
+import formula.stateFormula.StateFormula;
+import model.Model;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
-import formula.FormulaParser;
-import formula.stateFormula.StateFormula;
-import modelChecker.ModelChecker;
-import modelChecker.SimpleModelChecker;
-import model.Model;
+import static org.junit.Assert.fail;
 
 public class ModelCheckerTest {
 
@@ -30,7 +27,7 @@ public class ModelCheckerTest {
 
             ModelChecker mc = new SimpleModelChecker();
 
-            // TO IMPLEMENT
+            // TODO IMPLEMENT
             // assertTrue(mc.check(model, fairnessConstraint, query));
         } catch (IOException e) {
             e.printStackTrace();
