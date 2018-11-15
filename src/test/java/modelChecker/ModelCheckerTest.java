@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ModelCheckerTest {
@@ -28,7 +29,7 @@ public class ModelCheckerTest {
             ModelChecker mc = new SimpleModelChecker();
 
             // TODO IMPLEMENT
-            // assertTrue(mc.check(model, fairnessConstraint, query));
+            assertTrue(mc.check(model, fairnessConstraint, query));
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.toString());

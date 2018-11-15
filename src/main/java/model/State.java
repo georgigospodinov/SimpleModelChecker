@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Arrays;
+
 /**
  * 
  * */
@@ -39,10 +41,20 @@ public class State {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj instanceof String) {
+            String otherName = (String) obj;
+            return this.name.equals(otherName);
+        }
+
         if (!(obj instanceof State))
             return false;
 
         State other = (State) obj;
         return this.name.equals(other.name);
+    }
+
+    @Override
+    public String toString() {
+        return name + (init ? "* " : "  ") + Arrays.toString(label);
     }
 }
