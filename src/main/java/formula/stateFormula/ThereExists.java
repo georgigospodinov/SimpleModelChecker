@@ -21,6 +21,6 @@ public class ThereExists extends StateFormula {
 
     @Override
     public boolean isValidIn(State s) {
-        return pathFormula.skipPathSymbol(s);
+        return pathFormula.pathFrom(s);
     }
 }

@@ -30,4 +30,10 @@ public class Always extends PathFormula {
         return stateFormula.isValidIn(s);
     }
 
+	@Override
+	public boolean pathFrom(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

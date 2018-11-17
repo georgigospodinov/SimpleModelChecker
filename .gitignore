@@ -4,3 +4,7 @@ out
 .gradle
 00-readme.pdf
 
+
+.classpath
+.project
+

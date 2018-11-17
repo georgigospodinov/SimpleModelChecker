@@ -36,4 +36,10 @@ public class Eventually extends PathFormula {
     public boolean skipPathSymbol(State s) {
         return stateFormula.isValidIn(s);
     }
+
+	@Override
+	public boolean pathFrom(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

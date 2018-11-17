@@ -10,4 +10,6 @@ public abstract class PathFormula {
      * so that we can check the {@link formula.stateFormula.StateFormula#isValidIn(State)} method.
      */
     public abstract boolean skipPathSymbol(State s);
+    
+    public abstract boolean pathFrom(State s);
 }

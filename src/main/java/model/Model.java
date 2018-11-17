@@ -25,7 +25,19 @@ public class Model {
         for (Transition t : model.transitions) {
             System.out.println("\t" + t);
         }
+        model.build();
         return model;
+    }
+    
+    /*
+     * Add internal referances to the ts
+     */
+    private void build() {
+    	for (Transition t: transitions) {
+    		State src = getState(t.getSource());
+    		State trg = getState(t.getTarget());
+    		src.addTransition(trg, t.getActions());
+    	}
     }
 
     /**

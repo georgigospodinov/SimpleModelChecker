@@ -20,4 +20,10 @@ public class Neg extends PathFormula {
     public boolean skipPathSymbol(State s) {
         return !pathFormula.skipPathSymbol(s);
     }
+
+	@Override
+	public boolean pathFrom(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
