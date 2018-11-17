@@ -1,6 +1,7 @@
 package formula.stateFormula;
 
 import formula.FormulaParser;
+import formula.pathFormula.Neg;
 import formula.pathFormula.PathFormula;
 import model.State;
 
@@ -21,6 +22,7 @@ public class ForAll extends StateFormula {
 
     @Override
     public boolean isValidIn(State s) {
-        return pathFormula.skipPathSymbol(s);
+        Not n = new Not(new ThereExists(new Neg(pathFormula)));
+        return n.isValidIn(s);
     }
 }

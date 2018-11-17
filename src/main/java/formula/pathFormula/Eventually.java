@@ -1,6 +1,7 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
+import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.State;
 
@@ -32,14 +33,9 @@ public class Eventually extends PathFormula {
         stateFormula.writeToBuffer(buffer);
     }
 
-    @Override
-    public boolean skipPathSymbol(State s) {
-        return stateFormula.isValidIn(s);
-    }
-
 	@Override
 	public boolean pathFrom(State s) {
-		// TODO Auto-generated method stub
-		return false;
+        Until u = new Until(new BoolProp(false), stateFormula, leftActions, rightActions);
+        return u.pathFrom(s);
 	}
 }

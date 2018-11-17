@@ -38,11 +38,6 @@ public class Until extends PathFormula {
         buffer.append(")");
     }
 
-    @Override
-    public boolean skipPathSymbol(State s) {
-        return left.isValidIn(s) || right.isValidIn(s);
-    }
-
 	@Override
 	public boolean pathFrom(State s) {
 		if (rightActions==null && right.isValidIn(s) ) {

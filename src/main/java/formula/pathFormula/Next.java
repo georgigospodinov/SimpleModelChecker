@@ -3,7 +3,9 @@ package formula.pathFormula;
 import formula.FormulaParser;
 import formula.stateFormula.StateFormula;
 import model.State;
+import model.TransitionTo;
 
+import java.util.LinkedList;
 import java.util.Set;
 
 public class Next extends PathFormula {
@@ -25,14 +27,17 @@ public class Next extends PathFormula {
         stateFormula.writeToBuffer(buffer);
     }
 
-    @Override
-    public boolean skipPathSymbol(State s) {
-        return stateFormula.isValidIn(s);
-    }
-
 	@Override
 	public boolean pathFrom(State s) {
-		// TODO Auto-generated method stub
-		return false;
+        LinkedList<TransitionTo> ts = s.getTransitions();
+        for (TransitionTo t : ts) {
+            if (actions == null || t.isIn(actions)) {
+                State next = t.getTrg();
+                // At least one next state makes the stateFormula true.
+                if (stateFormula.isValidIn(next))
+                    return true;
+            }
+        }
+        return false;
 	}
 }
