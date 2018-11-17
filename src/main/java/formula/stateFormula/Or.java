@@ -1,5 +1,7 @@
 package formula.stateFormula;
 
+import model.State;
+
 public class Or extends StateFormula {
     public final StateFormula left;
     public final StateFormula right;
@@ -16,6 +18,11 @@ public class Or extends StateFormula {
         buffer.append(" || ");
         right.writeToBuffer(buffer);
         buffer.append(")");
+    }
+
+    @Override
+    public boolean isValidIn(State s) {
+        return left.isValidIn(s) || right.isValidIn(s);
     }
 
 }

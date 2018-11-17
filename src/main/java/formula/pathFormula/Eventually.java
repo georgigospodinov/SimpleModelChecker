@@ -1,8 +1,10 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
-import formula.stateFormula.*;
-import java.util.*;
+import formula.stateFormula.StateFormula;
+import model.State;
+
+import java.util.Set;
 
 public class Eventually extends PathFormula {
     public final StateFormula stateFormula;
@@ -28,7 +30,10 @@ public class Eventually extends PathFormula {
     public void writeToBuffer(StringBuilder buffer) {
         buffer.append(FormulaParser.EVENTUALLY_TOKEN);
         stateFormula.writeToBuffer(buffer);
-        ;
     }
 
+    @Override
+    public boolean skipPathSymbol(State s) {
+        return stateFormula.isValidIn(s);
+    }
 }

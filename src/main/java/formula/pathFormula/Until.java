@@ -1,7 +1,9 @@
 package formula.pathFormula;
 
-import formula.*;
-import formula.stateFormula.*;
+import formula.FormulaParser;
+import formula.stateFormula.StateFormula;
+import model.State;
+
 import java.util.Set;
 
 public class Until extends PathFormula {
@@ -35,4 +37,8 @@ public class Until extends PathFormula {
         buffer.append(")");
     }
 
+    @Override
+    public boolean skipPathSymbol(State s) {
+        return left.isValidIn(s) || right.isValidIn(s);
+    }
 }

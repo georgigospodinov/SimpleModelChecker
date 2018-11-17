@@ -2,6 +2,7 @@ package formula.stateFormula;
 
 import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
+import model.State;
 
 public class ThereExists extends StateFormula {
     public final PathFormula pathFormula;
@@ -16,5 +17,10 @@ public class ThereExists extends StateFormula {
         buffer.append(FormulaParser.THEREEXISTS_TOKEN);
         pathFormula.writeToBuffer(buffer);
         buffer.append(")");
+    }
+
+    @Override
+    public boolean isValidIn(State s) {
+        return pathFormula.skipPathSymbol(s);
     }
 }

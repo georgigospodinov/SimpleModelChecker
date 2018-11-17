@@ -1,6 +1,7 @@
 package formula.stateFormula;
 
 import formula.FormulaParser;
+import model.State;
 
 public class Not extends StateFormula {
     public final StateFormula stateFormula;
@@ -15,6 +16,11 @@ public class Not extends StateFormula {
         buffer.append("(");
         stateFormula.writeToBuffer(buffer);
         buffer.append(")");
+    }
+
+    @Override
+    public boolean isValidIn(State s) {
+        return !stateFormula.isValidIn(s);
     }
 
 }

@@ -1,7 +1,9 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
-import formula.stateFormula.*;
+import formula.stateFormula.StateFormula;
+import model.State;
+
 import java.util.Set;
 
 public class Next extends PathFormula {
@@ -21,7 +23,10 @@ public class Next extends PathFormula {
     public void writeToBuffer(StringBuilder buffer) {
         buffer.append(FormulaParser.NEXT_TOKEN);
         stateFormula.writeToBuffer(buffer);
-        ;
     }
 
+    @Override
+    public boolean skipPathSymbol(State s) {
+        return stateFormula.isValidIn(s);
+    }
 }

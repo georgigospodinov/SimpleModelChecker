@@ -1,7 +1,8 @@
 package formula.stateFormula;
 
-import formula.*;
+import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
+import model.State;
 
 public class ForAll extends StateFormula {
     public final PathFormula pathFormula;
@@ -16,5 +17,10 @@ public class ForAll extends StateFormula {
         buffer.append(FormulaParser.FORALL_TOKEN);
         pathFormula.writeToBuffer(buffer);
         buffer.append(")");
+    }
+
+    @Override
+    public boolean isValidIn(State s) {
+        return pathFormula.skipPathSymbol(s);
     }
 }
