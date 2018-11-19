@@ -1,11 +1,9 @@
 package formula.stateFormula;
 
 import formula.FormulaParser;
-import formula.pathFormula.*;
+import formula.pathFormula.PathFormula;
 import model.State;
-import model.TransitionTo;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class ThereExists extends StateFormula {
@@ -29,15 +27,4 @@ public class ThereExists extends StateFormula {
         return pathFormula.exists(s, path); 
     }
 
-    @Override
-    public LinkedHashMap<TransitionTo, State> shouldPrune(State s) {
-        // Each PathFormula implements this in its own way.
-        return pathFormula.shouldPrune(s);
-    }
-
-    @Override
-    public LinkedHashMap<TransitionTo, State> shouldNotPrune(State s) {
-        // Each PathFormula implements this in its own way.
-        return pathFormula.shouldNotPrune(s);
-    }
 }

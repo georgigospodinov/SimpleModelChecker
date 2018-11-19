@@ -1,4 +1,4 @@
-package formula.pathFormula;
+package formula.pathFormulaTests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import formula.pathFormula.PathFormula;
+import formula.pathFormula.Until;
 import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
@@ -160,6 +162,50 @@ public class UntilTests {
 		for (State s: m.getInitStates()) {
 			assertFalse(pathFormula.exists(s, path));
 			assertTrue(path.size() == 0);
+		}
+	}
+	
+	@Test
+	public void untilForAllTrueTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		LinkedList<State>  path = new LinkedList<>();
+		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("q"), null, null);	
+		for (State s: m.getInitStates()) {
+			assertTrue(pathFormula.forAll(s, path));
+			assertTrue(path.size() == 0);
+		}
+	}
+	
+	@Test
+	public void untilForAllFalseTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		LinkedList<State>  path = new LinkedList<>();
+		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("r"), null, null);	
+		for (State s: m.getInitStates()) {
+			assertFalse(pathFormula.forAll(s, path));
+			assertTrue(path.size() == 3);
+		}
+	}
+	
+	@Test
+	public void untilForAllAlwaysFalseTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		LinkedList<State>  path = new LinkedList<>();
+		Until pathFormula = new Until(new BoolProp(false), new BoolProp(false), null, null);	
+		for (State s: m.getInitStates()) {
+			assertFalse(pathFormula.forAll(s, path));
+			assertTrue(path.size() == 1);
+		}
+	}
+	
+	@Test
+	public void untilForAllCycleTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m2.json");
+		LinkedList<State>  path = new LinkedList<>();
+		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("r"), null, null);	
+		for (State s: m.getInitStates()) {
+			assertFalse(pathFormula.forAll(s, path));
+			assertTrue(path.size() == 3);
 		}
 	}
 	

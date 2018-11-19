@@ -8,13 +8,13 @@ import model.TransitionTo;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class Until extends PathFormula {
+public class WeakUntil extends PathFormula {
     public final StateFormula left;
     public final StateFormula right;
     private Set<String> leftActions;
     private Set<String> rightActions;
 
-    public Until(StateFormula left, StateFormula right, Set<String> leftActions, Set<String> rightActions) {
+    public WeakUntil(StateFormula left, StateFormula right, Set<String> leftActions, Set<String> rightActions) {
         super();
         this.left = left;
         this.right = right;
@@ -26,7 +26,7 @@ public class Until extends PathFormula {
     public void writeToBuffer(StringBuilder buffer) {
         buffer.append("(");
         left.writeToBuffer(buffer);
-        buffer.append(" " + FormulaParser.UNTIL_TOKEN + " ");
+        buffer.append(" " + FormulaParser.WEAK_UNTIL_TOKEN + " ");
         right.writeToBuffer(buffer);
         buffer.append(")");
     }
@@ -37,9 +37,10 @@ public class Until extends PathFormula {
     public boolean exists(State s, LinkedList<State> visited) {
     	if (rightActions != null && rightActions.size() == 0) // no acceptable path
     		return false;
-        if (visited.contains(s)) // cycle detection
-        	return false;
-        
+        if (visited.contains(s)) {// cycle detection 
+            visited.push(s);
+        	return true;
+        }
         if (rightActions == null && right.isValidIn(s)) { //in final state
             visited.push(s);
             return true;
@@ -75,8 +76,7 @@ public class Until extends PathFormula {
     public boolean forAll(State s, LinkedList<State> visited) {
         // Loop detected before final state
     	if (visited.contains(s)){
-        	visited.push(s);
-            return false;
+            return true;
     	}
     	// in final state
         if (rightActions == null && right.isValidIn(s)) 
@@ -90,14 +90,11 @@ public class Until extends PathFormula {
         
         // check transitions to the right
         // only check left on failed branches
-        int passing = 0;
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         for (TransitionTo t: s.getTransitions()) {
         	if (rightActions == null || t.isIn(rightActions)) {
         		if (!right.isValidIn(t.getTrg())) 
         			checkLeft.push(t);
-        		else
-        			passing++;
         	}
         }
         
@@ -106,19 +103,13 @@ public class Until extends PathFormula {
         	if (leftActions == null || t.isIn(leftActions)) {
         		if (! forAll(t.getTrg(), visited)) 
         			return false;
-        		passing++;
         	}
         }
-        
-        if (passing>0) {
-        	// there are passing paths and none failing
-            visited.pop();
-        	return true;
-        }
-        else
-        	//no passing paths 
-        	//fail as strong until
-        	return false;
+
+        // all paths if any accepted
+        // weak until accepts dead ends so no need to count
+        visited.pop();
+      	return true;
         
     }
 

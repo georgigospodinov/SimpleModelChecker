@@ -5,7 +5,6 @@ import model.TransitionTo;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Set;
 
 public abstract class PathFormula {
 
@@ -15,10 +14,9 @@ public abstract class PathFormula {
     public static final LinkedHashMap<TransitionTo, State> THIS_STATE_MAKES_ME_FALSE = null;
 
     public abstract void writeToBuffer(StringBuilder buffer);
-
     public abstract boolean exists(State s, LinkedList<State> path);
-    public abstract boolean forAll(State s);
-
+	public abstract boolean forAll(State s, LinkedList<State> path);
+	
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
@@ -26,23 +24,5 @@ public abstract class PathFormula {
         return buffer.toString();
     }
 
-    /**
-     * Finds all transitions that make this formula invalid.
-     * Returns a {@link java.util.LinkedHashMap} of all transitions that should be removed.
-     * In the map, keys are {@link TransitionTo} and values are their source {@link State}s.
-     * <p>
-     * An empty map means that no transitions should be removed. (All transitions are acceptable.)
-     * Null means that this formula is invalid in the given state. (Don't care about transitions.)
-     */
-    public abstract LinkedHashMap<TransitionTo, State> shouldPrune(State s);
 
-    /**
-     * Finds all transitions that make this formula true.
-     * Returns a {@link java.util.LinkedHashMap} of all transitions that should not be removed.
-     * In the map, keys are {@link TransitionTo} and values are their source {@link State}s.
-     * <p>
-     * An empty map means that all transitions should be removed. (No transitions are acceptable.)
-     * Null means that this formula is invalid in the given state. (Don't care about transitions.)
-     */
-    public abstract LinkedHashMap<TransitionTo, State> shouldNotPrune(State s);
 }

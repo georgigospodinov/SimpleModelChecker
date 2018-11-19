@@ -1,4 +1,4 @@
-package formula.pathFormula;
+package formula.pathFormulaTests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import formula.pathFormula.Always;
+import formula.pathFormula.PathFormula;
+import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
@@ -92,6 +95,65 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			assertFalse(a.exists(s, path));
 			assertTrue(path.size() == 0);
+		}
+	}
+	
+	@Test 
+	public void alwaysForAllTrueCycleTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m2.json");
+		PathFormula a = new Always(new BoolProp(true), null);
+		LinkedList<State> path = new LinkedList<State>();
+		for (State s: m.getInitStates()) {
+			assertTrue(a.forAll(s, path));
+			assertTrue(path.size() == 0);
+		}
+	}
+
+	@Test 
+	public void alwaysForAllTrueEndTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		PathFormula a = new Always(new BoolProp(true), null);
+		LinkedList<State> path = new LinkedList<State>();
+		for (State s: m.getInitStates()) {
+			assertTrue(a.forAll(s, path));
+			assertTrue(path.size() == 0);
+		}
+	}
+	
+	@Test 
+	public void alwaysForAllFalseTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m2.json");
+		PathFormula a = new Always(new AtomicProp("r"), null);
+		LinkedList<State> path = new LinkedList<State>();
+		for (State s: m.getInitStates()) {
+			assertFalse(a.forAll(s, path));
+			assertTrue(path.size() == 1);
+		}
+	}
+
+	@Test 
+	public void alwaysForAllRestrainedTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		Set<String> restr = new HashSet<String>();
+		restr.add("act2");
+		PathFormula a = new Always(new AtomicProp("p"), restr);
+		LinkedList<State> path = new LinkedList<State>();
+		for (State s: m.getInitStates()) {
+			assertTrue(a.forAll(s, path));
+			assertTrue(path.size() == 0);
+		}
+	}
+
+	@Test 
+	public void alwaysForAllChainTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		Set<String> restr = new HashSet<String>();
+		restr.add("act2");
+		PathFormula a = new Always(new AtomicProp("p"), null);
+		LinkedList<State> path = new LinkedList<State>();
+		for (State s: m.getInitStates()) {
+			assertFalse(a.forAll(s, path));
+			assertTrue(path.size() == 3);
 		}
 	}
 	

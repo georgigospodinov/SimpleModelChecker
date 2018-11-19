@@ -8,8 +8,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import formula.pathFormula.*;
 import formula.stateFormula.AtomicProp;
+import formula.pathFormula.Always;
+import formula.pathFormula.Eventually;
+import formula.pathFormula.Next;
+import formula.pathFormula.PathFormula;
+import formula.pathFormula.Until;
+import formula.pathFormula.WeakUntil;
 import formula.stateFormula.*;
 
 /**
@@ -25,6 +30,7 @@ public class FormulaParser {
     public static final char TRUE_TOKEN_PREFIX = 'T';
     public static final char NOT_TOKEN = '!';
     public static final char UNTIL_TOKEN = 'U';
+    public static final char WEAK_UNTIL_TOKEN = 'W';
     public static final char AND_TOKEN = '&';
     public static final char OR_TOKEN = '|';
     public static final char EVENTUALLY_TOKEN = 'F';
@@ -150,7 +156,7 @@ public class FormulaParser {
             Set<String> actionSet2 = getActions(actionSet2Identifier);
             return new Eventually(recursiveParseStateFormula(), actionSet1, actionSet2);
         case LEFT_BRACKET_TOKEN:
-            Until until = parseUntil();
+        	PathFormula until = parseUntil();
             validateNextChars(RIGHT_BRACKET_TOKEN);
             return until;
         default:
@@ -158,16 +164,27 @@ public class FormulaParser {
         }
     }
 
-    private Until parseUntil() throws IOException {
+    private PathFormula parseUntil() throws IOException {
         StateFormula leftFormula = recursiveParseStateFormula();
         String actionSet1Identifier = parseOptionalIdentifier(true);
-        validateNextChars(UNTIL_TOKEN);
+        boolean strong;
+        try {
+        	validateNextChars(WEAK_UNTIL_TOKEN);
+        	strong = false;
+        } catch (IOException e) {
+        	validateNextChars(UNTIL_TOKEN);
+        	strong = true;
+        }
         String actionSet2Identifier = parseOptionalIdentifier(false);
         StateFormula rightFormula = recursiveParseStateFormula();
         Set<String> actionSet1 = getActions(actionSet1Identifier);
         Set<String> actionSet2 = getActions(actionSet2Identifier);
-        return new Until(leftFormula, rightFormula, actionSet1, actionSet2);
+        if (strong)
+        	return new Until(leftFormula, rightFormula, actionSet1, actionSet2);
+        else
+        	return new WeakUntil(leftFormula, rightFormula, actionSet1, actionSet2);
     }
+    
 
     private void validateNextChars(char... chars) throws IOException {
         for (char charIn : chars) {
