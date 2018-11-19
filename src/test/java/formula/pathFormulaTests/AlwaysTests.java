@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import formula.pathFormula.Always;
 import formula.pathFormula.PathFormula;
-import formula.pathFormula.WeakUntil;
 import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
