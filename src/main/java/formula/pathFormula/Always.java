@@ -5,9 +5,7 @@ import formula.stateFormula.StateFormula;
 import model.State;
 import model.TransitionTo;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class Always extends PathFormula {
     public final StateFormula stateFormula;
@@ -78,9 +76,78 @@ public class Always extends PathFormula {
         return noRecursivePathMakesMeFalse;
     }
 
-	@Override
-	public boolean pathFrom(State s) {
+    @Override
+    public boolean pathFrom(State s) {
         return recursivePathFrom(s, new HashSet<State>());
-	}
+    }
 
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldPrune(State s) {
+        if (!stateFormula.isValidIn(s)) {
+            return THIS_STATE_MAKES_ME_FALSE;
+        }
+
+        LinkedHashMap<TransitionTo, State> toRemove = new LinkedHashMap<>();
+        LinkedHashSet<State> visited = new LinkedHashSet<>();
+        LinkedList<State> queue = new LinkedList<>();
+        queue.add(s);
+        // Breadth First Search.
+        while (!queue.isEmpty()) {
+            State n = queue.pollFirst();
+            // Skip states that are null or visited.
+            if (n == null || visited.contains(n))
+                continue;
+
+            visited.add(n);
+            LinkedList<TransitionTo> ts = n.getTransitions();
+            for (TransitionTo t : ts) {
+                if (actions == null || t.isIn(actions)) {
+                    State trg = t.getTrg();
+                    // Note: no need to call shouldPrune because BFS iterates all the states.
+                    // A recognized transition makes the formula false, so we need to remove it.
+                    if (!stateFormula.isValidIn(trg))
+                        toRemove.put(t, n);
+                        // The target state is ok, so we should check it/ recurse from it.
+                    else queue.addLast(trg);
+                }
+                // The transition is not recognized, so we need to remove it.
+                else toRemove.put(t, n);
+            }  // for
+        }  // while
+        return toRemove;
+    }
+
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldNotPrune(State s) {
+        if (!stateFormula.isValidIn(s)) {
+            return THIS_STATE_MAKES_ME_FALSE;
+        }
+
+        LinkedHashMap<TransitionTo, State> toSave = new LinkedHashMap<>();
+        LinkedHashSet<State> visited = new LinkedHashSet<>();
+        LinkedList<State> queue = new LinkedList<>();
+        queue.add(s);
+        // Breadth First Search.
+        while (!queue.isEmpty()) {
+            State n = queue.pollFirst();
+            // Skip states that are null or visited.
+            if (n == null || visited.contains(n))
+                continue;
+
+            visited.add(n);
+            LinkedList<TransitionTo> ts = n.getTransitions();
+            for (TransitionTo t : ts) {
+                if (actions == null || t.isIn(actions)) {
+                    State trg = t.getTrg();
+                    // Note: no need to call shouldPrune because BFS iterates all the states.
+                    // A recognized transition makes the formula true, so we need to save it.
+                    if (stateFormula.isValidIn(trg)) {
+                        toSave.put(t, n);
+                        queue.addLast(n);
+                    }
+                }
+            }  // for
+        }  // while
+        return toSave;
+    }
 }

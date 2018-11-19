@@ -4,7 +4,9 @@ import formula.FormulaParser;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.State;
+import model.TransitionTo;
 
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 public class Eventually extends PathFormula {
@@ -35,7 +37,19 @@ public class Eventually extends PathFormula {
 
 	@Override
 	public boolean pathFrom(State s) {
-        Until u = new Until(new BoolProp(false), stateFormula, leftActions, rightActions);
+        Until u = new Until(new BoolProp(true), stateFormula, leftActions, rightActions);
         return u.pathFrom(s);
 	}
+
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldPrune(State s) {
+        Until u = new Until(new BoolProp(true), stateFormula, leftActions, rightActions);
+        return u.shouldPrune(s);
+    }
+
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldNotPrune(State s) {
+        Until u = new Until(new BoolProp(true), stateFormula, leftActions, rightActions);
+        return u.shouldNotPrune(s);
+    }
 }

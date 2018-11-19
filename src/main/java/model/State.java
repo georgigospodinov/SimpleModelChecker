@@ -67,6 +67,10 @@ public class State {
 	public void addTransition(State trg, String[] actions) {
 		trans.add(new TransitionTo(trg, actions));		
 	}
+
+    public void removeTransition(TransitionTo t) {
+        trans.remove(t);
+    }
 	
 	public LinkedList<TransitionTo> getTransitions() {
 		return trans;

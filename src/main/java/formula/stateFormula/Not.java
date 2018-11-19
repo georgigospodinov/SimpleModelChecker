@@ -2,6 +2,9 @@ package formula.stateFormula;
 
 import formula.FormulaParser;
 import model.State;
+import model.TransitionTo;
+
+import java.util.LinkedHashMap;
 
 public class Not extends StateFormula {
     public final StateFormula stateFormula;
@@ -23,4 +26,13 @@ public class Not extends StateFormula {
         return !stateFormula.isValidIn(s);
     }
 
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldPrune(State s) {
+        return stateFormula.shouldNotPrune(s);
+    }
+
+    @Override
+    public LinkedHashMap<TransitionTo, State> shouldNotPrune(State s) {
+        return stateFormula.shouldPrune(s);
+    }
 }
