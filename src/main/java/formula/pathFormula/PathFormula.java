@@ -16,6 +16,13 @@ public abstract class PathFormula {
     
     public abstract boolean pathFrom(State s);
 
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        writeToBuffer(buffer);
+        return buffer.toString();
+    }
+
     /**
      * Finds all transitions that make this formula invalid.
      * Returns a {@link java.util.LinkedHashMap} of all transitions that should be removed.

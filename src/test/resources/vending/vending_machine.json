@@ -1,0 +1,33 @@
+{
+  "states": [
+    {
+      "init": true,
+      "name": "waiting for coin",
+      "label": []
+    },
+    {
+      "init": false,
+      "name": "waiting for selection",
+      "label": [
+        "c"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "source": "waiting for coin",
+      "target": "waiting for selection",
+      "actions": [
+        "insert coin"
+      ]
+    },
+    {
+      "source": "waiting for selection",
+      "target": "waiting for coin",
+      "actions": [
+        "make selection",
+        "eject coin"
+      ]
+    }
+  ]
+}

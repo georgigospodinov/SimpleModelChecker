@@ -89,6 +89,10 @@ public class ForAll extends StateFormula {
     }
 
     private boolean validUntilRecursive(State s, Until path, LinkedHashSet<State> visited) {
+        if (visited.contains(s)) {
+            // Loop detected.
+            return false;
+        }
         Set<String> leftActions = path.getLeftActions();
         Set<String> rightActions = path.getRightActions();
         if (rightActions == null && path.right.isValidIn(s)) {
@@ -104,10 +108,6 @@ public class ForAll extends StateFormula {
         boolean atLeastOneSucceeds = false;
         for (TransitionTo t : ts) {
             State target = t.getTrg();
-            if (visited.contains(target)) {
-                // Loop detected.
-                return false;
-            }
             if (rightActions == null) {
                 if (leftActions == null) {
                     // No actions on either side, if right is accepted, all good. Otherwise, left must recurse to a valid.

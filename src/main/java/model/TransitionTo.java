@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class TransitionTo {
@@ -24,4 +25,10 @@ public class TransitionTo {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "{trg=" + trg +
+                ", actions=" + Arrays.toString(actions) +
+                "}";
+    }
 }
