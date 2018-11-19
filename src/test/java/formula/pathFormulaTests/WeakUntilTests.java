@@ -66,6 +66,17 @@ public class WeakUntilTests {
 			assertTrue(path.size() == 3);
 		}
 	}
+
+	@Test 
+	public void trueUntilFalseTest() throws IOException {
+		LinkedList<State> path = new LinkedList<>();
+		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(false), null, null);		
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		for (State s: m.getInitStates()) {
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 3);
+		}
+	}
 	
 	@Test 
 	public void untilFalseEndTest() throws IOException {
@@ -86,7 +97,6 @@ public class WeakUntilTests {
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
 		for (State s: m.getInitStates()) {
 			assertTrue(pathFormula.exists(s, path));
-			System.out.println("\n\n\n\n\n" + path.size());
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -101,15 +111,21 @@ public class WeakUntilTests {
 
 		LinkedList<State> path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(l, r, null, null);	
+		// as strong until
 		for (State s: m.getInitStates()) {
 			assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, empty, null);	
+		/* should stop in first state 
+		 * second state is not r, so cannot be reached by right transitions
+		 * stays in first state 
+		 * no onwards transitions (empty list)
+		 */
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 1);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, null, empty);	
@@ -120,8 +136,8 @@ public class WeakUntilTests {
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, empty, empty);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 1);
 		}
 	}
 	
@@ -149,20 +165,20 @@ public class WeakUntilTests {
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftRestr, rightFree);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 1);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftFree, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 2);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftRestr, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(pathFormula.exists(s, path));
+			assertTrue(path.size() == 1);
 		}
 	}
 	

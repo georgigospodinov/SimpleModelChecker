@@ -35,9 +35,7 @@ public class WeakUntil extends PathFormula {
 	
     @Override
     public boolean exists(State s, LinkedList<State> visited) {
-    	if (rightActions != null && rightActions.size() == 0) // no acceptable path
-    		return false;
-        if (visited.contains(s)) {// cycle detection 
+        if (visited.contains(s)) { // cycle detection 
             visited.push(s);
         	return true;
         }
@@ -60,16 +58,32 @@ public class WeakUntil extends PathFormula {
         }
 
         // try left on failure
+        int onwards = 0;
         for (TransitionTo t : s.getTransitions()) {
             if (leftActions == null || t.isIn(leftActions)) {
+            	onwards++;
             	if (exists(t.getTrg(), visited))
             		return true;
             }
         }
+
+        // cannot step to end state 
+        // did not find an onwards path 
+        // if this is a dead end, accept
+        /*
+         * Dead end:
+         * 	No transitions
+         * 	No allowed left transitions
+         */
         
-        // no path found
-        visited.pop();
-        return false;
+        //onwards: number of transitions from s in leftActions
+        if (onwards==0) // || (leftActions != null && leftActions.isEmpty()) ||s.getTransitions().isEmpty())
+        	//dead end 
+        	return true;
+        else {
+	        visited.pop();
+	        return false;
+        }
     }
     
     @Override
@@ -96,6 +110,7 @@ public class WeakUntil extends PathFormula {
         		if (!right.isValidIn(t.getTrg())) 
         			checkLeft.push(t);
         	}
+        	checkLeft.push(t);
         }
         
         // then check left 

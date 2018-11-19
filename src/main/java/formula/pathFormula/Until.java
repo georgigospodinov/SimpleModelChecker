@@ -99,6 +99,7 @@ public class Until extends PathFormula {
         		else
         			passing++;
         	}
+        	checkLeft.push(t);
         }
         
         // then check left 

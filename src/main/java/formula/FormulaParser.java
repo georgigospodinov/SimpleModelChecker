@@ -37,7 +37,7 @@ public class FormulaParser {
     public static final char RIGHT_BRACKET_TOKEN = ')';
     public static final char LEFT_BRACKET_TOKEN = '(';
     public static final char NEXT_TOKEN = 'X';
-    public static final char ALWAYS_TOKEn = 'G';
+    public static final char ALWAYS_TOKEN = 'G';
     public static final char THEREEXISTS_TOKEN = 'E';
     public static final char FORALL_TOKEN = 'A';
     private Reader reader;
@@ -147,7 +147,7 @@ public class FormulaParser {
         Set<String> actionSet1 = getActions(actionSet1Identifier);
         char nextChar = reader.nextChar();
         switch (nextChar) {
-        case ALWAYS_TOKEn:
+        case ALWAYS_TOKEN:
             return new Always(recursiveParseStateFormula(), actionSet1);
         case NEXT_TOKEN:
             return new Next(recursiveParseStateFormula(), actionSet1);

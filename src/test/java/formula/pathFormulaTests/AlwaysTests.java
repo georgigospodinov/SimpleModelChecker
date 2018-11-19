@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import formula.pathFormula.Always;
 import formula.pathFormula.PathFormula;
+import formula.pathFormula.WeakUntil;
 import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
@@ -70,8 +71,8 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), new HashSet<String>());
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(a.exists(s, path));
+			assertTrue(path.size() == 1);
 		}
 	}
 	
@@ -82,7 +83,7 @@ public class AlwaysTests {
 		free.add("act1");
 		free.add("act2");
 		Set<String> restr = new HashSet<String>();
-		free.add("act1");
+		restr.add("act1");
 		
 		PathFormula a = new Always(new BoolProp(true), free);
 		LinkedList<State> path = new LinkedList<State>();
@@ -93,8 +94,8 @@ public class AlwaysTests {
 		a = new Always(new BoolProp(true), restr);
 		path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.exists(s, path));
-			assertTrue(path.size() == 0);
+			assertTrue(a.exists(s, path));
+			assertTrue(path.size() == 2);
 		}
 	}
 	
