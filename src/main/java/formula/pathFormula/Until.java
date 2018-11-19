@@ -40,41 +40,51 @@ public class Until extends PathFormula {
         right.writeToBuffer(buffer);
         buffer.append(")");
     }
-
+    
+ 
+	
     @Override
-    public boolean pathFrom(State s) {
-        if (rightActions == null && right.isValidIn(s)) {
-            // in final state
-            // could get there by any means
+    public boolean exists(State s, LinkedList<State> visited) {
+    	if (rightActions != null && rightActions.size() == 0) // no acceptable path
+    		return false;
+        if (visited.contains(s)) // cycle detection
+        	return false;
+        
+        if (rightActions == null && right.isValidIn(s)) { //in final state
+            visited.push(s);
             return true;
         }
-        else if (!left.isValidIn(s)) {
-            // not in final state
-            // until condition is not true
+        if (!this.left.isValidIn(s)) // current state invalid
             return false;
-        }
-        else {
-            // TODO cycle checks
-
-            // check if there is a transition to a state where right is valid
-            for (TransitionTo t : s.getTransitions()) {
-                if (rightActions == null || t.isIn(rightActions)) {
-                    if (right.isValidIn(t.getTrg()))
-                        return true;
-                }
+        visited.push(s);
+                
+        // try right first
+        for (TransitionTo t : s.getTransitions()) {
+            if (rightActions == null || t.isIn(rightActions)) {
+            	if (right.isValidIn(t.getTrg())) {
+            		visited.push(t.getTrg());
+            		return true;
+            	}
             }
-
-            // forwards recursive checks
-            for (TransitionTo t : s.getTransitions()) {
-                if (leftActions == null || t.isIn(leftActions)) {
-                    if (left.isValidIn(t.getTrg())) {
-                        if (pathFrom(t.getTrg()))
-                            return true;
-                    }
-                }
-            }
-            return false;
         }
+
+        // try left on failure
+        for (TransitionTo t : s.getTransitions()) {
+            if (leftActions == null || t.isIn(leftActions)) {
+            	if (exists(t.getTrg(), visited))
+            		return true;
+            }
+        }
+        
+        // no path found
+        visited.pop();
+        return false;
+    }
+    
+    @Override
+    public boolean forAll(State s) {
+    	// TODO Auto-generated method stub
+    	return false;
     }
 
     // FIXME: These two prune methods implement DFS. They might cause a StackOverflow if there is a loop in the model.

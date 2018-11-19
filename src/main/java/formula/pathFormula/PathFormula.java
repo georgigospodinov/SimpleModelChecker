@@ -4,6 +4,8 @@ import model.State;
 import model.TransitionTo;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Set;
 
 public abstract class PathFormula {
 
@@ -13,8 +15,9 @@ public abstract class PathFormula {
     public static final LinkedHashMap<TransitionTo, State> THIS_STATE_MAKES_ME_FALSE = null;
 
     public abstract void writeToBuffer(StringBuilder buffer);
-    
-    public abstract boolean pathFrom(State s);
+
+    public abstract boolean exists(State s, LinkedList<State> path);
+    public abstract boolean forAll(State s);
 
     @Override
     public String toString() {

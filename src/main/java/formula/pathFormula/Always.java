@@ -77,8 +77,28 @@ public class Always extends PathFormula {
     }
 
     @Override
-    public boolean pathFrom(State s) {
-        return recursivePathFrom(s, new HashSet<State>());
+    public boolean exists(State s, LinkedList<State> path) {
+    	if (!stateFormula.isValidIn(s))
+            return false;
+    	// check for an always true cycle
+    	if (path.contains(s)) {
+    		path.push(s);
+    		return true;
+    	}
+		path.push(s);
+    	// end of path
+    	if (s.getTransitions().isEmpty())
+    		return true;
+    	// search branches
+        for (TransitionTo t : s.getTransitions()) {
+            if (actions == null || t.isIn(actions)) {
+                if (exists(t.getTrg(), path))
+                    return true;
+            }
+        }
+        // no path found
+        path.pop();
+        return false;
     }
 
     @Override
@@ -150,4 +170,10 @@ public class Always extends PathFormula {
         }  // while
         return toSave;
     }
+
+	@Override
+	public boolean forAll(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

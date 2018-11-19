@@ -4,17 +4,13 @@
 			"init": true,
 			"name": "s0",
 			"label": ["p"]
-		}, 
-		{
-			"init": false,
-			"name": "s1", 
-			"label": ["p"]
 		},
 		{
 			"init": false,
-			"name": "s2",
-			"label": ["q"]
-		}	
+			"name": "s1",
+			"label": ["p"]
+		} 
+ 
 	],
 	"transitions": [
 		{
@@ -24,8 +20,8 @@
 		},
 		{
 			"source": "s1",
-			"target": "s2",
-			"actions": ["act2"]
+			"target": "s0",
+			"actions": ["act1"]
 		}
 	]
 }

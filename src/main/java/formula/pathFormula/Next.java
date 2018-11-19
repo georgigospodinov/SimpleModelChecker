@@ -29,14 +29,13 @@ public class Next extends PathFormula {
     }
 
 	@Override
-	public boolean pathFrom(State s) {
-        LinkedList<TransitionTo> ts = s.getTransitions();
-        for (TransitionTo t : ts) {
+	public boolean exists(State s, LinkedList<State> path) {
+        for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
-                State next = t.getTrg();
-                // At least one next state makes the stateFormula true.
-                if (stateFormula.isValidIn(next))
-                    return true;
+                if (stateFormula.isValidIn(t.getTrg())) {
+                    path.push(t.getTrg());
+                	return true;
+                }
             }
         }
         return false;
@@ -44,7 +43,7 @@ public class Next extends PathFormula {
 
     @Override
     public LinkedHashMap<TransitionTo, State> shouldPrune(State s) {
-        if (!this.pathFrom(s)) {
+        if (!this.exists(s, null)) {
             return THIS_STATE_MAKES_ME_FALSE;
         }
 
@@ -65,7 +64,7 @@ public class Next extends PathFormula {
 
     @Override
     public LinkedHashMap<TransitionTo, State> shouldNotPrune(State s) {
-        if (!this.pathFrom(s)) {
+        if (!this.exists(s, null)) {
             return THIS_STATE_MAKES_ME_FALSE;
         }
 
@@ -81,4 +80,10 @@ public class Next extends PathFormula {
         }
         return toSave;
     }
+
+	@Override
+	public boolean forAll(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
