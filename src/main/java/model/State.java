@@ -3,41 +3,41 @@ package model;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-/**
- * 
- * */
 public class State {
     private boolean init;
     private String name;
-    private String [] label;
+    private String[] label;
     private LinkedList<TransitionTo> trans = new LinkedList<>();
-	
+
     public void setLabels(String[] labels) {
-    	this.label = labels;
+        this.label = labels;
     }
-    
+
     /**
      * Is state an initial state
-     * @return boolean init 
-     * */
+     *
+     * @return boolean init
+     */
     public boolean isInit() {
-	return init;
+        return init;
     }
-	
+
     /**
      * Returns the name of the state
-     * @return String name 
-     * */
+     *
+     * @return String name
+     */
     public String getName() {
-	return name;
+        return name;
     }
-	
+
     /**
      * Returns the labels of the state
+     *
      * @return Array of string labels
-     * */
+     */
     public String[] getLabel() {
-	return label;
+        return label;
     }
 
     @Override
@@ -64,16 +64,12 @@ public class State {
         return name + (init ? "* " : "  ") + Arrays.toString(label);
     }
 
-	public void addTransition(State trg, String[] actions) {
-		trans.add(new TransitionTo(trg, actions));		
-	}
-
-    public void removeTransition(TransitionTo t) {
-        trans.remove(t);
+    public void addTransition(State trg, String[] actions) {
+        trans.add(new TransitionTo(trg, actions));
     }
-	
-	public LinkedList<TransitionTo> getTransitions() {
-		return trans;
-	}
-	
+
+    public LinkedList<TransitionTo> getTransitions() {
+        return trans;
+    }
+
 }

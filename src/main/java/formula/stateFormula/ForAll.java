@@ -4,7 +4,7 @@ import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
 import model.State;
 
-
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ForAll extends StateFormula {
@@ -25,12 +25,13 @@ public class ForAll extends StateFormula {
     @Override
     public boolean isValidIn(State s) {
     	LinkedList<State> path = new LinkedList<>();
-        return pathFormula.forAll(s, path); 
+        boolean b = pathFormula.forAll(s, path);
+        Iterator<State> i = path.descendingIterator();
+        System.out.println("Path: ");
+        while (i.hasNext())
+            System.out.println(i.next());
+        System.out.println("---");
+        return b;
     }
-/*
-    private boolean validEventually(State s, Eventually path) {
-        //Until u = new Until(new BoolProp(true), path.stateFormula, path.getLeftActions(), path.getRightActions());
-        return false;// validUntil(s, u);
-    }
-*/
+
 }

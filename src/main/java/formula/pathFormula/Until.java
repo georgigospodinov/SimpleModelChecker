@@ -30,16 +30,14 @@ public class Until extends PathFormula {
         right.writeToBuffer(buffer);
         buffer.append(")");
     }
-    
- 
-	
+
     @Override
     public boolean exists(State s, LinkedList<State> visited) {
-    	if (rightActions != null && rightActions.size() == 0) // no acceptable path
-    		return false;
+        if (rightActions != null && rightActions.size() == 0) // no acceptable path
+            return false;
         if (visited.contains(s)) // cycle detection
-        	return false;
-        
+            return false;
+
         if (rightActions == null && right.isValidIn(s)) { //in final state
             visited.push(s);
             return true;
@@ -47,39 +45,39 @@ public class Until extends PathFormula {
         if (!this.left.isValidIn(s)) // current state invalid
             return false;
         visited.push(s);
-                
+
         // try right first
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-            	if (right.isValidIn(t.getTrg())) {
-            		visited.push(t.getTrg());
-            		return true;
-            	}
+                if (right.isValidIn(t.getTrg())) {
+                    visited.push(t.getTrg());
+                    return true;
+                }
             }
         }
 
         // try left on failure
         for (TransitionTo t : s.getTransitions()) {
             if (leftActions == null || t.isIn(leftActions)) {
-            	if (exists(t.getTrg(), visited))
-            		return true;
+                if (exists(t.getTrg(), visited))
+                    return true;
             }
         }
-        
+
         // no path found
         visited.pop();
         return false;
     }
-    
+
     @Override
     public boolean forAll(State s, LinkedList<State> visited) {
         // Loop detected before final state
-    	if (visited.contains(s)){
-        	visited.push(s);
+        if (visited.contains(s)) {
+            visited.push(s);
             return false;
-    	}
-    	// in final state
-        if (rightActions == null && right.isValidIn(s)) 
+        }
+        // in final state
+        if (rightActions == null && right.isValidIn(s))
             return true;
         // in invalid state
         if (!left.isValidIn(s)) {
@@ -87,41 +85,40 @@ public class Until extends PathFormula {
             return false;
         }
         visited.push(s);
-        
+
         // check transitions to the right
         // only check left on failed branches
         int passing = 0;
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
-        for (TransitionTo t: s.getTransitions()) {
-        	if (rightActions == null || t.isIn(rightActions)) {
-        		if (!right.isValidIn(t.getTrg())) 
-        			checkLeft.push(t);
-        		else
-        			passing++;
-        	}
-        	checkLeft.push(t);
+        for (TransitionTo t : s.getTransitions()) {
+            if (rightActions == null || t.isIn(rightActions)) {
+                if (!right.isValidIn(t.getTrg()))
+                    checkLeft.push(t);
+                else
+                    passing++;
+            }
+            checkLeft.push(t);
         }
-        
+
         // then check left 
-        for (TransitionTo t: checkLeft) {
-        	if (leftActions == null || t.isIn(leftActions)) {
-        		if (! forAll(t.getTrg(), visited)) 
-        			return false;
-        		passing++;
-        	}
+        for (TransitionTo t : checkLeft) {
+            if (leftActions == null || t.isIn(leftActions)) {
+                if (!forAll(t.getTrg(), visited))
+                    return false;
+                passing++;
+            }
         }
-        
-        if (passing>0) {
-        	// there are passing paths and none failing
+
+        if (passing > 0) {
+            // there are passing paths and none failing
             visited.pop();
-        	return true;
+            return true;
         }
         else
-        	//no passing paths 
-        	//fail as strong until
-        	return false;
-        
-    }
+            //no passing paths
+            //fail as strong until
+            return false;
 
+    }
 
 }

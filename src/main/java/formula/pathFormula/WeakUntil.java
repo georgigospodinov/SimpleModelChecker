@@ -30,14 +30,12 @@ public class WeakUntil extends PathFormula {
         right.writeToBuffer(buffer);
         buffer.append(")");
     }
-    
- 
-	
+
     @Override
     public boolean exists(State s, LinkedList<State> visited) {
         if (visited.contains(s)) { // cycle detection 
             visited.push(s);
-        	return true;
+            return true;
         }
         if (rightActions == null && right.isValidIn(s)) { //in final state
             visited.push(s);
@@ -46,14 +44,14 @@ public class WeakUntil extends PathFormula {
         if (!this.left.isValidIn(s)) // current state invalid
             return false;
         visited.push(s);
-                
+
         // try right first
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-            	if (right.isValidIn(t.getTrg())) {
-            		visited.push(t.getTrg());
-            		return true;
-            	}
+                if (right.isValidIn(t.getTrg())) {
+                    visited.push(t.getTrg());
+                    return true;
+                }
             }
         }
 
@@ -61,9 +59,9 @@ public class WeakUntil extends PathFormula {
         int onwards = 0;
         for (TransitionTo t : s.getTransitions()) {
             if (leftActions == null || t.isIn(leftActions)) {
-            	onwards++;
-            	if (exists(t.getTrg(), visited))
-            		return true;
+                onwards++;
+                if (exists(t.getTrg(), visited))
+                    return true;
             }
         }
 
@@ -75,25 +73,25 @@ public class WeakUntil extends PathFormula {
          * 	No transitions
          * 	No allowed left transitions
          */
-        
+
         //onwards: number of transitions from s in leftActions
-        if (onwards==0) // || (leftActions != null && leftActions.isEmpty()) ||s.getTransitions().isEmpty())
-        	//dead end 
-        	return true;
+        if (onwards == 0) // || (leftActions != null && leftActions.isEmpty()) ||s.getTransitions().isEmpty())
+            //dead end
+            return true;
         else {
-	        visited.pop();
-	        return false;
+            visited.pop();
+            return false;
         }
     }
-    
+
     @Override
     public boolean forAll(State s, LinkedList<State> visited) {
         // Loop detected before final state
-    	if (visited.contains(s)){
+        if (visited.contains(s)) {
             return true;
-    	}
-    	// in final state
-        if (rightActions == null && right.isValidIn(s)) 
+        }
+        // in final state
+        if (rightActions == null && right.isValidIn(s))
             return true;
         // in invalid state
         if (!left.isValidIn(s)) {
@@ -101,32 +99,30 @@ public class WeakUntil extends PathFormula {
             return false;
         }
         visited.push(s);
-        
+
         // check transitions to the right
         // only check left on failed branches
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
-        for (TransitionTo t: s.getTransitions()) {
-        	if (rightActions == null || t.isIn(rightActions)) {
-        		if (!right.isValidIn(t.getTrg())) 
-        			checkLeft.push(t);
-        	}
-        	checkLeft.push(t);
+        for (TransitionTo t : s.getTransitions()) {
+            if (rightActions == null || t.isIn(rightActions)) {
+                if (!right.isValidIn(t.getTrg()))
+                    checkLeft.push(t);
+            }
+            checkLeft.push(t);
         }
-        
+
         // then check left 
-        for (TransitionTo t: checkLeft) {
-        	if (leftActions == null || t.isIn(leftActions)) {
-        		if (! forAll(t.getTrg(), visited)) 
-        			return false;
-        	}
+        for (TransitionTo t : checkLeft) {
+            if (leftActions == null || t.isIn(leftActions)) {
+                if (!forAll(t.getTrg(), visited))
+                    return false;
+            }
         }
 
         // all paths if any accepted
         // weak until accepts dead ends so no need to count
         visited.pop();
-      	return true;
-        
+        return true;
     }
-
 
 }

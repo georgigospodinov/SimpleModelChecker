@@ -50,10 +50,7 @@ public class Next extends PathFormula {
                 }
             }
         }
-        if (paths>0)
-        	return true;
-        else
-        	// there are no permitted paths
-        	return false;
+        // We need at least one valid path
+        return paths > 0;
 	}
 }

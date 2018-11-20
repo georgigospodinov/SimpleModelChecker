@@ -4,6 +4,7 @@ import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
 import model.State;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ThereExists extends StateFormula {
@@ -24,7 +25,13 @@ public class ThereExists extends StateFormula {
     @Override
     public boolean isValidIn(State s) {
     	LinkedList<State> path = new LinkedList<>();
-        return pathFormula.exists(s, path); 
+        boolean exists = pathFormula.exists(s, path);
+        Iterator<State> i = path.descendingIterator();
+        System.out.println("Path: ");
+        while (i.hasNext())
+            System.out.println(i.next());
+        System.out.println("---");
+        return exists;
     }
 
 }
