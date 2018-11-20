@@ -17,7 +17,7 @@ public class PathQualifiers {
 	public void existsTests() {
 		PathFormula pf = new Until(new BoolProp(true), new BoolProp(true), null, null);	
 		ThereExists e = new ThereExists(pf);		
-		assertTrue(e.isValidIn(null));
+		assertTrue(e.isValidIn(null, null));
 		assertTrue(e.toString().equals("(E" + pf + ")"));
 	}
 	
@@ -25,7 +25,7 @@ public class PathQualifiers {
 	public void forAllTests() {
 		PathFormula pf = new Until(new BoolProp(true), new BoolProp(true), null, null);	
 		ForAll a = new ForAll(pf);		
-		assertTrue(a.isValidIn(null));
+		assertTrue(a.isValidIn(null, null));
 		assertTrue(a.toString().equals("(A" + pf + ")"));
 	}
 

@@ -15,7 +15,7 @@ public class AtomicProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s) {
+    public boolean isValidIn(State s, StateFormula constraint) {
         String[] labels = s.getLabel();
         for (String l : labels) {
             if (label.equals(l))
@@ -23,5 +23,23 @@ public class AtomicProp extends StateFormula {
         }
         return false;
     }
+
+	@Override
+	public boolean holdsIn(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean holdsInLeaf(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public StateFormula fromHere(State s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

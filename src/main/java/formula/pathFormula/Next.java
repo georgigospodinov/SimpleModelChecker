@@ -1,6 +1,7 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
+import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.State;
 import model.TransitionTo;
@@ -9,6 +10,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class Next extends PathFormula {
+	//TODO replace 
+	StateFormula constraint = new BoolProp(true);
     public final StateFormula stateFormula;
     private Set<String> actions;
 
@@ -27,7 +30,7 @@ public class Next extends PathFormula {
 	public boolean exists(State s, LinkedList<State> path) {
         for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
-                if (stateFormula.isValidIn(t.getTrg())) {
+                if (stateFormula.isValidIn(t.getTrg(), constraint)) {
                     path.push(t.getTrg());
                 	return true;
                 }
@@ -44,7 +47,7 @@ public class Next extends PathFormula {
         for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
             	paths++;
-                if (! stateFormula.isValidIn(t.getTrg())) {
+                if (! stateFormula.isValidIn(t.getTrg(), constraint)) {
                     path.push(t.getTrg());
                 	return false;
                 }

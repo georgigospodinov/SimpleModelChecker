@@ -1,6 +1,7 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
+import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.State;
 import model.TransitionTo;
@@ -9,6 +10,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class Until extends PathFormula {
+	//TODO replace 
+	StateFormula constraint = new BoolProp(true);
     public final StateFormula left;
     public final StateFormula right;
     private Set<String> leftActions;
@@ -38,18 +41,18 @@ public class Until extends PathFormula {
         if (visited.contains(s)) // cycle detection
             return false;
 
-        if (rightActions == null && right.isValidIn(s)) { //in final state
+        if (rightActions == null && right.isValidIn(s, constraint)) { //in final state
             visited.push(s);
             return true;
         }
-        if (!this.left.isValidIn(s)) // current state invalid
+        if (!this.left.isValidIn(s, constraint)) // current state invalid
             return false;
         visited.push(s);
 
         // try right first
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-                if (right.isValidIn(t.getTrg())) {
+                if (right.isValidIn(t.getTrg(), constraint)) {
                     visited.push(t.getTrg());
                     return true;
                 }
@@ -77,10 +80,10 @@ public class Until extends PathFormula {
             return false;
         }
         // in final state
-        if (rightActions == null && right.isValidIn(s))
+        if (rightActions == null && right.isValidIn(s, constraint))
             return true;
         // in invalid state
-        if (!left.isValidIn(s)) {
+        if (!left.isValidIn(s, constraint)) {
             visited.push(s);
             return false;
         }
@@ -92,7 +95,7 @@ public class Until extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-                if (!right.isValidIn(t.getTrg()))
+                if (!right.isValidIn(t.getTrg(), constraint))
                     checkLeft.push(t);
                 else
                     passing++;

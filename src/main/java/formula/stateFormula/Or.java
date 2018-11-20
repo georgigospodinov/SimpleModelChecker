@@ -21,8 +21,26 @@ public class Or extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s) {
-        return left.isValidIn(s) || right.isValidIn(s);
+    public boolean isValidIn(State s, StateFormula constraint) {
+        return left.isValidIn(s, constraint) || right.isValidIn(s, constraint);
     }
+
+	@Override
+	public boolean holdsIn(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean holdsInLeaf(State s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public StateFormula fromHere(State s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

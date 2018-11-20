@@ -16,8 +16,27 @@ public class BoolProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s) {
-        return value;
+    public boolean isValidIn(State s, StateFormula constraint) {
+    	if (constraint.holdsInLeaf(s))
+    		return value;
+    	else
+    		return false;
     }
+
+	@Override
+	public boolean holdsIn(State s) {
+		return value;
+	}
+
+	@Override
+	public boolean holdsInLeaf(State s) {
+		return value;
+	}
+
+	@Override
+	public StateFormula fromHere(State s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

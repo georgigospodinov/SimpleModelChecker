@@ -1,6 +1,7 @@
 package modelChecker;
 
 import formula.FormulaParser;
+import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
 import org.junit.Test;
@@ -21,15 +22,16 @@ public class ModelCheckerTest {
     @Test
     public void buildAndCheckModel() {
         try {
-            Model model = Model.parseModel("src/test/resources/model1.json");
+            Model model = Model.parseModel("src/test/resources/ts/m1.json");
 
-            StateFormula fairnessConstraint = new FormulaParser("src/test/resources/constraint1.json").parse();
-            StateFormula query = new FormulaParser("src/test/resources/custom/ctl_1.json").parse();
-
+            //StateFormula fairnessConstraint = new FormulaParser("src/test/resources/constraint1.json").parse();
+            //StateFormula query = new FormulaParser("src/test/resources/custom/ctl_1.json").parse();
+            StateFormula ctl = new BoolProp(true);
+            StateFormula constr = new BoolProp(true);
             ModelChecker mc = new SimpleModelChecker();
 
             // TODO IMPLEMENT
-            assertTrue(mc.check(model, fairnessConstraint, query));
+            assertTrue(mc.check(model, constr, ctl));
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.toString());
