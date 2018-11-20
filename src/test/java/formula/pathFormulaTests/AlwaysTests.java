@@ -19,6 +19,7 @@ import model.Model;
 import model.State;
 
 public class AlwaysTests {
+	LinkedList<State> stateList = new LinkedList<>();
 	
 	@Test
 	public void alwaysTrueCycleTest() throws IOException {
@@ -26,7 +27,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -37,7 +38,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -48,7 +49,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(false), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.exists(s, path));
+			assertFalse(a.exists(s, path, stateList));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -59,7 +60,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -70,7 +71,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), new HashSet<String>());
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -87,13 +88,13 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), free);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 3);
 		}
 		a = new Always(new BoolProp(true), restr);
 		path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
+			assertTrue(a.exists(s, path, stateList));
 			assertTrue(path.size() == 2);
 		}
 	}
@@ -104,7 +105,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
+			assertTrue(a.forAll(s, path, stateList));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -115,7 +116,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
+			assertTrue(a.forAll(s, path, stateList));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -126,7 +127,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new AtomicProp("r"), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.forAll(s, path));
+			assertFalse(a.forAll(s, path, stateList));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -139,7 +140,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new AtomicProp("p"), restr);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
+			assertTrue(a.forAll(s, path, stateList));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -152,7 +153,7 @@ public class AlwaysTests {
 		PathFormula a = new Always(new AtomicProp("p"), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.forAll(s, path));
+			assertFalse(a.forAll(s, path, stateList));
 			assertTrue(path.size() == 3);
 		}
 	}

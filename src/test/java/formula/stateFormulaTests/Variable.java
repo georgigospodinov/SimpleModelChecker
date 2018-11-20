@@ -1,6 +1,9 @@
 package formula.stateFormulaTests;
 
 import static org.junit.Assert.assertTrue;
+
+import java.util.LinkedList;
+
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
@@ -12,6 +15,7 @@ import model.State;
 
 public class Variable {
 	StateFormula constraint = new BoolProp(true);
+	LinkedList<State> stateList = new LinkedList<>();
 
 	@Test
 	public void StateFormulaVariableNone() {
@@ -22,7 +26,7 @@ public class Variable {
 		State none = new State();
 		String[] empty = {};
 		none.setLabels(empty);
-		assertFalse(x.isValidIn(none, constraint));
+		assertFalse(x.isValidIn(none, constraint, stateList));
 	
 	}
 	public void StateFormulaVariableSinglelabel() {
@@ -32,13 +36,13 @@ public class Variable {
 		State singleTrue = new State();
 		String[] justX = {var};
 		singleTrue.setLabels(justX);
-		assertTrue(x.isValidIn(singleTrue, constraint));
+		assertTrue(x.isValidIn(singleTrue, constraint, stateList));
 
 		// one label, not x
 		State singleFalse = new State();
 		String[] justNotX = {"y"};
 		singleFalse.setLabels(justNotX);
-		assertFalse(x.isValidIn(singleFalse, constraint));		
+		assertFalse(x.isValidIn(singleFalse, constraint, stateList));		
 	}
 	
 	public void StateFormulaVariableManyLabels() {
@@ -48,19 +52,19 @@ public class Variable {
 		State manyTrue = new State();
 		String[] withX = {"y", var};
 		manyTrue.setLabels(withX);
-		assertTrue(x.isValidIn(manyTrue, constraint));
+		assertTrue(x.isValidIn(manyTrue, constraint, stateList));
 
 		State manyTrueRev = new State();
 		String[] withXRev = {var, "y"};
 		manyTrueRev.setLabels(withXRev);
-		assertTrue(x.isValidIn(manyTrueRev, constraint));
+		assertTrue(x.isValidIn(manyTrueRev, constraint, stateList));
 		
 		
 		// many labels, not inc. x
 		State manyFalse = new State();
 		String[] withoutX = {"y", "z"};
 		manyFalse.setLabels(withoutX);
-		assertFalse(x.isValidIn(manyFalse, constraint));
+		assertFalse(x.isValidIn(manyFalse, constraint, stateList));
 		
 
 		

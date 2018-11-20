@@ -31,7 +31,10 @@ public class Next extends PathFormula {
 	public boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath) {
         for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
-                if (stateFormula.isValidIn(t.getTrg(), constraint)) {
+                LinkedList<State> fullPath = new LinkedList<State>();
+                fullPath.addAll(path);
+                fullPath.addAll(basePath);
+                if (stateFormula.isValidIn(t.getTrg(), constraint, fullPath)) {
                     path.push(t.getTrg());
                 	return true;
                 }
@@ -48,7 +51,10 @@ public class Next extends PathFormula {
         for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
             	paths++;
-                if (! stateFormula.isValidIn(t.getTrg(), constraint)) {
+                LinkedList<State> fullPath = new LinkedList<State>();
+                fullPath.addAll(path);
+                fullPath.addAll(basePath);
+                if (! stateFormula.isValidIn(t.getTrg(), constraint, fullPath)) {
                     path.push(t.getTrg());
                 	return false;
                 }

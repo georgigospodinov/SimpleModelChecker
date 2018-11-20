@@ -115,9 +115,6 @@ public class WeakUntil extends PathFormula {
         if (rightActions == null && right.isValidIn(s, constraint, fullPath))
             return true;
         // in invalid state
-        fullPath = new LinkedList<State>();
-        fullPath.addAll(visited);
-        fullPath.addAll(basePath);
         if (!left.isValidIn(s, constraint, fullPath)) {
             visited.push(s);
             return false;
@@ -129,11 +126,11 @@ public class WeakUntil extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-                fullPath = new LinkedList<State>();
-                fullPath.addAll(visited);
-                fullPath.addAll(basePath);
                 if (!right.isValidIn(t.getTrg(), constraint, fullPath))
                     checkLeft.push(t);
+	                fullPath = new LinkedList<State>();
+	                fullPath.addAll(visited);
+	                fullPath.addAll(basePath);
             }
             checkLeft.push(t);
         }
@@ -141,10 +138,7 @@ public class WeakUntil extends PathFormula {
         // then check left 
         for (TransitionTo t : checkLeft) {
             if (leftActions == null || t.isIn(leftActions)) {
-                fullPath = new LinkedList<State>();
-                fullPath.addAll(visited);
-                fullPath.addAll(basePath);
-                if (!forAll(t.getTrg(), visited, fullPath))
+                if (!forAll(t.getTrg(), visited, basePath))
                     return false;
             }
         }
