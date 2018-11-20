@@ -35,7 +35,7 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean exists(State s, LinkedList<State> visited) {
+    public boolean exists(State s, LinkedList<State> visited, LinkedList<State> basePath) {
         if (rightActions != null && rightActions.size() == 0) // no acceptable path
             return false;
         if (visited.contains(s)) // cycle detection
@@ -73,7 +73,7 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean forAll(State s, LinkedList<State> visited) {
+    public boolean forAll(State s, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
         if (visited.contains(s)) {
             visited.push(s);

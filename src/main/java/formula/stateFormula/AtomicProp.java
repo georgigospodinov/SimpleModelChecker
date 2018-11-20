@@ -1,5 +1,8 @@
 package formula.stateFormula;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import model.State;
 
 public class AtomicProp extends StateFormula {
@@ -15,7 +18,7 @@ public class AtomicProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint) {
+    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
         String[] labels = s.getLabel();
         for (String l : labels) {
             if (label.equals(l))

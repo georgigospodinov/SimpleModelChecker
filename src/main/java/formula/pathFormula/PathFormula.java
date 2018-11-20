@@ -3,6 +3,7 @@ package formula.pathFormula;
 import model.State;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public abstract class PathFormula {
 
@@ -41,8 +42,8 @@ public abstract class PathFormula {
      * @return true if there is a path, in which case the path argument contains a path
      * false if there isn't such a path, in which case the path argument is empty
      */
-    public abstract boolean exists(State s, LinkedList<State> path);
-	public abstract boolean forAll(State s, LinkedList<State> path);
+    public abstract boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath);
+	public abstract boolean forAll(State s, LinkedList<State> path, LinkedList<State> basePath);
 	
     @Override
     public String toString() {

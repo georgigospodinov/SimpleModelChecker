@@ -1,5 +1,8 @@
 package formula.stateFormula;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import formula.FormulaParser;
 import model.State;
 
@@ -19,8 +22,8 @@ public class Not extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint) {
-        return !stateFormula.isValidIn(s, constraint);
+    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
+        return !stateFormula.isValidIn(s, constraint, path);
     }
 
 	@Override

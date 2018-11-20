@@ -7,6 +7,7 @@ import model.State;
 import model.TransitionTo;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class Next extends PathFormula {
@@ -27,7 +28,7 @@ public class Next extends PathFormula {
     }
 
 	@Override
-	public boolean exists(State s, LinkedList<State> path) {
+	public boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath) {
         for (TransitionTo t : s.getTransitions()) {
             if (actions == null || t.isIn(actions)) {
                 if (stateFormula.isValidIn(t.getTrg(), constraint)) {
@@ -40,7 +41,7 @@ public class Next extends PathFormula {
 	}
 
 	@Override
-	public boolean forAll(State s, LinkedList<State> path) {
+	public boolean forAll(State s, LinkedList<State> path, LinkedList<State> basePath) {
 		if (actions != null && actions.isEmpty())
 			return false;
 		int paths = 0;

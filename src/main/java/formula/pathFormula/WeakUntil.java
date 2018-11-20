@@ -36,23 +36,33 @@ public class WeakUntil extends PathFormula {
     }
 
     @Override
-    public boolean exists(State s, LinkedList<State> visited) {
+    public boolean exists(State s, LinkedList<State> visited, LinkedList<State> basePath) {
         if (visited.contains(s)) { // cycle detection 
             visited.push(s);
             return true;
         }
-        if (rightActions == null && right.isValidIn(s, constraint)) { //in final state
+        
+        LinkedList<State> fullPath = new LinkedList<State>();
+        fullPath.addAll(visited);
+        fullPath.addAll(basePath);
+        if (rightActions == null && right.isValidIn(s, constraint, fullPath)) { //in final state
             visited.push(s);
             return true;
         }
-        if (!this.left.isValidIn(s, constraint)) // current state invalid
+        fullPath = new LinkedList<State>();
+        fullPath.addAll(visited);
+        fullPath.addAll(basePath);
+        if (!this.left.isValidIn(s, constraint, fullPath)) // current state invalid
             return false;
         visited.push(s);
 
         // try right first
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-                if (right.isValidIn(t.getTrg(), constraint)) {
+                fullPath = new LinkedList<State>();
+                fullPath.addAll(visited);
+                fullPath.addAll(basePath);
+                if (right.isValidIn(t.getTrg(), constraint, fullPath)) {
                     visited.push(t.getTrg());
                     return true;
                 }
@@ -64,7 +74,10 @@ public class WeakUntil extends PathFormula {
         for (TransitionTo t : s.getTransitions()) {
             if (leftActions == null || t.isIn(leftActions)) {
                 onwards++;
-                if (exists(t.getTrg(), visited))
+                fullPath = new LinkedList<State>();
+                fullPath.addAll(visited);
+                fullPath.addAll(basePath);
+                if (exists(t.getTrg(), visited, fullPath))
                     return true;
             }
         }
@@ -89,16 +102,23 @@ public class WeakUntil extends PathFormula {
     }
 
     @Override
-    public boolean forAll(State s, LinkedList<State> visited) {
+    public boolean forAll(State s, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
         if (visited.contains(s)) {
             return true;
         }
         // in final state
-        if (rightActions == null && right.isValidIn(s, constraint))
+
+        LinkedList<State> fullPath = new LinkedList<State>();
+        fullPath.addAll(visited);
+        fullPath.addAll(basePath);
+        if (rightActions == null && right.isValidIn(s, constraint, fullPath))
             return true;
         // in invalid state
-        if (!left.isValidIn(s, constraint)) {
+        fullPath = new LinkedList<State>();
+        fullPath.addAll(visited);
+        fullPath.addAll(basePath);
+        if (!left.isValidIn(s, constraint, fullPath)) {
             visited.push(s);
             return false;
         }
@@ -109,7 +129,10 @@ public class WeakUntil extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         for (TransitionTo t : s.getTransitions()) {
             if (rightActions == null || t.isIn(rightActions)) {
-                if (!right.isValidIn(t.getTrg(), constraint))
+                fullPath = new LinkedList<State>();
+                fullPath.addAll(visited);
+                fullPath.addAll(basePath);
+                if (!right.isValidIn(t.getTrg(), constraint, fullPath))
                     checkLeft.push(t);
             }
             checkLeft.push(t);
@@ -118,7 +141,10 @@ public class WeakUntil extends PathFormula {
         // then check left 
         for (TransitionTo t : checkLeft) {
             if (leftActions == null || t.isIn(leftActions)) {
-                if (!forAll(t.getTrg(), visited))
+                fullPath = new LinkedList<State>();
+                fullPath.addAll(visited);
+                fullPath.addAll(basePath);
+                if (!forAll(t.getTrg(), visited, fullPath))
                     return false;
             }
         }

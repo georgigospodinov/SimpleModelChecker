@@ -1,5 +1,7 @@
 package formula.stateFormula;
 
+import java.util.LinkedList;
+
 import model.State;
 
 public class BoolProp extends StateFormula {
@@ -16,7 +18,7 @@ public class BoolProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint) {
+    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
     	if (constraint.holdsInLeaf(s))
     		return value;
     	else
