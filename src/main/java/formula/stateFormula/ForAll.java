@@ -25,6 +25,8 @@ public class ForAll extends StateFormula {
 
     @Override
     public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> basePath) {
+    	if (!constraint.holdsIn(s))
+    		return false;
     	LinkedList<State> path = new LinkedList<>();
         boolean b = pathFormula.forAll(s, path, basePath);
         Iterator<State> i = path.descendingIterator();
@@ -41,8 +43,7 @@ public class ForAll extends StateFormula {
 
 	@Override
 	public boolean holdsIn(State s) {
-		// TODO Auto-generated method stub
-		return false;
+		return isValidIn(s, new BoolProp(true), new LinkedList<>());
 	}
 
 	@Override
@@ -52,9 +53,22 @@ public class ForAll extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
+	public StateFormula childConstraint(State s) {
 		// TODO Auto-generated method stub
 		return null;
+		/*
+		 * Next: stateformula of pathformula 
+		 * 
+		 * 
+		 * Always: true if right.isValidin(s) else self 
+		 * Eventually: true if right.isValidin(s) else self
+		 * Until: true if right.isValidin(s) else self		 * 
+		 * Weak Until: true if right.isValidin(s) else self
+		 * 
+		 * 
+		 * 
+		 * Also need transition checks
+		 */
 	}
 
 }

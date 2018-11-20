@@ -25,13 +25,12 @@ public class Or extends StateFormula {
 
     @Override
     public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
-        return left.isValidIn(s, constraint, path) || right.isValidIn(s, constraint, path);
+        return constraint.holdsIn(s) && left.isValidIn(s, constraint, path) || right.isValidIn(s, constraint, path);
     }
 
 	@Override
 	public boolean holdsIn(State s) {
-		// TODO Auto-generated method stub
-		return false;
+		return left.holdsIn(s) || right.holdsIn(s);
 	}
 
 	@Override
@@ -41,9 +40,8 @@ public class Or extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
-		// TODO Auto-generated method stub
-		return null;
+	public StateFormula childConstraint(State s) {
+		return new Or(left.childConstraint(s), right.childConstraint(s));
 	}
 
 }

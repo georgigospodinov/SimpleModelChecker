@@ -25,13 +25,17 @@ public class ThereExists extends StateFormula {
 
     @Override
     public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> basePath) {
+    	if (!constraint.holdsIn(s))
+    		return false;
     	LinkedList<State> path = new LinkedList<>();
         boolean exists = pathFormula.exists(s, path, basePath);
+        /*
         Iterator<State> i = path.descendingIterator();
         System.out.println("Path: ");
         while (i.hasNext())
             System.out.println(i.next());
         System.out.println("---");
+        */
         path.addAll(basePath);
         while (!basePath.isEmpty())
         	basePath.removeAll(path);
@@ -41,8 +45,7 @@ public class ThereExists extends StateFormula {
 
 	@Override
 	public boolean holdsIn(State s) {
-		// TODO Auto-generated method stub
-		return false;
+		return isValidIn(s, new BoolProp(true), new LinkedList<State>());
 	}
 
 	@Override
@@ -52,9 +55,8 @@ public class ThereExists extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
-		// TODO Auto-generated method stub
-		return null;
+	public StateFormula childConstraint(State s) {
+		return new BoolProp(holdsIn(s));
 	}
 
 }

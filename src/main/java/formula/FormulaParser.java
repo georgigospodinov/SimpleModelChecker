@@ -239,7 +239,7 @@ public class FormulaParser {
 
     private Set<String> getActions(String actionSetIdentifier) {
         if (actionSetIdentifier == null) {
-            return new HashSet<String>();
+            return null;//new HashSet<String>();
         }
         String[] actionsArray = gson.fromJson(jsonFormula.get(actionSetIdentifier), String[].class);
         if (actionsArray == null) {

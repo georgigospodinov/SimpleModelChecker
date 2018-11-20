@@ -21,7 +21,7 @@ public abstract class StateFormula {
      * Given the current state, what is the constraint from here onwards
      * 
      */
-    public abstract StateFormula fromHere(State s);
+    public abstract StateFormula childConstraint(State s);
     
     @Override
     public String toString() {

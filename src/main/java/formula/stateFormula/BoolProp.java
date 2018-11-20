@@ -36,9 +36,8 @@ public class BoolProp extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
-		// TODO Auto-generated method stub
-		return null;
+	public StateFormula childConstraint(State s) {
+		return this;
 	}
 
 }

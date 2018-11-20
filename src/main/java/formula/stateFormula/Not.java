@@ -23,13 +23,12 @@ public class Not extends StateFormula {
 
     @Override
     public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
-        return !stateFormula.isValidIn(s, constraint, path);
+        return constraint.holdsIn(s) && !stateFormula.isValidIn(s, constraint, path);
     }
 
 	@Override
 	public boolean holdsIn(State s) {
-		// TODO Auto-generated method stub
-		return false;
+		return isValidIn(s, new BoolProp(true), new LinkedList<>());
 	}
 
 	@Override
@@ -39,9 +38,8 @@ public class Not extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
-		// TODO Auto-generated method stub
-		return null;
+	public StateFormula childConstraint(State s) {
+		return new Not(stateFormula.childConstraint(s));
 	}
 
 }

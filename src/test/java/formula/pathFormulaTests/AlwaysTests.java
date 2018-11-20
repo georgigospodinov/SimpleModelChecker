@@ -14,6 +14,7 @@ import formula.pathFormula.Always;
 import formula.pathFormula.PathFormula;
 import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
+import formula.stateFormula.Not;
 import formula.stateFormula.StateFormula;
 import model.Model;
 import model.State;
@@ -24,7 +25,7 @@ public class AlwaysTests {
 	@Test
 	public void alwaysTrueCycleTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		PathFormula a = new Always(new BoolProp(true), null);
+		PathFormula a = new Always(new AtomicProp("p"), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
 			assertTrue(a.exists(s, path, stateList));
@@ -35,11 +36,11 @@ public class AlwaysTests {
 	@Test
 	public void alwaysTrueEndTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula a = new Always(new BoolProp(true), null);
+		PathFormula a = new Always(new AtomicProp("p"), null);
 		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path, stateList));
-			assertTrue(path.size() == 3);
+			assertFalse(a.exists(s, path, stateList));
+			assertTrue(path.size() == 0);
 		}
 	}
 

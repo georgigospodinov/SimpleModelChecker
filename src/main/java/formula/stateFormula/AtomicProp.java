@@ -19,18 +19,19 @@ public class AtomicProp extends StateFormula {
 
     @Override
     public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
+    	if (!constraint.holdsIn(s))
+    		return false;
         String[] labels = s.getLabel();
         for (String l : labels) {
-            if (label.equals(l))
+            if (label.equals(l)) 
                 return true;
-        }
+        }        
         return false;
     }
 
 	@Override
 	public boolean holdsIn(State s) {
-		// TODO Auto-generated method stub
-		return false;
+		return isValidIn(s, new BoolProp(true), new LinkedList<State>());
 	}
 
 	@Override
@@ -40,9 +41,8 @@ public class AtomicProp extends StateFormula {
 	}
 
 	@Override
-	public StateFormula fromHere(State s) {
-		// TODO Auto-generated method stub
-		return null;
+	public StateFormula childConstraint(State s) {
+		return new BoolProp(holdsIn(s));
 	}
 
 }

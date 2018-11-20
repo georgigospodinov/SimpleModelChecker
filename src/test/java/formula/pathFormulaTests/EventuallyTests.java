@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import org.junit.Test;
 
 import formula.stateFormula.BoolProp;
+import formula.stateFormula.Not;
 import formula.stateFormula.StateFormula;
 import model.Model;
 import model.State;
@@ -34,11 +35,11 @@ public class EventuallyTests {
 	@Test
 	public void eventFalseEndTest() throws IOException {	
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula e = new Eventually(new BoolProp(false), null, null);	
+		PathFormula e = new Eventually(new Not(new AtomicProp("p")), null, null);	
 		LinkedList<State> path = new LinkedList<>();
 		for (State s: m.getInitStates()) {
-			assertFalse(e.exists(s, path, stateList));
-			assertTrue(path.size() == 0);
+			assertTrue(e.exists(s, path, stateList));
+			assertTrue(path.size() == 3);
 		}
 	}
 	
