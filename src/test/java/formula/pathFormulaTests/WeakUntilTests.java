@@ -1,5 +1,6 @@
 package formula.pathFormulaTests;
 
+import formula.pathFormula.Always;
 import formula.pathFormula.PathFormula;
 import formula.pathFormula.WeakUntil;
 import formula.stateFormula.AtomicProp;
@@ -14,137 +15,86 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class WeakUntilTests {
-	LinkedList<State> stateList = new LinkedList<>();
+	StateFormula t = new BoolProp(true);
+	StateFormula f = new BoolProp(false);
+	
+	
 	/*
+	 * Tests are in addition to those in always
 	 * 
-	 * TODO remove notes 
+	 * Accepting in first state is covered 
 	 * 
-	 * Until should return true if it finds a path, and store the path in the linked list 
-	 * If it does not find a path, the list should be length 0.
+	 * Need to handle right hand side stuff
+	 * 
+	 * Corner cases:
+	 * only right transitions are allowed
+	 * 
+	 * Short circuit to rhs
+	 * 
+	 * 
+	 * weak until fails only if a becomes untrue before b becomes true
 	 * 
 	 */
 	
 	
 	@Test 
-	public void untilBasicTests() {	
-		
-		// true until true 
-		// should always accept (already in final state)
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(true), null, null);
-        assertTrue(pathFormula.exists(null, path));
-		assertTrue(path.size() == 1);
-		
-		// false until true 
-		// should always accept (already in final state)
-		path = new Path();
-		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(true), null, null);
-        assertTrue(pathFormula.exists(null, path));
-		assertTrue(path.size() == 1);
-		
-		
-		// false until false
-		// should always fail
-		path = new Path();
-		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(false), null, null);
-        assertFalse(pathFormula.exists(null, path));
-        assertTrue(path.size() == 0);
-
-        // TODO: True until False should pass.
+	public void shortCircuitTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		PathFormula wu = new WeakUntil(new BoolProp(false), new BoolProp(true), null, null);	
+		for (State s: m.getInitStates()) {
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);		
+			assertTrue(wu.exists(t, path));
+			assertTrue(path.size() == 1);
+			path = new Path();
+			assertTrue(wu.forAll(t, path));
+			assertTrue(path.isEmpty());			
+		}
 	}
 	
 	@Test 
-	public void untilTrueTests() throws IOException {
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new AtomicProp("q"), null, null);		
+	public void varTrueTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		PathFormula wu = new WeakUntil(new AtomicProp("p"), new AtomicProp("q"), null, null);		
 		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);		
+			assertTrue(wu.exists(t, path));
 			assertTrue(path.size() == 3);
-		}
-	}
-
-	@Test 
-	public void trueUntilFalseTest() throws IOException {
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(false), null, null);		
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 3);
+			path = new Path();
+			assertTrue(wu.forAll(t, path));
+			System.out.println(path);
+			assertTrue(path.isEmpty());			
 		}
 	}
 	
-	@Test 
-	public void untilFalseEndTest() throws IOException {
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new BoolProp(false), null, null);		
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		for (State s: m.getInitStates()) {
-            assertFalse(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 0);
-		}
-	}
+	
+	
 	
 	@Test 
-	public void untilCycleTest() throws IOException {
-
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new AtomicProp("q"), null, null);// , null, null);		
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 3);
-		}
-	}
-	
-	@Test 
-	public void untilFullyRestrainedTest() throws IOException {
+	public void noLeftActionsTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		
 		StateFormula l = new AtomicProp("p");
 		StateFormula r = new AtomicProp("q");
-		Set<String> empty = new HashSet<String>();
-
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(l, r, null, null);	
-		// as strong until
+		
+		PathFormula pathFormula = new WeakUntil(l, r, new HashSet<String>(), null);	
 		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 3);
-		}
-		path = new Path();
-		pathFormula = new WeakUntil(l, r, empty, null);	
-		/* should stop in first state 
-		 * second state is not r, so cannot be reached by right transitions
-		 * stays in first state 
-		 * no onwards transitions (empty list)
-		 */
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			// cannot make a transition
+            assertTrue(pathFormula.exists(t, path));
 			assertTrue(path.size() == 1);
-		}
-		path = new Path();
-		pathFormula = new WeakUntil(l, r, null, empty);	
-		for (State s: m.getInitStates()) {
-            assertFalse(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 0);
-		}
-		path = new Path();
-		pathFormula = new WeakUntil(l, r, empty, empty);	
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 1);
+			path = new Path();
+            assertTrue(pathFormula.forAll(t, path));
+            assertTrue(path.isEmpty());
 		}
 	}
-	
 	@Test 
 	public void untilPartiallyRestrainedTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
@@ -171,66 +121,17 @@ public class WeakUntilTests {
 		for (State s: m.getInitStates()) {
             assertTrue(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 1);
-		}path = new Path();
+		}
+		path = new Path();
 		pathFormula = new WeakUntil(l, r, leftFree, rightRestr);	
 		for (State s: m.getInitStates()) {
             assertTrue(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 2);
-		}path = new Path();
-		pathFormula = new WeakUntil(l, r, leftRestr, rightRestr);	
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path));
-			assertTrue(path.size() == 1);
-		}
-	}
-	
-	@Test
-	public void untilForAllTrueTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("q"), null, null);	
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.forAll(new TransitionTo(s), path));
-			assertTrue(path.size() == 0);
-		}
-	}
-	
-	@Test
-	public void untilForAllFalseTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("r"), null, null);	
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.forAll(new TransitionTo(s), path));
-			assertTrue(path.size() == 0);
-		}
-	}
-	
-	@Test
-	public void untilForAllAlwaysFalseTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(false), null, null);	
-		for (State s: m.getInitStates()) {
-            assertFalse(pathFormula.forAll(new TransitionTo(s), path));
-			assertTrue(path.size() == 1);
-		}
-	}
-	
-	@Test
-	public void untilForAllCycleTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		Path path = new Path();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("r"), null, null);	
-		for (State s: m.getInitStates()) {
-            assertTrue(pathFormula.forAll(new TransitionTo(s), path));
-			assertTrue(path.size() == 0);
 		}
 	}
 	
 	@Test
 	public void printTest() {
-		StateFormula f = new BoolProp(true);
 		PathFormula u = new WeakUntil(f, f, null, null);	
 		assertTrue(("(" + f + " W " + f + ")").equals(u.toString()));		
 	}
