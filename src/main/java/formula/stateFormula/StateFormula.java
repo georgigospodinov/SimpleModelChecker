@@ -18,7 +18,7 @@ public abstract class StateFormula {
      * {@link PathFormula#forAll(TransitionTo, Path, StateFormula)}.
      *
      * @param t          the {@link TransitionTo} that was made before this call
-     * @param p          path so far (before that transition)
+     * @param p          path so far (before transition t)
      * @param constraint constraint to abide to
      * @return true iff this {@link StateFormula} is valid in {@link TransitionTo#trg}
      *

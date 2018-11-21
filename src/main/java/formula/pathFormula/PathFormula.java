@@ -2,28 +2,39 @@ package formula.pathFormula;
 
 import formula.stateFormula.StateFormula;
 import model.Path;
+import model.State;
 import model.TransitionTo;
 
 public abstract class PathFormula {
 
     public abstract void writeToBuffer(StringBuilder buffer);
 
-    //    /**
-//     * Checks that at least one path exists that satisfies the formula.
-//     * The sequence of {@link State}s that make up that path are stacked in the given {@link LinkedList}.
-//     * After this method returns, you can iterate the list in descending order with {@link LinkedList#descendingIterator()}
-//     * to obtain the correct sequence of {@link State}s.
-//     * <p>
-//     * Inner calls to this method use the same {@link LinkedList} as a stack.
-//     * They push and pop {@link State}s as needed.
-//     *
-//     * @param t    the {@link State} from which this path should start
-//     * @param path the stack to which {@link State}s are pushed to make up a path that satisfies this {@link PathFormula}
-//     * @return true if there is a path, in which case the path argument contains a path
-//     * false if there isn't such a path, in which case the path argument is empty
-//     */
+    /**
+     * Checks that at least one path exists that satisfies this {@link PathFormula}.
+     * The sequence of {@link TransitionTo}s that make up that path are NOT saved.
+     * The {@link Path} argument is used internally for recursive checks.
+     * This method returns true if and only if a path exists and it abides the given constraint.
+     * The check starts at the target {@link State} of the given {@link TransitionTo}.
+     *
+     * @param t          the {@link TransitionTo} that was made before this call
+     * @param p          the {@link Path} so far (before transition t)
+     * @param constraint constraint to abide to
+     * @return true iff there is a path that satisfies this {@link PathFormula} and it abides the constraint
+     */
     public abstract boolean exists(TransitionTo t, Path p, StateFormula constraint);
 
+    /**
+     * Checks if all paths after the given {@link TransitionTo} satisfy this {@link PathFormula}.
+     * These paths all abide the constraint.
+     * The check starts at the target {@link State} of the given {@link TransitionTo}.
+     * The given {@link Path} is used to store a sequence of {@link TransitionTo}s that invalidate this {@link PathFormula}.
+     * This will happen only if the method returns false. Otherwise it returns true.
+     *
+     * @param t the {@link TransitionTo} that was made before this call
+     * @param p the {@link Path} so far (before transition t)
+     * @param constraint constraint to abide to
+     * @return true iff all paths satisfy this {@link PathFormula} and they abide the constraint
+     */
     public abstract boolean forAll(TransitionTo t, Path p, StateFormula constraint);
 
     @Override
