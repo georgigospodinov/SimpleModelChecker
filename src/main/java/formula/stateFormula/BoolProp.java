@@ -21,14 +21,7 @@ public class BoolProp extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        if (!constraint.holdsIn(t)) {
-            return false;
-        }
-        if (!value) {
-//            p.push(t);
-            return false;
-        }
-        else return true;
+        return constraint.holdsIn(t) && value;
     }
 
     @Override

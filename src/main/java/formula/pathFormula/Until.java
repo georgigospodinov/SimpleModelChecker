@@ -15,8 +15,8 @@ public class Until extends PathFormula {
 	StateFormula constraint = new BoolProp(true);
     public final StateFormula left;
     public final StateFormula right;
-    private Set<String> leftActions;
-    private Set<String> rightActions;
+    public final Set<String> leftActions;
+    public final Set<String> rightActions;
 
     public Until(StateFormula left, StateFormula right, Set<String> leftActions, Set<String> rightActions) {
         super();

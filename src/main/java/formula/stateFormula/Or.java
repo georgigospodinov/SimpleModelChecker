@@ -23,13 +23,7 @@ public class Or extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        if (!constraint.holdsIn(t)) {
-            return false;
-        }
-        if (left.isValidIn(t, p, constraint) || right.isValidIn(t, p, constraint))
-            return true;
-//        p.push(t);
-        return false;
+        return constraint.holdsIn(t) && (left.isValidIn(t, p, constraint) || right.isValidIn(t, p, constraint));
     }
 
     @Override

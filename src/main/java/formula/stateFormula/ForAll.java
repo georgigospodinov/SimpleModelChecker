@@ -26,7 +26,7 @@ public class ForAll extends StateFormula {
         buffer.append(")");
     }
 
-	@Override
+    @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
         return constraint.holdsIn(t) && pathFormula.forAll(t, p);
     }
@@ -36,14 +36,14 @@ public class ForAll extends StateFormula {
         return isValidIn(t, new Path(), new BoolProp(true));
     }
 
-	@Override
-	public boolean holdsInLeaf(TransitionTo t) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean holdsInLeaf(TransitionTo t) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public StateFormula childConstraint(TransitionTo t) {
+    @Override
+    public StateFormula childConstraint(TransitionTo t) {
         if (pathFormula instanceof Next) {
             Next n = (Next) this.pathFormula;
             if (t.isIn(n.actions))
@@ -51,32 +51,36 @@ public class ForAll extends StateFormula {
             else return FALSE;
         }
 
-        boolean validIn = false;
         if (pathFormula instanceof WeakUntil) {
-            WeakUntil weakUntil = (WeakUntil) this.pathFormula;
-            if (t.isIn(weakUntil.rightActions))
-                validIn = weakUntil.right.isValidIn(t.getTrg(), TRUE);
-
+            WeakUntil wu = (WeakUntil) this.pathFormula;
+            if ((wu.rightActions == null || t.isIn(wu.rightActions)) && wu.right.isValidIn(t.getTrg(), TRUE))
+                return TRUE;
+            if (wu.leftActions == null || t.isIn(wu.leftActions))
+                return this;
+            else return FALSE;
         }
         else if (pathFormula instanceof Until) {
-            validIn = ((Until) pathFormula).right.isValidIn(t.getTrg(), TRUE);
+            Until u = (Until) this.pathFormula;
+            if ((u.rightActions == null || t.isIn(u.rightActions)) && u.right.isValidIn(t.getTrg(), TRUE))
+                return TRUE;
+            if (u.leftActions == null || t.isIn(u.leftActions))
+                return this;
+            else return FALSE;
         }
-
-        if (validIn) return TRUE;
-        else return this;
+        throw new UnsupportedOperationException("All pathFormulas are instances of one of the three.");
         /*
-		 * Next: stateformula of pathformula 
-		 * 
-		 * 
-		 * Always: true if right.isValidin(s) else self 
-		 * Eventually: true if right.isValidin(s) else self
-		 * Until: true if right.isValidin(s) else self		 * 
-		 * Weak Until: true if right.isValidin(s) else self
-		 * 
-		 * 
-		 * 
-		 * Also need transition checks
-		 */
-	}
+         * Next: stateformula of pathformula
+         *
+         *
+         * Always: true if right.isValidin(s) else self
+         * Eventually: true if right.isValidin(s) else self
+         * Until: true if right.isValidin(s) else self		 *
+         * Weak Until: true if right.isValidin(s) else self
+         *
+         *
+         *
+         * Also need transition checks
+         */
+    }
 
 }

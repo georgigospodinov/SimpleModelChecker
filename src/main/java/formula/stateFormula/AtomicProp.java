@@ -25,7 +25,6 @@ public class AtomicProp extends StateFormula {
             if (label.equals(l))
                 return true;
         }
-//        p.push(t);
         return false;
     }
 
