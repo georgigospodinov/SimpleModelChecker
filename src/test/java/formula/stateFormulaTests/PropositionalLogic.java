@@ -13,57 +13,96 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.Not;
 import formula.stateFormula.Or;
 import formula.stateFormula.StateFormula;
-
+import model.Path;
 import model.State;
 
 public class PropositionalLogic {
 	StateFormula constraint = new BoolProp(true);
-	LinkedList<State> stateList = new LinkedList<>();
+	State s = new State();
+	BoolProp t = new BoolProp(true);
+	BoolProp f = new BoolProp(false);
 
     @Test
-    public void StateFormulaNot() {
-    	BoolProp t = new BoolProp(true);
-    	Not n = new Not(t);
-    	assertFalse(n.isValidIn(null, constraint, stateList));
+    public void notTest() {
+    	Not nt = new Not(t);
+    	Not nf = new Not(f);
+    	assertFalse(nt.isValidIn(s, constraint));
+    	assertTrue(nf.isValidIn(s, constraint));
     }
     
     @Test
-    public void StateFormulaAnd() {
-    	BoolProp t = new BoolProp(true);
-    	BoolProp f = new BoolProp(false);
-
+    public void notPathTest() {
+    	// TODO
+    	Not nt = new Not(t);
+    	Not nf = new Not(f);
+    	Path path = new Path();
+    	/*
+    	nf.isValidIn(s, constraint, path);
+    	assertTrue(path.isEmpty());
+    	nt.isValidIn(s, constraint, path);
+    	assertTrue(path.size() == 1);
+    	*/
+    }
+    
+    @Test
+    public void andTest() {
     	And ff = new And(f, f);
-    	assertFalse(ff.isValidIn(null, constraint, stateList));
+    	assertFalse(ff.isValidIn(s, constraint));
     	And ft = new And(f, t);
-    	assertFalse(ft.isValidIn(null, constraint, stateList));
+    	assertFalse(ft.isValidIn(s, constraint));
     	And tf = new And(t, f);
-    	assertFalse(tf.isValidIn(null, constraint, stateList));    	
+    	assertFalse(tf.isValidIn(s, constraint));    	
     	And tt = new And(t, t);
-    	assertTrue(tt.isValidIn(null, constraint, stateList));    	
+    	assertTrue(tt.isValidIn(s, constraint));    	
     }
     
     @Test
-    public void StateFormulaOr() {
-    	BoolProp t = new BoolProp(true);
-    	BoolProp f = new BoolProp(false);
-
-    	Or ff = new Or(f, f);
-    	assertFalse(ff.isValidIn(null, constraint, stateList));
-    	Or ft = new Or(f, t);
-    	assertTrue(ft.isValidIn(null, constraint, stateList));
-    	Or tf = new Or(t, f);
-    	assertTrue(tf.isValidIn(null, constraint, stateList));    	
-    	Or tt = new Or(t, t);
-    	assertTrue(tt.isValidIn(null, constraint, stateList));    	
+    public void andPathTest() {
+    	// TODO 	
+    	And tt = new And(t, t);
+    	And ff = new And(f, f);
+    	Path path = new Path();
+    	/*
+    	tt.isValidIn(s, constraint, path);
+    	assertTrue(path.isEmpty());
+    	ff.isValidIn(s, constraint, path);
+    	assertTrue(path.size() == 1);
+    	*/
     }
     
+    @Test
+    public void orTest() {
+    	Or ff = new Or(f, f);
+    	assertFalse(ff.isValidIn(s, constraint));
+    	Or ft = new Or(f, t);
+    	assertTrue(ft.isValidIn(s, constraint));
+    	Or tf = new Or(t, f);
+    	assertTrue(tf.isValidIn(s, constraint));    	
+    	Or tt = new Or(t, t);
+    	assertTrue(tt.isValidIn(s, constraint));    	
+    }
+    
+    @Test
+    public void orPathTest() {
+    	// TODO 	  	
+    	Or tt = new Or(t, t);
+    	Or ff = new Or(f, f);
+    	Path path = new Path();
+    	/*
+    	tt.isValidIn(s, constraint, path);
+    	assertTrue(path.isEmpty());
+    	ff.isValidIn(s, constraint, path);
+    	assertTrue(path.size() == 1);
+    	*/
+    }
     @Test 
-    public void printLogical() {
-    	BoolProp t = new BoolProp(true);
+    public void printTest() {
     	Or or = new Or(t, t);
     	And and = new And(t, t);
+    	Not not = new Not(t);
     	assertTrue(or.toString().equals("(" + t + " || " + t + ")"));
     	assertTrue(and.toString().equals("(" + t + " && " + t + ")"));
+    	assertTrue(not.toString().equals("!(" + t + ")"));
     	
     }
     

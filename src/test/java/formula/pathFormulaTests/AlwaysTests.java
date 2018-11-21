@@ -6,7 +6,10 @@ import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
+import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,148 +22,128 @@ import static org.junit.Assert.assertTrue;
 
 public class AlwaysTests {
 	LinkedList<State> stateList = new LinkedList<>();
+	StateFormula t = new BoolProp(true);
+	StateFormula f = new BoolProp(false);
 	
-	@Test
-	public void alwaysTrueCycleTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		PathFormula a = new Always(new AtomicProp("p"), null);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
-			assertTrue(path.size() == 3);
-		}
-	}
-	
-	@Test
-	public void alwaysTrueEndTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula a = new Always(new AtomicProp("p"), null);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertFalse(a.exists(s, path));
-			assertTrue(path.size() == 0);
-		}
-	}
+	/*
+	 * G _A a
+	 * Always holds if:
+	 * Only transitions from A occur and a is true in every state
+	 * 
+	 * Accepts loops.
+	 * 
+	 * Fails if and only if a transition from A leads to a state where a is false
+	 * 
+	 * Corner case: transition not in A gives state where a is false 
+	 * 
+	 */
 
 	@Test
-	public void alwaysFalseTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		PathFormula a = new Always(new BoolProp(false), null);
-		LinkedList<State> path = new LinkedList<State>();
+	public void linearVarTest() throws IOException {
+		//TODO 
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		PathFormula p = new Always(new AtomicProp("p"), null);
 		for (State s: m.getInitStates()) {
-			assertFalse(a.exists(s, path));
-			assertTrue(path.size() == 0);
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertFalse(a.exists(t, path));
+			assertTrue(path.size() == 1);
+			path = new Path();
+			assertFalse(a.forAll(t, path));
+			assertTrue(path.size() == 3);
+			*/
 		}
 	}
 	
 	@Test
-	public void alwaysNoTransitionsTest() throws IOException {
+	public void linearBoolTest() throws IOException {
+		//TODO 
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		PathFormula alwaysTrue = new Always(t, null);
+		for (State s: m.getInitStates()) {
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertTrue(alwaysTrue.exists(t, path));
+			assertTrue(path.isEmpty());
+			assertTrue(alwaysTrue.forAll(t, path));
+			assertTrue(path.isEmpty());
+			*/
+		}
+	}
+	
+	@Test
+	public void cycleVarTest() throws IOException {
+		//TODO
+		Model m = Model.parseModel("src/test/resources/ts/m2.json");
+		PathFormula a = new Always(new AtomicProp("p"), null);
+		for (State s: m.getInitStates()) {
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertTrue(a.exists(t, path));
+			assertTrue(path.isEmpty());
+			assertTrue(a.forAll(t, path));
+			assertTrue(path.isEmpty());
+			*/
+		}
+	}
+	
+
+	@Test
+	public void actionSetTest() throws IOException {
+		//TODO
+		Model m = Model.parseModel("src/test/resources/ts/m4.json");
+		HashSet<String> as = new HashSet<>();
+		as.add("act1");
+		PathFormula a = new Always(new AtomicProp("p"), as);
+		for (State s: m.getInitStates()) {
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertTrue(a.exists(t, path));
+			assertTrue(path.isEmpty());
+			assertTrue(a.forAll(t, path));
+			assertTrue(path.isEmpty());
+			*/
+		}
+	}
+	
+	@Test
+	public void noPossibleTransitions() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m0.json");
-		PathFormula a = new Always(new BoolProp(true), null);
-		LinkedList<State> path = new LinkedList<State>();
+		PathFormula a = new Always(t, null);
 		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
-			assertTrue(path.size() == 1);
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertTrue(a.exists(t, path));
+			assertTrue(path.isEmpty());
+			assertTrue(a.forAll(t, path));
+			assertTrue(path.isEmpty());
+			*/
 		}
 	}
-	
+
 	@Test
-	public void alwaysFullyRestrainedTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula a = new Always(new BoolProp(true), new HashSet<String>());
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
-			assertTrue(path.size() == 1);
-		}
-	}
-	
-	@Test
-	public void alwaysPartiallyRestrainedTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Set<String> free = new HashSet<String>();
-		free.add("act1");
-		free.add("act2");
-		Set<String> restr = new HashSet<String>();
-		restr.add("act1");
-		
-		PathFormula a = new Always(new BoolProp(true), free);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
-			assertTrue(path.size() == 3);
-		}
-		a = new Always(new BoolProp(true), restr);
-		path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.exists(s, path));
-			assertTrue(path.size() == 2);
-		}
-	}
-	
-	@Test 
-	public void alwaysForAllTrueCycleTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		PathFormula a = new Always(new BoolProp(true), null);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
-			assertTrue(path.size() == 0);
-		}
-	}
-
-	@Test 
-	public void alwaysForAllTrueEndTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula a = new Always(new BoolProp(true), null);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
-			assertTrue(path.size() == 0);
-		}
-	}
-	
-	@Test 
-	public void alwaysForAllFalseTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		PathFormula a = new Always(new AtomicProp("r"), null);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertFalse(a.forAll(s, path));
-			assertTrue(path.size() == 1);
-		}
-	}
-
-	@Test 
-	public void alwaysForAllRestrainedTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Set<String> restr = new HashSet<String>();
-		restr.add("act2");
-		PathFormula a = new Always(new AtomicProp("p"), restr);
-		LinkedList<State> path = new LinkedList<State>();
-		for (State s: m.getInitStates()) {
-			assertTrue(a.forAll(s, path));
-			assertTrue(path.size() == 0);
-		}
-	}
-
-	@Test 
-	public void alwaysForAllChainTest() throws IOException {
-		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		Set<String> restr = new HashSet<String>();
-		restr.add("act2");
+	public void existsOnlyTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m5.json");
 		PathFormula a = new Always(new AtomicProp("p"), null);
-		LinkedList<State> path = new LinkedList<State>();
 		for (State s: m.getInitStates()) {
-			assertFalse(a.forAll(s, path));
-			assertTrue(path.size() == 3);
+			Path path = new Path();
+			TransitionTo t = new TransitionTo(s);
+			/*
+			assertTrue(a.exists(t, path));
+			assertTrue(path.isEmpty());
+			assertFalse(a.forAll(t, path));
+			assertTrue(path.size() == 2);
+			*/
 		}
 	}
-	
 	@Test
 	public void printTest() {
-		StateFormula f = new BoolProp(true);
-		PathFormula a = new Always(f, null);
-		assertTrue(a.toString().equals("G" + f));		
+		PathFormula a = new Always(t, null);
+		assertTrue(a.toString().equals("G" + t));		
 	}
 }

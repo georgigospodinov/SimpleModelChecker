@@ -2,6 +2,7 @@ package formula.stateFormulaTests;
 
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
+import model.Path;
 import model.State;
 
 import org.junit.Test;
@@ -12,15 +13,32 @@ import static org.junit.Assert.assertTrue;
 import java.util.LinkedList;
 
 public class AtomicConstant {
-	StateFormula constraint = new BoolProp(true);
-	LinkedList<State> stateList = new LinkedList<>();
 	
-    @Test
-    public void StateFormulaBool() {
+	 @Test
+    public void boolTrueFalse() {
+    	StateFormula constraint = new BoolProp(true);
     	BoolProp t = new BoolProp(true);
     	BoolProp f = new BoolProp(false);
-    	assertTrue(t.isValidIn(null, constraint, stateList));
-    	assertFalse(f.isValidIn(null, constraint, stateList));
+    	assertTrue(t.isValidIn(null, constraint));
+    	assertFalse(f.isValidIn(null, constraint));
+    }
+ 
+    @Test
+    public void boolPathLength() {
+    	// TODO 
+    	// check returned path is correct length
+    	
+    	StateFormula constraint = new BoolProp(true);
+    	Path path = new Path();
+    	BoolProp t = new BoolProp(true);
+    	BoolProp f = new BoolProp(false);
+        State state = new State();
+        /*
+    	assertTrue(t.isValidIn(state, constraint, path));
+    	assertTrue(path.size() == 0);
+    	assertFalse(f.isValidIn(state, constraint, path));
+    	assertTrue(path.size() == 1);
+    	*/
     }
     
     @Test

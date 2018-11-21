@@ -3,69 +3,73 @@ package formula.stateFormulaTests;
 import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
+import model.Path;
 import model.State;
 import org.junit.Test;
-
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class Variable {
 	StateFormula constraint = new BoolProp(true);
-	LinkedList<State> stateList = new LinkedList<>();
 
 	@Test
-	public void StateFormulaVariableNone() {
-		String var = "x";
-		AtomicProp x = new AtomicProp(var);
-		
-		// no label 
+	public void varNoLabels() {
+		AtomicProp x = new AtomicProp("x");
 		State none = new State();
-		String[] empty = {};
-		none.setLabels(empty);
-        assertFalse(x.isValidIn(none, constraint));
-	
+		none.setLabels(new String[0]);
+        assertFalse(x.isValidIn(none, constraint));	
 	}
 
     @Test
-    public void StateFormulaVariableSinglelabel() {
+    public void varSingleLabel() {
         String var = "x";
+        String notVar = "y";
         AtomicProp x = new AtomicProp(var);
-        // one label, x
-        State singleTrue = new State();
-        String[] justX = {var};
-        singleTrue.setLabels(justX);
-        assertTrue(x.isValidIn(singleTrue, constraint));
-
-        // one label, not x
-        State singleFalse = new State();
-        String[] justNotX = {"y"};
-        singleFalse.setLabels(justNotX);
-        assertFalse(x.isValidIn(singleFalse, constraint));
+        AtomicProp y = new AtomicProp(notVar);
+        
+        State state = new State();
+        String[] labels = {var};
+        state.setLabels(labels);
+        assertTrue(x.isValidIn(state, constraint));
+        assertFalse(y.isValidIn(state, constraint));
     }
 
     @Test
-	public void StateFormulaVariableManyLabels() {
-		String var = "x";
+	public void varManyLabels() {
+        String var = "x";
+        String notVar = "y";
 		AtomicProp x = new AtomicProp(var);
+		AtomicProp y = new AtomicProp(notVar);
+		AtomicProp z = new AtomicProp("z");
+		
 		// many labels, inc. x 
-		State manyTrue = new State();
-		String[] withX = {"y", var};
-		manyTrue.setLabels(withX);
-        assertTrue(x.isValidIn(manyTrue, constraint));
-
-		State manyTrueRev = new State();
-		String[] withXRev = {var, "y"};
-		manyTrueRev.setLabels(withXRev);
-        assertTrue(x.isValidIn(manyTrueRev, constraint));
-		
-		
-		// many labels, not inc. x
-		State manyFalse = new State();
-		String[] withoutX = {"y", "z"};
-		manyFalse.setLabels(withoutX);
-        assertFalse(x.isValidIn(manyFalse, constraint));
+		State state = new State();
+		String[] labels = {notVar, var};
+		state.setLabels(labels);
+        assertTrue(x.isValidIn(state, constraint));
+        assertTrue(y.isValidIn(state, constraint));
+        assertFalse(z.isValidIn(state, constraint));
 	}
+    
+    @Test 
+    public void varPathTest() {
+    	// TODO
+    	String var = "x";
+        String notVar = "y";
+        AtomicProp x = new AtomicProp(var);
+        AtomicProp y = new AtomicProp(notVar);
+        
+        State state = new State();
+        String[] labels = {var};
+        state.setLabels(labels);
+        Path path = new Path();
+        /*
+        assertTrue(x.isValidIn(state, constraint, path));
+        assertTrue(path.isEmpty());
+        assertFalse(y.isValidIn(state, constraint, path));
+        assertTrue(path.size() == 1);
+        */
+    }
 
 }
