@@ -15,7 +15,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -46,30 +45,27 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
-			/*
-			assertFalse(a.exists(t, path));
+			assertFalse(p.exists(t, path));
 			assertTrue(path.size() == 1);
 			path = new Path();
-			assertFalse(a.forAll(t, path));
+			assertFalse(p.forAll(t, path));
+			System.out.println(path.size());
 			assertTrue(path.size() == 3);
-			*/
 		}
 	}
 	
 	@Test
 	public void linearBoolTest() throws IOException {
-		//TODO 
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		PathFormula alwaysTrue = new Always(t, null);
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
-			TransitionTo t = new TransitionTo(s);
-			/*
+			TransitionTo t = new TransitionTo(s);			
 			assertTrue(alwaysTrue.exists(t, path));
-			assertTrue(path.isEmpty());
+			assertTrue(path.size() == 3);
+			path = new Path();
 			assertTrue(alwaysTrue.forAll(t, path));
-			assertTrue(path.isEmpty());
-			*/
+			assertTrue(path.isEmpty());			
 		}
 	}
 	
@@ -81,12 +77,10 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
-			/*
 			assertTrue(a.exists(t, path));
-			assertTrue(path.isEmpty());
+			assertTrue(path.size() == 3);
 			assertTrue(a.forAll(t, path));
 			assertTrue(path.isEmpty());
-			*/
 		}
 	}
 	
@@ -101,12 +95,11 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
-			/*
 			assertTrue(a.exists(t, path));
-			assertTrue(path.isEmpty());
+			assertTrue(path.size() == 2);
+			path = new Path();
 			assertTrue(a.forAll(t, path));
 			assertTrue(path.isEmpty());
-			*/
 		}
 	}
 	
@@ -117,12 +110,10 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
-			/*
 			assertTrue(a.exists(t, path));
 			assertTrue(path.isEmpty());
 			assertTrue(a.forAll(t, path));
 			assertTrue(path.isEmpty());
-			*/
 		}
 	}
 
@@ -133,12 +124,10 @@ public class AlwaysTests {
 		for (State s: m.getInitStates()) {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
-			/*
 			assertTrue(a.exists(t, path));
 			assertTrue(path.isEmpty());
 			assertFalse(a.forAll(t, path));
 			assertTrue(path.size() == 2);
-			*/
 		}
 	}
 	@Test
