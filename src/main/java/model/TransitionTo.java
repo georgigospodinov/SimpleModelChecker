@@ -21,6 +21,10 @@ public class TransitionTo {
         return trg;
     }
 
+    public String[] getActions() {
+        return actions;
+    }
+
     public boolean isIn(Set<String> acts) {
         if (actions == null)
             return false;

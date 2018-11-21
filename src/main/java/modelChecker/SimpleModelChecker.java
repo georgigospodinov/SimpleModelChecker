@@ -6,8 +6,6 @@ import model.Path;
 import model.State;
 import model.TransitionTo;
 
-import java.util.LinkedList;
-
 public class SimpleModelChecker implements ModelChecker {
 
     @Override
@@ -15,16 +13,13 @@ public class SimpleModelChecker implements ModelChecker {
         // TODO: must satisfy constraint
         System.out.println(query);
 
-    	LinkedList<State> stateList = new LinkedList<>();
         // check true for all init states
         for (State initState : model.getInitStates()) {
             TransitionTo t = new TransitionTo(initState);
-            if (!query.isValidIn(t, new Path(), constraint))
+            Path p = new Path();
+            if (!query.isValidIn(t, p, constraint))
                 return false;
-        }
-
-        for (State state : stateList) {
-            System.out.println(state);
+            System.out.println(p.getSequence());
         }
 
         return true;
