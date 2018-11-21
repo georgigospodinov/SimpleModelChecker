@@ -7,7 +7,6 @@ import model.Path;
 import model.State;
 import model.TransitionTo;
 
-import java.util.LinkedList;
 import java.util.Set;
 
 public class Next extends PathFormula {
@@ -28,22 +27,6 @@ public class Next extends PathFormula {
     }
 
     @Override
-    public boolean exists(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath) {
-        for (TransitionTo tran : t.getTrg().getTransitions()) {
-            if (actions == null || tran.isIn(actions)) {
-                LinkedList<State> fullPath = new LinkedList<>();
-                fullPath.addAll(path);
-                fullPath.addAll(basePath);
-                if (stateFormula.isValidIn(tran, constraint, fullPath)) {
-                    path.push(tran.getTrg());
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean exists(TransitionTo t, Path p) {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
@@ -56,27 +39,6 @@ public class Next extends PathFormula {
         }
 
         return false;
-    }
-
-    @Override
-    public boolean forAll(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath) {
-        if (actions != null && actions.isEmpty())
-            return false;
-        int paths = 0;
-        for (TransitionTo tran : t.getTrg().getTransitions()) {
-            if (actions == null || tran.isIn(actions)) {
-                paths++;
-                LinkedList<State> fullPath = new LinkedList<>();
-                fullPath.addAll(path);
-                fullPath.addAll(basePath);
-                if (!stateFormula.isValidIn(tran, constraint, fullPath)) {
-                    path.push(tran.getTrg());
-                    return false;
-                }
-            }
-        }
-        // We need at least one valid path
-        return paths > 0;
     }
 
     @Override

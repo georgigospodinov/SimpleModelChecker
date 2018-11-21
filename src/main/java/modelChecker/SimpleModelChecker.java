@@ -2,6 +2,7 @@ package modelChecker;
 
 import formula.stateFormula.StateFormula;
 import model.Model;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -18,7 +19,7 @@ public class SimpleModelChecker implements ModelChecker {
         // check true for all init states
         for (State initState : model.getInitStates()) {
             TransitionTo t = new TransitionTo(initState);
-            if (!query.isValidIn(t, constraint, stateList))
+            if (!query.isValidIn(t, new Path(), constraint))
                 return false;
         }
 

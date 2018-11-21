@@ -1,10 +1,7 @@
 package formula.stateFormula;
 
 import model.Path;
-import model.State;
 import model.TransitionTo;
-
-import java.util.LinkedList;
 
 public class AtomicProp extends StateFormula {
     public final String label;
@@ -16,18 +13,6 @@ public class AtomicProp extends StateFormula {
     @Override
     public void writeToBuffer(StringBuilder buffer) {
         buffer.append(" " + label + " ");
-    }
-
-    @Override
-    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
-        if (!constraint.holdsIn(t))
-    		return false;
-        String[] labels = t.getTrg().getLabel();
-        for (String l : labels) {
-            if (label.equals(l)) 
-                return true;
-        }        
-        return false;
     }
 
     @Override
@@ -46,7 +31,7 @@ public class AtomicProp extends StateFormula {
 
     @Override
     public boolean holdsIn(TransitionTo t) {
-        return isValidIn(t, new BoolProp(true), new LinkedList<State>());
+        return isValidIn(t, new Path(), new BoolProp(true));
 	}
 
 	@Override

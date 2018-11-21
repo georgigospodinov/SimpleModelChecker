@@ -4,13 +4,10 @@ import model.Path;
 import model.State;
 import model.TransitionTo;
 
-import java.util.LinkedList;
-
 public abstract class StateFormula {
     public abstract void writeToBuffer(StringBuilder buffer);
 
     // formula is true and does not breach the constraint
-    public abstract boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path);
 
 //    protected boolean isValidInInternal(TransitionTo t, Path p) {
 //        throw new UnsupportedOperationException("Not yet implemented!");

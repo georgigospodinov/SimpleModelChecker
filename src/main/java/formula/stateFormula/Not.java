@@ -2,10 +2,7 @@ package formula.stateFormula;
 
 import formula.FormulaParser;
 import model.Path;
-import model.State;
 import model.TransitionTo;
-
-import java.util.LinkedList;
 
 public class Not extends StateFormula {
     public final StateFormula stateFormula;
@@ -23,11 +20,6 @@ public class Not extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
-        return constraint.holdsIn(t) && !stateFormula.isValidIn(t, constraint, path);
-    }
-
-    @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
         if (!constraint.holdsIn(t)) {
             return false;
@@ -41,7 +33,7 @@ public class Not extends StateFormula {
 
     @Override
     public boolean holdsIn(TransitionTo t) {
-        return isValidIn(t, new BoolProp(true), new LinkedList<State>());
+        return isValidIn(t, new Path(), new BoolProp(true));
     }
 
     @Override

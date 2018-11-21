@@ -3,11 +3,7 @@ package formula.stateFormula;
 import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
 import model.Path;
-import model.State;
 import model.TransitionTo;
-
-import java.util.Iterator;
-import java.util.LinkedList;
 
 public class ForAll extends StateFormula {
     public final PathFormula pathFormula;
@@ -24,33 +20,14 @@ public class ForAll extends StateFormula {
         buffer.append(")");
     }
 
-    @Override
-	public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> basePath) {
-		if (!constraint.holdsIn(t))
-    		return false;
-    	LinkedList<State> path = new LinkedList<>();
-		boolean b = pathFormula.forAll(t, path, basePath);
-        Iterator<State> i = path.descendingIterator();
-        System.out.println("Path: ");
-        while (i.hasNext())
-            System.out.println(i.next());
-        System.out.println("---");
-        path.addAll(basePath);
-        while (!basePath.isEmpty())
-        	basePath.removeAll(path);
-        basePath.addAll(path);
-        return b;
-    }
-
 	@Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
         return constraint.holdsIn(t) && pathFormula.forAll(t, p);
-
     }
 
     @Override
     public boolean holdsIn(TransitionTo t) {
-        return isValidIn(t, new BoolProp(true), new LinkedList<State>());
+        return isValidIn(t, new Path(), new BoolProp(true));
     }
 
 	@Override

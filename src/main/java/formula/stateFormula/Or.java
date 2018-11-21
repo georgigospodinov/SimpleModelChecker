@@ -1,10 +1,7 @@
 package formula.stateFormula;
 
 import model.Path;
-import model.State;
 import model.TransitionTo;
-
-import java.util.LinkedList;
 
 public class Or extends StateFormula {
     public final StateFormula left;
@@ -22,11 +19,6 @@ public class Or extends StateFormula {
         buffer.append(" || ");
         right.writeToBuffer(buffer);
         buffer.append(")");
-    }
-
-    @Override
-    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
-        return constraint.holdsIn(t) && (left.isValidIn(t, constraint, path) || right.isValidIn(t, constraint, path));
     }
 
     @Override

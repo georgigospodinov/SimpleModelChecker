@@ -1,10 +1,7 @@
 package formula.stateFormula;
 
 import model.Path;
-import model.State;
 import model.TransitionTo;
-
-import java.util.LinkedList;
 
 public class BoolProp extends StateFormula {
     public final boolean value;
@@ -17,11 +14,6 @@ public class BoolProp extends StateFormula {
     public void writeToBuffer(StringBuilder buffer) {
         String stringValue = (value) ? "True" : "False";
         buffer.append(" " + stringValue + " ");
-    }
-
-    @Override
-    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
-        return constraint.holdsInLeaf(t) && value;
     }
 
     @Override
