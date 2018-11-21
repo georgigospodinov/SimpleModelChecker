@@ -4,6 +4,9 @@ import model.Path;
 import model.TransitionTo;
 
 public class BoolProp extends StateFormula {
+    public static final BoolProp TRUE = new BoolProp(true);
+    public static final BoolProp FALSE = new BoolProp(false);
+
     public final boolean value;
 
     public BoolProp(boolean value) {
@@ -22,7 +25,7 @@ public class BoolProp extends StateFormula {
             return false;
         }
         if (!value) {
-            p.push(t);
+//            p.push(t);
             return false;
         }
         else return true;

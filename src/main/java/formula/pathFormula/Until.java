@@ -79,7 +79,6 @@ public class Until extends PathFormula {
     public boolean forAll(TransitionTo t, Path p) {
         // Loop detection
         if (p.contains(t)) {
-            p.push(t);
             return false;
         }
 
@@ -87,10 +86,10 @@ public class Until extends PathFormula {
             return true;
         }
 
-        if (left.isValidIn(t, p, constraint)) {
+        p.push(t);
+        if (!left.isValidIn(t, p, constraint)) {
             return false;
         }
-        p.push(t);
 
         int passing = 0;
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();

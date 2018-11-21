@@ -9,7 +9,6 @@ import model.Model;
 import model.Path;
 import model.State;
 import model.TransitionTo;
-
 import org.junit.Test;
 
 import java.io.IOException;
@@ -46,7 +45,8 @@ public class AlwaysTests {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
 			assertFalse(p.exists(t, path));
-			assertTrue(path.size() == 1);
+			System.out.println(path);
+			assertTrue(path.size() == 0);
 			path = new Path();
 			assertFalse(p.forAll(t, path));
 			System.out.println(path.size());

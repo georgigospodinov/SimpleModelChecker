@@ -13,7 +13,7 @@ public class Next extends PathFormula {
     //TODO replace
     StateFormula constraint = new BoolProp(true);
     public final StateFormula stateFormula;
-    private Set<String> actions;
+    public final Set<String> actions;
 
     public Next(StateFormula stateFormula, Set<String> actions) {
         this.stateFormula = stateFormula;

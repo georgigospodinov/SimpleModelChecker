@@ -28,7 +28,7 @@ public class Or extends StateFormula {
         }
         if (left.isValidIn(t, p, constraint) || right.isValidIn(t, p, constraint))
             return true;
-        p.push(t);
+//        p.push(t);
         return false;
     }
 

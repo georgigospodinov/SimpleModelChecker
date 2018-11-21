@@ -25,7 +25,7 @@ public class Not extends StateFormula {
             return false;
         }
         if (stateFormula.isValidIn(t, p, constraint)) {
-            p.push(t);
+//            p.push(t);
             return false;
         }
         return true;

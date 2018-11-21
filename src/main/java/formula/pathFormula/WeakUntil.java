@@ -11,13 +11,13 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class WeakUntil extends PathFormula {
-	//TODO replace 
-	StateFormula constraint = new BoolProp(true);
-	
+    //TODO replace
+    StateFormula constraint = new BoolProp(true);
+
     public final StateFormula left;
     public final StateFormula right;
-    private Set<String> leftActions;
-    private Set<String> rightActions;
+    public final Set<String> leftActions;
+    public final Set<String> rightActions;
 
     public WeakUntil(StateFormula left, StateFormula right, Set<String> leftActions, Set<String> rightActions) {
         super();
@@ -98,10 +98,10 @@ public class WeakUntil extends PathFormula {
         if (rightActions == null && right.isValidIn(t, p, constraint))
             return true;
 
+        p.push(t);
         if (!left.isValidIn(t, p, constraint)) {
             return false;
         }
-        p.push(t);
 
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         State current = t.getTrg();
