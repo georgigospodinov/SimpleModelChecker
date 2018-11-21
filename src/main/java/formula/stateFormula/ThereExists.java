@@ -2,6 +2,7 @@ package formula.stateFormula;
 
 import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -42,7 +43,24 @@ public class ThereExists extends StateFormula {
         return exists;
     }
 
-	@Override
+    @Override
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t))
+            return false;
+
+        int len = p.size();
+        System.out.println("before exists call: " + len + " " + p);
+        boolean exists = pathFormula.exists(t, p);
+        System.out.println(exists);
+        System.out.println("after exists call: " + p.size() + " " + p);
+
+        // The path will have increased if the exists holds.
+        boolean b = len < p.size();
+        System.out.println("b = " + b);
+        return b;
+    }
+
+    @Override
     public boolean holdsIn(TransitionTo t) {
         return isValidIn(t, new BoolProp(true), new LinkedList<State>());
 	}

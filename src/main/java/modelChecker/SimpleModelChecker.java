@@ -22,6 +22,10 @@ public class SimpleModelChecker implements ModelChecker {
                 return false;
         }
 
+        for (State state : stateList) {
+            System.out.println(state);
+        }
+
         return true;
     }
 

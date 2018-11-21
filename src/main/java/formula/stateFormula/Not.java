@@ -1,6 +1,7 @@
 package formula.stateFormula;
 
 import formula.FormulaParser;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -24,6 +25,18 @@ public class Not extends StateFormula {
     @Override
     public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
         return constraint.holdsIn(t) && !stateFormula.isValidIn(t, constraint, path);
+    }
+
+    @Override
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t)) {
+            return false;
+        }
+        if (stateFormula.isValidIn(t, p, constraint)) {
+            p.push(t);
+            return false;
+        }
+        return true;
     }
 
     @Override

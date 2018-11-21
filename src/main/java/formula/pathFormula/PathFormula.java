@@ -38,7 +38,7 @@ public abstract class PathFormula {
      * Inner calls to this method use the same {@link LinkedList} as a stack.
      * They push and pop {@link State}s as needed.
      *
-     * @param s    the {@link State} from which this path should start
+     * @param t    the {@link State} from which this path should start
      * @param path the stack to which {@link State}s are pushed to make up a path that satisfies this {@link PathFormula}
      * @return true if there is a path, in which case the path argument contains a path
      * false if there isn't such a path, in which case the path argument is empty
@@ -51,16 +51,21 @@ public abstract class PathFormula {
 
     public boolean exists(State s, LinkedList<State> path) {
         TransitionTo t = new TransitionTo(s);
-        return exists(t, path, new LinkedList<State>());
+        boolean exists = exists(t, path, new LinkedList<State>());
+
+        return exists;
     }
 
-    public void exists(TransitionTo t, Path p) {
+    public boolean exists(TransitionTo t, Path p) {
+        return false;
     }
 
     public Path exists(State s) {
         Path p = new Path();
         TransitionTo t = new TransitionTo(s);
-        exists(t, p);
+        boolean exists = exists(t, p);
+        if (!exists)
+            p.pop();
         return p;
     }
 
@@ -71,7 +76,8 @@ public abstract class PathFormula {
         return forAll(t, path, new LinkedList<State>());
     }
 
-    public void forAll(TransitionTo t, Path p) {
+    public boolean forAll(TransitionTo t, Path p) {
+        return false;
     }
 
     public Path forAll(State s) {

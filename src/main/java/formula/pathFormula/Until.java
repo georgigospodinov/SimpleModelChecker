@@ -3,6 +3,7 @@ package formula.pathFormula;
 import formula.FormulaParser;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -77,6 +78,46 @@ public class Until extends PathFormula {
     }
 
     @Override
+    public boolean exists(TransitionTo t, Path p) {
+        if (rightActions != null && rightActions.size() == 0) // no acceptable path
+            return false;
+
+        if (p.contains(t))
+            return false;
+
+        if (rightActions == null && right.isValidIn(t, p, constraint)) {
+            p.push(t);
+            return true;
+        }
+
+        if (!left.isValidIn(t, p, constraint)) {
+            return false;
+        }
+
+        p.push(t);
+
+        State current = t.getTrg();
+        for (TransitionTo transition : current.getTransitions()) {
+            if (rightActions == null || transition.isIn(rightActions)) {
+                if (right.isValidIn(transition, p, constraint)) {
+                    p.push(transition);
+                    return true;
+                }
+            }
+        }
+
+        for (TransitionTo transition : current.getTransitions()) {
+            if (leftActions == null || transition.isIn(leftActions)) {
+                if (exists(transition, p))
+                    return true;
+            }
+        }
+
+        p.pop();
+        return false;
+    }
+
+    @Override
     public boolean forAll(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
         State s = t.getTrg();
@@ -132,4 +173,50 @@ public class Until extends PathFormula {
 
     }
 
+    @Override
+    public boolean forAll(TransitionTo t, Path p) {
+        // Loop detection
+        if (p.contains(t)) {
+            p.push(t);
+            return false;
+        }
+
+        if (rightActions == null && right.isValidIn(t, p, constraint)) {
+            return true;
+        }
+
+        p.push(t);
+        if (left.isValidIn(t, p, constraint)) {
+            return false;
+        }
+
+        int passing = 0;
+        LinkedList<TransitionTo> checkLeft = new LinkedList<>();
+        State current = t.getTrg();
+        for (TransitionTo transition : current.getTransitions()) {
+            if (rightActions == null || transition.isIn(rightActions)) {
+                if (!right.isValidIn(transition, p, constraint)) {
+                    checkLeft.push(transition);
+                }
+                else passing++;
+            }
+            else checkLeft.push(transition);
+        }
+
+        for (TransitionTo transition : checkLeft) {
+            if (leftActions == null || transition.isIn(leftActions)) {
+                if (!forAll(transition, p)) {
+                    return false;
+                }
+                passing++;
+            }
+        }
+
+        if (passing > 0) {
+            p.pop();
+            return true;
+        }
+        //no passing paths, Strong until fails.
+        else return false;
+    }
 }

@@ -1,5 +1,6 @@
 package formula.stateFormula;
 
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -19,26 +20,35 @@ public class BoolProp extends StateFormula {
     }
 
     @Override
-	public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
-		if (constraint.holdsInLeaf(t))
-    		return value;
-    	else
-    		return false;
+    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
+        return constraint.holdsInLeaf(t) && value;
     }
 
-	@Override
-	public boolean holdsIn(TransitionTo t) {
-		return value;
-	}
+    @Override
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t)) {
+            return false;
+        }
+        if (!value) {
+            p.push(t);
+            return false;
+        }
+        else return true;
+    }
 
-	@Override
-	public boolean holdsInLeaf(TransitionTo t) {
-		return value;
-	}
+    @Override
+    public boolean holdsIn(TransitionTo t) {
+        return value;
+    }
 
-	@Override
-	public StateFormula childConstraint(TransitionTo t) {
-		return this;
-	}
+    @Override
+    public boolean holdsInLeaf(TransitionTo t) {
+        return value;
+    }
+
+    @Override
+    public StateFormula childConstraint(TransitionTo t) {
+        return this;
+    }
 
 }

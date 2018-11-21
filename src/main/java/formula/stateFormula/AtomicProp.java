@@ -1,5 +1,6 @@
 package formula.stateFormula;
 
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -29,7 +30,21 @@ public class AtomicProp extends StateFormula {
         return false;
     }
 
-	@Override
+    @Override
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t)) {
+            return false;
+        }
+        String[] labels = t.getTrg().getLabel();
+        for (String l : labels) {
+            if (label.equals(l))
+                return true;
+        }
+        p.push(t);
+        return false;
+    }
+
+    @Override
     public boolean holdsIn(TransitionTo t) {
         return isValidIn(t, new BoolProp(true), new LinkedList<State>());
 	}

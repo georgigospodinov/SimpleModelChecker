@@ -1,5 +1,6 @@
 package formula.stateFormula;
 
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -28,7 +29,19 @@ public class And extends StateFormula {
         return constraint.holdsIn(t) && left.isValidIn(t, constraint, path) && right.isValidIn(t, constraint, path);
     }
 
-	@Override
+    @Override
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t)) {
+            return false;
+        }
+
+        if (left.isValidIn(t, p, constraint) && right.isValidIn(t, p, constraint))
+            return true;
+        p.push(t);
+        return false;
+    }
+
+    @Override
     public boolean holdsIn(TransitionTo t) {
         return left.holdsIn(t) && right.holdsIn(t);
     }

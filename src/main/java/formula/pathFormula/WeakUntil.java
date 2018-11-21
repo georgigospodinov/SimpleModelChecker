@@ -3,6 +3,7 @@ package formula.pathFormula;
 import formula.FormulaParser;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -103,6 +104,60 @@ public class WeakUntil extends PathFormula {
     }
 
     @Override
+    public boolean exists(TransitionTo t, Path p) {
+        if (p.contains(t)) {
+            p.push(t);
+            return true;
+        }
+
+        if (rightActions == null && right.isValidIn(t, p, constraint)) {
+            p.push(t);
+            return true;
+        }
+
+        if (!left.isValidIn(t, p, constraint))
+            return false;
+
+        p.push(t);
+        State current = t.getTrg();
+        for (TransitionTo transition : current.getTransitions()) {
+            if (rightActions == null || transition.isIn(rightActions)) {
+                if (right.isValidIn(transition, p, constraint)) {
+                    p.push(transition);
+                    return true;
+                }
+            }
+        }
+
+        int onwards = 0;
+        for (TransitionTo transition : current.getTransitions()) {
+            if (leftActions == null || transition.isIn(leftActions)) {
+                onwards++;
+                if (exists(transition, p))
+                    return true;
+            }
+        }
+
+        // cannot step to end state
+        // did not find an onwards path
+        // if this is a dead end, accept
+        /*
+         * Dead end:
+         * 	No transitions
+         * 	No allowed left transitions
+         */
+
+        //onwards: number of transitions from s in leftActions
+        if (onwards == 0) // || (leftActions != null && leftActions.isEmpty()) ||s.getTransitions().isEmpty())
+            //dead end
+            return true;
+        else {
+            p.pop();
+            return false;
+        }
+    }
+
+    @Override
     public boolean forAll(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
         State s = t.getTrg();
@@ -128,7 +183,6 @@ public class WeakUntil extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         for (TransitionTo tran : s.getTransitions()) {
             if (rightActions == null || tran.isIn(rightActions)) {
-                // TODO: GREGOR!!! Check that this looks/works as expected.
                 if (!right.isValidIn(tran, constraint, fullPath)) {
                     checkLeft.push(tran);
                     fullPath = new LinkedList<State>();
@@ -153,4 +207,40 @@ public class WeakUntil extends PathFormula {
         return true;
     }
 
+    @Override
+    public boolean forAll(TransitionTo t, Path p) {
+        if (p.contains(t)) {
+            return true;
+        }
+
+        if (rightActions == null && right.isValidIn(t, p, constraint))
+            return true;
+
+        p.push(t);
+        if (!left.isValidIn(t, p, constraint)) {
+            return false;
+        }
+
+        LinkedList<TransitionTo> checkLeft = new LinkedList<>();
+        State current = t.getTrg();
+        for (TransitionTo transition : current.getTransitions()) {
+            if (rightActions == null || transition.isIn(rightActions)) {
+                if (!right.isValidIn(transition, p, constraint)) {
+                    checkLeft.push(transition);
+                }
+            }
+            else checkLeft.push(transition);
+        }
+
+        for (TransitionTo transition : checkLeft) {
+            if (leftActions == null || transition.isIn(leftActions)) {
+                if (!forAll(transition, p)) {
+                    return false;
+                }
+            }
+        }
+
+        p.pop();
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
 package formula.stateFormula;
 
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -11,9 +12,25 @@ public abstract class StateFormula {
     // formula is true and does not breach the constraint
     public abstract boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path);
 
+//    protected boolean isValidInInternal(TransitionTo t, Path p) {
+//        throw new UnsupportedOperationException("Not yet implemented!");
+//    }
+//
+
+    /**
+     * TODO
+     * On fail, add the given transition t to Path p.
+     *
+     * @param t          transition just made
+     * @param p          path so far (before that transition)
+     * @param constraint constraint to check
+     * @return true if all ok else false
+     */
+    public abstract boolean isValidIn(TransitionTo t, Path p, StateFormula constraint);
+
     public boolean isValidIn(State s, StateFormula constraint) {
         TransitionTo t = new TransitionTo(s);
-        return isValidIn(t, constraint, new LinkedList<State>());
+        return isValidIn(t, new Path(), constraint);
     }
 
     // constraint is satisfied in this state
@@ -34,7 +51,5 @@ public abstract class StateFormula {
         writeToBuffer(buffer);
         return buffer.toString();
     }
-    
-    
 
 }

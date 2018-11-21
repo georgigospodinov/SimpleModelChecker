@@ -2,6 +2,7 @@ package formula.stateFormula;
 
 import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -42,9 +43,21 @@ public class ForAll extends StateFormula {
     }
 
 	@Override
-	public boolean holdsIn(TransitionTo t) {
-		return isValidIn(t, new BoolProp(true), new LinkedList<State>());
-	}
+    public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
+        if (!constraint.holdsIn(t))
+            return false;
+
+        int len = p.size();
+        pathFormula.forAll(t, p);
+
+        // The path will remain the same if the forAll holds.
+        return len == p.size();
+    }
+
+    @Override
+    public boolean holdsIn(TransitionTo t) {
+        return isValidIn(t, new BoolProp(true), new LinkedList<State>());
+    }
 
 	@Override
 	public boolean holdsInLeaf(TransitionTo t) {

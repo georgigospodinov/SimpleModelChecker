@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Path implements Iterable<TransitionTo> {
+    public static final boolean DEBUGGING = true;
+
     private LinkedList<TransitionTo> list = new LinkedList<>();
     private HashSet<TransitionTo> set = new HashSet<>();
 
@@ -20,16 +22,17 @@ public class Path implements Iterable<TransitionTo> {
         return set.contains(t);
     }
 
-    public boolean push(TransitionTo t) {
-        if (!set.add(t))
-            return false;
-
+    public void push(TransitionTo t) {
+        if (DEBUGGING)
+            System.out.println("Pushing " + t);
         list.addLast(t);
-        return true;
+        set.add(t);
     }
 
     public TransitionTo pop() {
         TransitionTo t = list.removeLast();
+        if (DEBUGGING)
+            System.out.println("Popping  " + t);
         set.remove(t);
         return t;
     }
@@ -37,5 +40,10 @@ public class Path implements Iterable<TransitionTo> {
     @Override
     public Iterator<TransitionTo> iterator() {
         return list.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }
