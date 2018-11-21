@@ -24,7 +24,7 @@ public class ThereExists extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        return constraint.holdsIn(t) && pathFormula.exists(t, p, TRUE);
+        return constraint.holdsIn(t) && pathFormula.exists(t, new Path(), TRUE);
     }
 
     @Override

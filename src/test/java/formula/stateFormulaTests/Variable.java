@@ -5,6 +5,8 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -54,7 +56,6 @@ public class Variable {
 
     @Test
     public void varPathTest() {
-        // TODO
         String var = "x";
         String notVar = "y";
         AtomicProp x = new AtomicProp(var);
@@ -64,12 +65,10 @@ public class Variable {
         String[] labels = {var};
         state.setLabels(labels);
         Path path = new Path();
-        /*
-        assertTrue(x.isValidIn(state, constraint, path));
-        assertTrue(path.isEmpty());
-        assertFalse(y.isValidIn(state, constraint, path));
-        assertTrue(path.size() == 1);
-        */
+        assertTrue(x.isValidIn(new TransitionTo(state), path, constraint));
+    	assertTrue(path.isEmpty());
+        assertFalse(y.isValidIn(new TransitionTo(state), path, constraint));
+    	assertTrue(path.isEmpty());
     }
 
 }

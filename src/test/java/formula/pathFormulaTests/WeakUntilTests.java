@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Set;
 
 import static formula.stateFormula.BoolProp.TRUE;
 import static org.junit.Assert.assertTrue;
@@ -21,25 +20,6 @@ import static org.junit.Assert.assertTrue;
 public class WeakUntilTests {
     StateFormula t = new BoolProp(true);
     StateFormula f = new BoolProp(false);
-
-
-    /*
-     * Tests are in addition to those in always
-     *
-     * Accepting in first state is covered
-     *
-     * Need to handle right hand side stuff
-     *
-     * Corner cases:
-     * only right transitions are allowed
-     *
-     * Short circuit to rhs
-     *
-     *
-     * weak until fails only if a becomes untrue before b becomes true
-     *
-     */
-
 
     @Test
     public void shortCircuitTest() throws IOException {
@@ -72,7 +52,6 @@ public class WeakUntilTests {
         }
     }
 
-
     @Test
     public void noLeftActionsTest() throws IOException {
         Model m = Model.parseModel("src/test/resources/ts/m1.json");
@@ -89,41 +68,6 @@ public class WeakUntilTests {
             path = new Path();
             assertTrue(pathFormula.forAll(t, path, TRUE));
             assertTrue(path.isEmpty());
-        }
-    }
-
-    @Test
-    public void untilPartiallyRestrainedTest() throws IOException {
-        Model m = Model.parseModel("src/test/resources/ts/m1.json");
-
-        StateFormula l = new AtomicProp("p");
-        StateFormula r = new AtomicProp("q");
-        Set<String> leftFree = new HashSet<String>();
-        leftFree.add("act1");
-        Set<String> rightFree = new HashSet<String>();
-        rightFree.add("act2");
-        Set<String> leftRestr = new HashSet<String>();
-        leftRestr.add("act2");
-        Set<String> rightRestr = new HashSet<String>();
-        rightRestr.add("act1");
-
-        Path path = new Path();
-        PathFormula pathFormula = new WeakUntil(l, r, leftFree, rightFree);
-        for (State s : m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path, TRUE));
-            assertTrue(path.size() == 3);
-        }
-        path = new Path();
-        pathFormula = new WeakUntil(l, r, leftRestr, rightFree);
-        for (State s : m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path, TRUE));
-            assertTrue(path.size() == 1);
-        }
-        path = new Path();
-        pathFormula = new WeakUntil(l, r, leftFree, rightRestr);
-        for (State s : m.getInitStates()) {
-            assertTrue(pathFormula.exists(new TransitionTo(s), path, TRUE));
-            assertTrue(path.size() == 2);
         }
     }
 

@@ -11,6 +11,8 @@ import formula.stateFormula.ThereExists;
 import model.Model;
 import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,18 +45,17 @@ public class PathQualifiers {
 
 	@Test
 	public void existsPathTests() throws IOException {
-		// TODO
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		StateFormula et = FormulaParser.parseRawFormulaString("E X TRUE");
 		StateFormula ef = FormulaParser.parseRawFormulaString("E X FALSE");
 		Path path = new Path();
 		for (State s : m.getInitStates()) {
-			/*
-			et.isValidIn(s, constraint, path);
+			TransitionTo t = new TransitionTo(s);
+			et.isValidIn(t, path, constraint);
 			assertTrue(path.isEmpty());
-			ef.isValidIn(s, constraint, path);
-			assertTrue(path.size() == 1);
-			*/
+			path = new Path();
+			ef.isValidIn(t, path, constraint);
+			assertTrue(path.isEmpty());
 		}
 	}
 
@@ -71,19 +72,18 @@ public class PathQualifiers {
 
 	@Test
 	public void forAllPathTests() throws IOException {
-		// TODO
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		StateFormula at = FormulaParser.parseRawFormulaString("A X TRUE");
 		StateFormula af = FormulaParser.parseRawFormulaString("A X FALSE");
 		Path path = new Path();
 		for (State s : m.getInitStates()) {
-			/*
-			at.isValidIn(s, constraint, path);
+			TransitionTo t = new TransitionTo(s);
+			at.isValidIn(t, path, constraint);
 			assertTrue(path.isEmpty());
-			af.isValidIn(s, constraint, path);
-			// TODO  is this correct?
+			path = new Path();
+			af.isValidIn(t, path, constraint);
+			System.out.println(path);
 			assertTrue(path.size() == 2);
-			*/
 		}
 	}
 

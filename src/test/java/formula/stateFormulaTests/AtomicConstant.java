@@ -4,6 +4,8 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -22,20 +24,15 @@ public class AtomicConstant {
 
     @Test
     public void boolPathLength() {
-        // TODO
-        // check returned path is correct length
-
         StateFormula constraint = new BoolProp(true);
         Path path = new Path();
         BoolProp t = new BoolProp(true);
         BoolProp f = new BoolProp(false);
-        State state = new State();
-        /*
-    	assertTrue(t.isValidIn(state, constraint, path));
-    	assertTrue(path.size() == 0);
-    	assertFalse(f.isValidIn(state, constraint, path));
-    	assertTrue(path.size() == 1);
-    	*/
+        TransitionTo tran = new TransitionTo(new State());        
+    	assertTrue(t.isValidIn(tran, path, constraint));
+    	assertTrue(path.isEmpty());
+    	assertFalse(f.isValidIn(tran, path, constraint));
+    	assertTrue(path.isEmpty());
     }
 
     @Test

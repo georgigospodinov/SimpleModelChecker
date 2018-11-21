@@ -28,7 +28,16 @@ public class ForAll extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        return constraint.holdsIn(t) && pathFormula.forAll(t, p, TRUE);
+        //return constraint.holdsIn(t) && pathFormula.forAll(t, p, TRUE);
+        if (!constraint.holdsIn(t))
+        	return false;
+        p.push(t);
+        if (pathFormula.forAll(t, p, TRUE)) {
+        	p.pop();
+        	return true;
+        }
+        return false;
+        
     }
 
     @Override

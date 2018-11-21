@@ -3,6 +3,8 @@ package formula.stateFormulaTests;
 import formula.stateFormula.*;
 import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -11,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class PropositionalLogic {
 	StateFormula constraint = new BoolProp(true);
 	State s = new State();
+	TransitionTo tran = new TransitionTo(s);
 	BoolProp t = new BoolProp(true);
 	BoolProp f = new BoolProp(false);
 
@@ -24,16 +27,13 @@ public class PropositionalLogic {
 
     @Test
     public void notPathTest() {
-		// TODO
 		Not nt = new Not(t);
 		Not nf = new Not(f);
 		Path path = new Path();
-    	/*
-    	nf.isValidIn(s, constraint, path);
+    	nf.isValidIn(tran, path, constraint);
     	assertTrue(path.isEmpty());
-    	nt.isValidIn(s, constraint, path);
-    	assertTrue(path.size() == 1);
-    	*/
+    	nt.isValidIn(tran, path, constraint);
+    	assertTrue(path.isEmpty());
     }
 
     @Test
@@ -50,16 +50,13 @@ public class PropositionalLogic {
 
     @Test
     public void andPathTest() {
-		// TODO
 		And tt = new And(t, t);
 		And ff = new And(f, f);
 		Path path = new Path();
-    	/*
-    	tt.isValidIn(s, constraint, path);
+    	tt.isValidIn(tran, path, constraint);
     	assertTrue(path.isEmpty());
-    	ff.isValidIn(s, constraint, path);
-    	assertTrue(path.size() == 1);
-    	*/
+    	ff.isValidIn(tran, path, constraint);
+    	assertTrue(path.isEmpty());
     }
 
     @Test
@@ -76,16 +73,13 @@ public class PropositionalLogic {
 
 	@Test
     public void orPathTest() {
-		// TODO
 		Or tt = new Or(t, t);
 		Or ff = new Or(f, f);
 		Path path = new Path();
-    	/*
-    	tt.isValidIn(s, constraint, path);
+    	tt.isValidIn(tran, path, constraint);
     	assertTrue(path.isEmpty());
-    	ff.isValidIn(s, constraint, path);
-    	assertTrue(path.size() == 1);
-    	*/
+    	ff.isValidIn(tran, path, constraint);
+    	assertTrue(path.isEmpty());
     }
 
 	@Test
