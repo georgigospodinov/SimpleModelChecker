@@ -3,10 +3,10 @@ package formula.stateFormula;
 import formula.FormulaParser;
 import formula.pathFormula.PathFormula;
 import model.State;
+import model.TransitionTo;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ForAll extends StateFormula {
     public final PathFormula pathFormula;
@@ -24,11 +24,11 @@ public class ForAll extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> basePath) {
-    	if (!constraint.holdsIn(s))
+	public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> basePath) {
+		if (!constraint.holdsIn(t))
     		return false;
     	LinkedList<State> path = new LinkedList<>();
-        boolean b = pathFormula.forAll(s, path, basePath);
+		boolean b = pathFormula.forAll(t, path, basePath);
         Iterator<State> i = path.descendingIterator();
         System.out.println("Path: ");
         while (i.hasNext())
@@ -42,18 +42,18 @@ public class ForAll extends StateFormula {
     }
 
 	@Override
-	public boolean holdsIn(State s) {
-		return isValidIn(s, new BoolProp(true), new LinkedList<>());
+	public boolean holdsIn(TransitionTo t) {
+		return isValidIn(t, new BoolProp(true), new LinkedList<State>());
 	}
 
 	@Override
-	public boolean holdsInLeaf(State s) {
+	public boolean holdsInLeaf(TransitionTo t) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public StateFormula childConstraint(State s) {
+	public StateFormula childConstraint(TransitionTo t) {
 		// TODO Auto-generated method stub
 		return null;
 		/*

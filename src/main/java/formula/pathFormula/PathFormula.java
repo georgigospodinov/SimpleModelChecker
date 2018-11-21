@@ -1,9 +1,9 @@
 package formula.pathFormula;
 
 import model.State;
+import model.TransitionTo;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public abstract class PathFormula {
 
@@ -42,8 +42,26 @@ public abstract class PathFormula {
      * @return true if there is a path, in which case the path argument contains a path
      * false if there isn't such a path, in which case the path argument is empty
      */
-    public abstract boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath);
-	public abstract boolean forAll(State s, LinkedList<State> path, LinkedList<State> basePath);
+//    public boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath) {
+//        TransitionTo t = new TransitionTo(s, null);
+//        return exists(t, path, basePath);
+//    }
+    public abstract boolean exists(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath);
+
+    public boolean exists(State s, LinkedList<State> path) {
+        TransitionTo t = new TransitionTo(s, null);
+        return exists(t, path, new LinkedList<State>());
+    }
+
+    public abstract boolean forAll(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath);
+
+    public boolean forAll(State s, LinkedList<State> path) {
+        TransitionTo t = new TransitionTo(s, null);
+        return forAll(t, path, new LinkedList<State>());
+    }
+    // TODO: If we replace the "LinkedList<State> path" parameter with a "LinkedHashSet<State>"
+    // we will have constant time contains()
+    // and still iterate in insertion order.
 	
     @Override
     public String toString() {

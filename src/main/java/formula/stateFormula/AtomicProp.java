@@ -1,9 +1,9 @@
 package formula.stateFormula;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import model.State;
+import model.TransitionTo;
+
+import java.util.LinkedList;
 
 public class AtomicProp extends StateFormula {
     public final String label;
@@ -18,10 +18,10 @@ public class AtomicProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
-    	if (!constraint.holdsIn(s))
+    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
+        if (!constraint.holdsIn(t))
     		return false;
-        String[] labels = s.getLabel();
+        String[] labels = t.getTrg().getLabel();
         for (String l : labels) {
             if (label.equals(l)) 
                 return true;
@@ -30,19 +30,19 @@ public class AtomicProp extends StateFormula {
     }
 
 	@Override
-	public boolean holdsIn(State s) {
-		return isValidIn(s, new BoolProp(true), new LinkedList<State>());
+    public boolean holdsIn(TransitionTo t) {
+        return isValidIn(t, new BoolProp(true), new LinkedList<State>());
 	}
 
 	@Override
-	public boolean holdsInLeaf(State s) {
+    public boolean holdsInLeaf(TransitionTo t) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public StateFormula childConstraint(State s) {
-		return new BoolProp(holdsIn(s));
+    public StateFormula childConstraint(TransitionTo t) {
+        return new BoolProp(holdsIn(t));
 	}
 
 }

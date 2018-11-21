@@ -7,7 +7,6 @@ import model.State;
 import model.TransitionTo;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class Next extends PathFormula {
@@ -28,14 +27,14 @@ public class Next extends PathFormula {
     }
 
 	@Override
-	public boolean exists(State s, LinkedList<State> path, LinkedList<State> basePath) {
-        for (TransitionTo t : s.getTransitions()) {
-            if (actions == null || t.isIn(actions)) {
-                LinkedList<State> fullPath = new LinkedList<State>();
+    public boolean exists(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath) {
+        for (TransitionTo tran : t.getTrg().getTransitions()) {
+            if (actions == null || tran.isIn(actions)) {
+                LinkedList<State> fullPath = new LinkedList<>();
                 fullPath.addAll(path);
                 fullPath.addAll(basePath);
-                if (stateFormula.isValidIn(t.getTrg(), constraint, fullPath)) {
-                    path.push(t.getTrg());
+                if (stateFormula.isValidIn(tran, constraint, fullPath)) {
+                    path.push(tran.getTrg());
                 	return true;
                 }
             }
@@ -44,18 +43,18 @@ public class Next extends PathFormula {
 	}
 
 	@Override
-	public boolean forAll(State s, LinkedList<State> path, LinkedList<State> basePath) {
+    public boolean forAll(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath) {
 		if (actions != null && actions.isEmpty())
 			return false;
 		int paths = 0;
-        for (TransitionTo t : s.getTransitions()) {
-            if (actions == null || t.isIn(actions)) {
+        for (TransitionTo tran : t.getTrg().getTransitions()) {
+            if (actions == null || tran.isIn(actions)) {
             	paths++;
-                LinkedList<State> fullPath = new LinkedList<State>();
+                LinkedList<State> fullPath = new LinkedList<>();
                 fullPath.addAll(path);
                 fullPath.addAll(basePath);
-                if (! stateFormula.isValidIn(t.getTrg(), constraint, fullPath)) {
-                    path.push(t.getTrg());
+                if (!stateFormula.isValidIn(tran, constraint, fullPath)) {
+                    path.push(tran.getTrg());
                 	return false;
                 }
             }

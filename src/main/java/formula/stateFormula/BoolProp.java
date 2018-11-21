@@ -1,8 +1,9 @@
 package formula.stateFormula;
 
-import java.util.LinkedList;
-
 import model.State;
+import model.TransitionTo;
+
+import java.util.LinkedList;
 
 public class BoolProp extends StateFormula {
     public final boolean value;
@@ -18,25 +19,25 @@ public class BoolProp extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
-    	if (constraint.holdsInLeaf(s))
+	public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
+		if (constraint.holdsInLeaf(t))
     		return value;
     	else
     		return false;
     }
 
 	@Override
-	public boolean holdsIn(State s) {
+	public boolean holdsIn(TransitionTo t) {
 		return value;
 	}
 
 	@Override
-	public boolean holdsInLeaf(State s) {
+	public boolean holdsInLeaf(TransitionTo t) {
 		return value;
 	}
 
 	@Override
-	public StateFormula childConstraint(State s) {
+	public StateFormula childConstraint(TransitionTo t) {
 		return this;
 	}
 

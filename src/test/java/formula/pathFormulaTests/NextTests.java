@@ -1,15 +1,5 @@
 package formula.pathFormulaTests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
-import org.junit.Test;
-
 import formula.pathFormula.Next;
 import formula.pathFormula.PathFormula;
 import formula.stateFormula.AtomicProp;
@@ -17,6 +7,15 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
 import model.State;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class NextTests {
 	LinkedList<State> stateList = new LinkedList<>();
@@ -27,7 +26,7 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), null);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertTrue(n.exists(s, path, stateList));
+			assertTrue(n.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -38,7 +37,7 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(false), null);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.exists(s, path, stateList));
+			assertFalse(n.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -49,7 +48,7 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), new HashSet<String>());
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.exists(s, path, stateList));
+			assertFalse(n.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -60,7 +59,7 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), null);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.exists(s, path, stateList));
+			assertFalse(n.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -76,19 +75,19 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), free);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertTrue(n.exists(s, path, stateList));
+			assertTrue(n.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 		n = new Next(new BoolProp(true), restr);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.exists(s, path, stateList));
+			assertFalse(n.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 		n = new Next(new BoolProp(true), new HashSet<String>());
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.forAll(s, path, stateList));
+			assertFalse(n.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -99,7 +98,7 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), null);
 		LinkedList<State> path = new LinkedList<>();
 		for (State s: m.getInitStates()) {
-			assertTrue(n.forAll(s, path, stateList));
+			assertTrue(n.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -110,7 +109,7 @@ public class NextTests {
 		PathFormula n = new Next(new AtomicProp("r"), null);
 		LinkedList<State> path = new LinkedList<>();
 		for (State s: m.getInitStates()) {
-			assertFalse(n.forAll(s, path, stateList));
+			assertFalse(n.forAll(s, path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -126,19 +125,19 @@ public class NextTests {
 		PathFormula n = new Next(new BoolProp(true), free);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertTrue(n.forAll(s, path, stateList));
+			assertTrue(n.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 		n = new Next(new BoolProp(true), restr);
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.forAll(s, path, stateList));
+			assertFalse(n.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 		n = new Next(new BoolProp(true), new HashSet<String>());
 		for (State s: m.getInitStates()) {
 			LinkedList<State> path = new LinkedList<>();
-			assertFalse(n.forAll(s, path, stateList));
+			assertFalse(n.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}

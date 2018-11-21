@@ -1,10 +1,11 @@
 package modelChecker;
 
-import java.util.LinkedList;
-
 import formula.stateFormula.StateFormula;
 import model.Model;
 import model.State;
+import model.TransitionTo;
+
+import java.util.LinkedList;
 
 public class SimpleModelChecker implements ModelChecker {
 
@@ -16,7 +17,8 @@ public class SimpleModelChecker implements ModelChecker {
     	LinkedList<State> stateList = new LinkedList<>();
         // check true for all init states
         for (State initState : model.getInitStates()) {
-            if (! query.isValidIn(initState, constraint, stateList))
+            TransitionTo t = new TransitionTo(initState, null);
+            if (!query.isValidIn(t, constraint, stateList))
                 return false;
         }
 

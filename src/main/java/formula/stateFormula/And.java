@@ -1,9 +1,9 @@
 package formula.stateFormula;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import model.State;
+import model.TransitionTo;
+
+import java.util.LinkedList;
 
 public class And extends StateFormula {
     public final StateFormula left;
@@ -24,23 +24,23 @@ public class And extends StateFormula {
     }
 
     @Override
-    public boolean isValidIn(State s, StateFormula constraint, LinkedList<State> path) {
-        return constraint.holdsIn(s) && left.isValidIn(s, constraint, path) && right.isValidIn(s, constraint, path);
+    public boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path) {
+        return constraint.holdsIn(t) && left.isValidIn(t, constraint, path) && right.isValidIn(t, constraint, path);
     }
 
 	@Override
-	public boolean holdsIn(State s) {
-		return left.holdsIn(s) && right.holdsIn(s);
-	}
+    public boolean holdsIn(TransitionTo t) {
+        return left.holdsIn(t) && right.holdsIn(t);
+    }
 
-	public boolean holdsInLeaf(State s) {
+    public boolean holdsInLeaf(TransitionTo t) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public StateFormula childConstraint(State s) {
-		return new And(left.childConstraint(s), right.childConstraint(s));
+    public StateFormula childConstraint(TransitionTo t) {
+        return new And(left.childConstraint(t), right.childConstraint(t));
 	}
 
 }

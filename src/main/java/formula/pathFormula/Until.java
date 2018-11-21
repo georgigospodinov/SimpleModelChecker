@@ -35,37 +35,38 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean exists(State s, LinkedList<State> visited, LinkedList<State> basePath) {
+    public boolean exists(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
         if (rightActions != null && rightActions.size() == 0) // no acceptable path
             return false;
+        State s = t.getTrg();
         if (visited.contains(s)) // cycle detection
             return false;
 
-        LinkedList<State> fullPath = new LinkedList<State>();
+        LinkedList<State> fullPath = new LinkedList<>();
         fullPath.addAll(visited);
         fullPath.addAll(basePath);
-        if (rightActions == null && right.isValidIn(s, constraint, fullPath)) { //in final state
+        if (rightActions == null && right.isValidIn(t, constraint, fullPath)) { //in final state
             visited.push(s);
             return true;
         }
-        if (!this.left.isValidIn(s, constraint, fullPath)) // current state invalid
+        if (!this.left.isValidIn(t, constraint, fullPath)) // current state invalid
             return false;
         visited.push(s);
 
         // try right first
-        for (TransitionTo t : s.getTransitions()) {
-            if (rightActions == null || t.isIn(rightActions)) {
-                if (right.isValidIn(t.getTrg(), constraint, fullPath)) {
-                    visited.push(t.getTrg());
+        for (TransitionTo tran : s.getTransitions()) {
+            if (rightActions == null || tran.isIn(rightActions)) {
+                if (right.isValidIn(tran, constraint, fullPath)) {
+                    visited.push(tran.getTrg());
                     return true;
                 }
             }
         }
 
         // try left on failure
-        for (TransitionTo t : s.getTransitions()) {
-            if (leftActions == null || t.isIn(leftActions)) {
-                if (exists(t.getTrg(), visited, basePath))
+        for (TransitionTo tran : s.getTransitions()) {
+            if (leftActions == null || tran.isIn(leftActions)) {
+                if (exists(tran, visited, basePath))
                     return true;
             }
         }
@@ -76,20 +77,21 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean forAll(State s, LinkedList<State> visited, LinkedList<State> basePath) {
+    public boolean forAll(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
+        State s = t.getTrg();
         if (visited.contains(s)) {
             visited.push(s);
             return false;
         }
         // in final state
-        LinkedList<State> fullPath = new LinkedList<State>();
+        LinkedList<State> fullPath = new LinkedList<>();
         fullPath.addAll(visited);
         fullPath.addAll(basePath);
-        if (rightActions == null && right.isValidIn(s, constraint, fullPath))
+        if (rightActions == null && right.isValidIn(t, constraint, fullPath))
             return true;
         // in invalid state
-        if (!left.isValidIn(s, constraint, fullPath)) {
+        if (!left.isValidIn(t, constraint, fullPath)) {
             visited.push(s);
             return false;
         }
@@ -99,20 +101,20 @@ public class Until extends PathFormula {
         // only check left on failed branches
         int passing = 0;
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
-        for (TransitionTo t : s.getTransitions()) {
-            if (rightActions == null || t.isIn(rightActions)) {
-                if (!right.isValidIn(t.getTrg(), constraint, fullPath))
-                    checkLeft.push(t);
+        for (TransitionTo tran : s.getTransitions()) {
+            if (rightActions == null || tran.isIn(rightActions)) {
+                if (!right.isValidIn(tran, constraint, fullPath))
+                    checkLeft.push(tran);
                 else
                     passing++;
             }
-            checkLeft.push(t);
+            checkLeft.push(tran);
         }
 
         // then check left 
-        for (TransitionTo t : checkLeft) {
-            if (leftActions == null || t.isIn(leftActions)) {
-                if (!forAll(t.getTrg(), visited, basePath))
+        for (TransitionTo tran : checkLeft) {
+            if (leftActions == null || tran.isIn(leftActions)) {
+                if (!forAll(tran, visited, basePath))
                     return false;
                 passing++;
             }

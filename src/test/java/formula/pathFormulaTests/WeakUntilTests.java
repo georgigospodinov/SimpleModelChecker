@@ -1,15 +1,5 @@
 package formula.pathFormulaTests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
-import org.junit.Test;
-
 import formula.pathFormula.PathFormula;
 import formula.pathFormula.WeakUntil;
 import formula.stateFormula.AtomicProp;
@@ -17,6 +7,15 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
 import model.State;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class WeakUntilTests {
 	LinkedList<State> stateList = new LinkedList<>();
@@ -36,25 +35,26 @@ public class WeakUntilTests {
 		// true until true 
 		// should always accept (already in final state)
 		LinkedList<State> path = new LinkedList<>();
-		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(true), null, null);	
-		assertTrue(pathFormula.exists(null, path, stateList));
+		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(true), null, null);
+        assertTrue(pathFormula.exists(null, path));
 		assertTrue(path.size() == 1);
 		
 		// false until true 
 		// should always accept (already in final state)
 		path = new LinkedList<>();
-		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(true), null, null);		
-		assertTrue(pathFormula.exists(null, path,stateList));
+		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(true), null, null);
+        assertTrue(pathFormula.exists(null, path));
 		assertTrue(path.size() == 1);
 		
 		
 		// false until false
 		// should always fail
 		path = new LinkedList<>();
-		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(false), null, null);		
-		assertFalse(pathFormula.exists(null, path, stateList));	
-		assertTrue(path.size() == 0);	
-		
+		pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(false), null, null);
+        assertFalse(pathFormula.exists(null, path));
+        assertTrue(path.size() == 0);
+
+        // TODO: True until False should pass.
 	}
 	
 	@Test 
@@ -63,7 +63,7 @@ public class WeakUntilTests {
 		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new AtomicProp("q"), null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path,stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -74,7 +74,7 @@ public class WeakUntilTests {
 		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new BoolProp(false), null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -85,7 +85,7 @@ public class WeakUntilTests {
 		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new BoolProp(false), null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path,stateList));
+            assertFalse(pathFormula.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -97,7 +97,7 @@ public class WeakUntilTests {
 		PathFormula pathFormula = new WeakUntil(new AtomicProp("p"), new AtomicProp("q"), null, null);// , null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -114,7 +114,7 @@ public class WeakUntilTests {
 		PathFormula pathFormula = new WeakUntil(l, r, null, null);	
 		// as strong until
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path,stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 		path = new LinkedList<>();
@@ -125,19 +125,19 @@ public class WeakUntilTests {
 		 * no onwards transitions (empty list)
 		 */
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path,stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, null, empty);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path, stateList));
+            assertFalse(pathFormula.exists(s, path));
 			assertTrue(path.size() == 0);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, empty, empty);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path,stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -160,25 +160,25 @@ public class WeakUntilTests {
 		LinkedList<State>  path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(l, r, leftFree, rightFree);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 3);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftRestr, rightFree);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftFree, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 2);
 		}
 		path = new LinkedList<>();
 		pathFormula = new WeakUntil(l, r, leftRestr, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path, stateList));
+            assertTrue(pathFormula.exists(s, path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -189,7 +189,7 @@ public class WeakUntilTests {
 		LinkedList<State>  path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("q"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.forAll(s, path, stateList));
+            assertTrue(pathFormula.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -200,7 +200,7 @@ public class WeakUntilTests {
 		LinkedList<State>  path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.forAll(s, path, stateList));
+            assertTrue(pathFormula.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -211,7 +211,7 @@ public class WeakUntilTests {
 		LinkedList<State>  path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(new BoolProp(false), new BoolProp(false), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path, stateList));
+            assertFalse(pathFormula.forAll(s, path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -222,7 +222,7 @@ public class WeakUntilTests {
 		LinkedList<State>  path = new LinkedList<>();
 		PathFormula pathFormula = new WeakUntil(new BoolProp(true), new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.forAll(s, path, stateList));
+            assertTrue(pathFormula.forAll(s, path));
 			assertTrue(path.size() == 0);
 		}
 	}

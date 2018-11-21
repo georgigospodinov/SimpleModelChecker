@@ -36,34 +36,35 @@ public class WeakUntil extends PathFormula {
     }
 
     @Override
-    public boolean exists(State s, LinkedList<State> visited, LinkedList<State> basePath) {
-        if (visited.contains(s)) { // cycle detection 
+    public boolean exists(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
+        State s = t.getTrg();
+        if (visited.contains(s)) { // cycle detection
             visited.push(s);
             return true;
         }
-        
-        LinkedList<State> fullPath = new LinkedList<State>();
+
+        LinkedList<State> fullPath = new LinkedList<>();
         fullPath.addAll(visited);
         fullPath.addAll(basePath);
-        if (rightActions == null && right.isValidIn(s, constraint, fullPath)) { //in final state
+        if (rightActions == null && right.isValidIn(t, constraint, fullPath)) { //in final state
             visited.push(s);
             return true;
         }
-        fullPath = new LinkedList<State>();
+        fullPath = new LinkedList<>();
         fullPath.addAll(visited);
         fullPath.addAll(basePath);
-        if (!this.left.isValidIn(s, constraint, fullPath)) // current state invalid
+        if (!this.left.isValidIn(t, constraint, fullPath)) // current state invalid
             return false;
         visited.push(s);
 
         // try right first
-        for (TransitionTo t : s.getTransitions()) {
-            if (rightActions == null || t.isIn(rightActions)) {
-                fullPath = new LinkedList<State>();
+        for (TransitionTo tran : s.getTransitions()) {
+            if (rightActions == null || tran.isIn(rightActions)) {
+                fullPath = new LinkedList<>();
                 fullPath.addAll(visited);
                 fullPath.addAll(basePath);
-                if (right.isValidIn(t.getTrg(), constraint, fullPath)) {
-                    visited.push(t.getTrg());
+                if (right.isValidIn(tran, constraint, fullPath)) {
+                    visited.push(tran.getTrg());
                     return true;
                 }
             }
@@ -71,13 +72,13 @@ public class WeakUntil extends PathFormula {
 
         // try left on failure
         int onwards = 0;
-        for (TransitionTo t : s.getTransitions()) {
-            if (leftActions == null || t.isIn(leftActions)) {
+        for (TransitionTo tran : s.getTransitions()) {
+            if (leftActions == null || tran.isIn(leftActions)) {
                 onwards++;
-                fullPath = new LinkedList<State>();
+                fullPath = new LinkedList<>();
                 fullPath.addAll(visited);
                 fullPath.addAll(basePath);
-                if (exists(t.getTrg(), visited, fullPath))
+                if (exists(tran, visited, fullPath))
                     return true;
             }
         }
@@ -102,20 +103,21 @@ public class WeakUntil extends PathFormula {
     }
 
     @Override
-    public boolean forAll(State s, LinkedList<State> visited, LinkedList<State> basePath) {
+    public boolean forAll(TransitionTo t, LinkedList<State> visited, LinkedList<State> basePath) {
         // Loop detected before final state
+        State s = t.getTrg();
         if (visited.contains(s)) {
             return true;
         }
         // in final state
 
-        LinkedList<State> fullPath = new LinkedList<State>();
+        LinkedList<State> fullPath = new LinkedList<>();
         fullPath.addAll(visited);
         fullPath.addAll(basePath);
-        if (rightActions == null && right.isValidIn(s, constraint, fullPath))
+        if (rightActions == null && right.isValidIn(t, constraint, fullPath))
             return true;
         // in invalid state
-        if (!left.isValidIn(s, constraint, fullPath)) {
+        if (!left.isValidIn(t, constraint, fullPath)) {
             visited.push(s);
             return false;
         }
@@ -124,21 +126,23 @@ public class WeakUntil extends PathFormula {
         // check transitions to the right
         // only check left on failed branches
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
-        for (TransitionTo t : s.getTransitions()) {
-            if (rightActions == null || t.isIn(rightActions)) {
-                if (!right.isValidIn(t.getTrg(), constraint, fullPath))
-                    checkLeft.push(t);
-	                fullPath = new LinkedList<State>();
-	                fullPath.addAll(visited);
-	                fullPath.addAll(basePath);
+        for (TransitionTo tran : s.getTransitions()) {
+            if (rightActions == null || tran.isIn(rightActions)) {
+                // TODO: GREGOR!!! Check that this looks/works as expected.
+                if (!right.isValidIn(tran, constraint, fullPath)) {
+                    checkLeft.push(tran);
+                    fullPath = new LinkedList<State>();
+                    fullPath.addAll(visited);
+                    fullPath.addAll(basePath);
+                }
             }
-            checkLeft.push(t);
+            checkLeft.push(tran);
         }
 
         // then check left 
-        for (TransitionTo t : checkLeft) {
-            if (leftActions == null || t.isIn(leftActions)) {
-                if (!forAll(t.getTrg(), visited, basePath))
+        for (TransitionTo tran : checkLeft) {
+            if (leftActions == null || tran.isIn(leftActions)) {
+                if (!forAll(tran, visited, basePath))
                     return false;
             }
         }
