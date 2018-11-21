@@ -30,11 +30,13 @@ public class ForAll extends StateFormula {
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
         if (!constraint.holdsIn(t))
         	return false;
-        p.push(t);
-        if (pathFormula.forAll(t, p, TRUE)) {
-        	p.pop();
+        Path fa = new Path();
+        if (pathFormula.forAll(t, fa, TRUE)) {
         	return true;
         }
+        p.push(t);
+        for (TransitionTo tran: fa)
+        	p.push(tran);
         return false;
         
     }

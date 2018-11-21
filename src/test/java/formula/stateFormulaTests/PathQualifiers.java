@@ -17,11 +17,11 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static formula.stateFormula.BoolProp.TRUE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PathQualifiers {
-	StateFormula constraint = new BoolProp(true);
 
 	@Test
 	public void printTests() throws IOException {
@@ -38,8 +38,8 @@ public class PathQualifiers {
 		StateFormula et = FormulaParser.parseRawFormulaString("E X TRUE");
 		StateFormula ef = FormulaParser.parseRawFormulaString("E X FALSE");
 		for (State s : m.getInitStates()) {
-			assertTrue(et.isValidIn(s, constraint));
-			assertFalse(ef.isValidIn(s, constraint));
+			assertTrue(et.isValidIn(s, TRUE));
+			assertFalse(ef.isValidIn(s, TRUE));
 		}
 	}
 
@@ -51,10 +51,10 @@ public class PathQualifiers {
 		Path path = new Path();
 		for (State s : m.getInitStates()) {
 			TransitionTo t = new TransitionTo(s);
-			et.isValidIn(t, path, constraint);
+			et.isValidIn(t, path, TRUE);
 			assertTrue(path.isEmpty());
 			path = new Path();
-			ef.isValidIn(t, path, constraint);
+			ef.isValidIn(t, path, TRUE);
 			assertTrue(path.isEmpty());
 		}
 	}
@@ -65,8 +65,8 @@ public class PathQualifiers {
 		StateFormula at = FormulaParser.parseRawFormulaString("A X TRUE");
 		StateFormula af = FormulaParser.parseRawFormulaString("A X FALSE");
 		for (State s : m.getInitStates()) {
-			assertTrue(at.isValidIn(s, constraint));
-			assertFalse(af.isValidIn(s, constraint));
+			assertTrue(at.isValidIn(s, TRUE));
+			assertFalse(af.isValidIn(s, TRUE));
 		}
 	}
 
@@ -78,10 +78,10 @@ public class PathQualifiers {
 		Path path = new Path();
 		for (State s : m.getInitStates()) {
 			TransitionTo t = new TransitionTo(s);
-			at.isValidIn(t, path, constraint);
+			at.isValidIn(t, path, TRUE);
 			assertTrue(path.isEmpty());
 			path = new Path();
-			af.isValidIn(t, path, constraint);
+			af.isValidIn(t, path, TRUE);
 			System.out.println(path);
 			assertTrue(path.size() == 2);
 		}
