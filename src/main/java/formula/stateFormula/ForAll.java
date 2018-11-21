@@ -44,14 +44,8 @@ public class ForAll extends StateFormula {
 
 	@Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        if (!constraint.holdsIn(t))
-            return false;
+        return constraint.holdsIn(t) && pathFormula.forAll(t, p);
 
-        int len = p.size();
-        pathFormula.forAll(t, p);
-
-        // The path will remain the same if the forAll holds.
-        return len == p.size();
     }
 
     @Override

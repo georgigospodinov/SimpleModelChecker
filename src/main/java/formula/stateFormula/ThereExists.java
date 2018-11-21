@@ -45,19 +45,8 @@ public class ThereExists extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        if (!constraint.holdsIn(t))
-            return false;
+        return constraint.holdsIn(t) && pathFormula.exists(t, p);
 
-        int len = p.size();
-        System.out.println("before exists call: " + len + " " + p);
-        boolean exists = pathFormula.exists(t, p);
-        System.out.println(exists);
-        System.out.println("after exists call: " + p.size() + " " + p);
-
-        // The path will have increased if the exists holds.
-        boolean b = len < p.size();
-        System.out.println("b = " + b);
-        return b;
     }
 
     @Override

@@ -51,22 +51,11 @@ public abstract class PathFormula {
 
     public boolean exists(State s, LinkedList<State> path) {
         TransitionTo t = new TransitionTo(s);
-        boolean exists = exists(t, path, new LinkedList<State>());
-
-        return exists;
+        return exists(t, path, new LinkedList<State>());
     }
 
     public boolean exists(TransitionTo t, Path p) {
         return false;
-    }
-
-    public Path exists(State s) {
-        Path p = new Path();
-        TransitionTo t = new TransitionTo(s);
-        boolean exists = exists(t, p);
-        if (!exists)
-            p.pop();
-        return p;
     }
 
     public abstract boolean forAll(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath);
@@ -80,13 +69,6 @@ public abstract class PathFormula {
         return false;
     }
 
-    public Path forAll(State s) {
-        Path p = new Path();
-        TransitionTo t = new TransitionTo(s);
-        exists(t, p);
-        return p;
-    }
-	
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
