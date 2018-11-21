@@ -8,3 +8,14 @@ out
 .classpath
 .project
 
+
+# Latex Extras
+Report/*.log
+Report/*.aux
+Report/*.synctex.gz
+Report/*.log
+
+
+
+
+
