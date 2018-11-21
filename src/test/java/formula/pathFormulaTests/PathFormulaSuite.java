@@ -6,8 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 
 @RunWith(Suite.class)
-//@SuiteClasses({UntilTests.class, NextTests.class, AlwaysTests.class, EventuallyTests.class, WeakUntilTests.class})
-@SuiteClasses({AlwaysTests.class, WeakUntilTests.class})
+@SuiteClasses({UntilTests.class, NextTests.class, AlwaysTests.class, EventuallyTests.class, WeakUntilTests.class})
 public class PathFormulaSuite {
 
 }
