@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 public class SimpleModelChecker implements ModelChecker {
 
-    private LinkedList<LinkedList<String>> traces;
+    private LinkedList<String> trace;
 
     @Override
     public boolean check(Model model, StateFormula constraint, StateFormula query) {
@@ -19,17 +19,15 @@ public class SimpleModelChecker implements ModelChecker {
 
         // check true for all init states
         LinkedHashSet<State> initStates = model.getInitStates();
-        traces = new LinkedList<>();
-
+        trace = new LinkedList<>();
         for (State initState : initStates) {
             TransitionTo t = new TransitionTo(initState);
             Path p = new Path();
             boolean invalid = !query.isValidIn(t, p, constraint);
-            LinkedList<String> seq = p.getSequence();
-            System.out.println(seq);
-            traces.addLast(seq);
-            if (invalid)
+            if (invalid) {
+                trace = p.getSequence();
                 return false;
+            }
         }
 
         return true;
@@ -37,9 +35,8 @@ public class SimpleModelChecker implements ModelChecker {
 
     @Override
     public String[] getTrace() {
-        LinkedList<String> first = traces.peekFirst();
-        String[] t = new String[first.size()];
-        return first.toArray(t);
+        String[] t = new String[trace.size()];
+        return trace.toArray(t);
     }
 
 }
