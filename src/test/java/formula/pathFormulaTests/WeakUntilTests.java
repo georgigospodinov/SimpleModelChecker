@@ -47,7 +47,6 @@ public class WeakUntilTests {
             assertTrue(path.size() == 3);
             path = new Path();
             assertTrue(wu.forAll(t, path, TRUE));
-            System.out.println(path);
             assertTrue(path.isEmpty());
         }
     }

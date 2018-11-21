@@ -112,4 +112,12 @@ public class Path implements Iterable<TransitionTo> {
         seq.pollFirst();
         return seq;
     }
+
+	public String[] toTrace() {
+		String[] trace = new String[size()];
+		int n=0;
+		for (TransitionTo t: list)
+			trace[n++] = t.toTrace();
+		return trace;
+	}
 }

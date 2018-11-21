@@ -82,8 +82,7 @@ public class PathQualifiers {
 			assertTrue(path.isEmpty());
 			path = new Path();
 			af.isValidIn(t, path, TRUE);
-			System.out.println(path);
-			assertTrue(path.size() == 2);
+			assertTrue(path.size() == 1);
 		}
 	}
 

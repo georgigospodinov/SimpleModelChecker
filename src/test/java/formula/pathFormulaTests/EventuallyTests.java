@@ -102,7 +102,6 @@ public class EventuallyTests {
             assertTrue(path.isEmpty());
             path = new Path();
             assertFalse(pf.forAll(new TransitionTo(s), path, TRUE));
-            System.out.println(path);
             assertTrue(path.size() == 3);
         }
     }

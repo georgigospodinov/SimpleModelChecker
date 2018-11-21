@@ -17,14 +17,6 @@ public class Model {
         Gson gson = new Gson();
         // This fills in the arrays of states and transitions.
         Model model = gson.fromJson(new FileReader(filePath), Model.class);
-        System.out.println("states:");
-        for (State s : model.states) {
-            System.out.println("\t" + s);
-        }
-        System.out.println("transitions:");
-        for (Transition t : model.transitions) {
-            System.out.println("\t" + t);
-        }
         model.build();
         return model;
     }
@@ -105,4 +97,17 @@ public class Model {
         return possibleTransitions;
     }
 
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("States:\n");
+        for (State s : states) {
+        	sb.append("\t" + s + "\n");
+        }
+        sb.append("Transitions:\n");
+        for (Transition t : transitions) {
+        	sb.append("\t" + t + "\n");
+        }
+        return sb.toString();
+    }
 }

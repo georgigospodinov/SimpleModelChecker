@@ -44,4 +44,11 @@ public class TransitionTo {
                 ", actions=" + Arrays.toString(actions) +
                 "}";
     }
+
+	public String toTrace() {
+		if (actions == null)
+			return "Init: " + trg.getName();
+		else
+			return "  ->  " + trg.getName();
+	}
 }

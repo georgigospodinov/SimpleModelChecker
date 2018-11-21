@@ -34,7 +34,7 @@ public class ForAll extends StateFormula {
         if (pathFormula.forAll(t, fa, constraint)) {
         	return true;
         }
-        p.push(t);
+        //p.push(t);
         for (TransitionTo tran: fa)
         	p.push(tran);
         return false;
@@ -61,7 +61,6 @@ public class ForAll extends StateFormula {
                 return n.stateFormula;
             else return FALSE;
         }
-
         if (pathFormula instanceof WeakUntil) {
             WeakUntil wu = (WeakUntil) this.pathFormula;
             if ((wu.rightActions == null || t.isIn(wu.rightActions)) && wu.right.isValidIn(t.getTrg(), TRUE))

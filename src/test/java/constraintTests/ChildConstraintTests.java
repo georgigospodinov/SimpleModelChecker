@@ -127,7 +127,7 @@ public class ChildConstraintTests {
 			StateFormula childTrue = untilTrue.childConstraint(t);
 			assertTrue(childTrue instanceof ForAll);
 			assertTrue(childTrue.holdsIn(t));
-
+			 
 			//transition does not violate constraint, but it does not hold
 			StateFormula childFalse = untilFalse.childConstraint(t);
 			assertTrue(childFalse instanceof ForAll);
@@ -190,11 +190,89 @@ public class ChildConstraintTests {
 		}
 	}
 	
-	/*
-	 * TODO
-	 * 
-	 * For all with action set constraints
-	 * 
-	 */
+	@Test 
+	public void nextActionSetTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m4.json");
+		HashSet<String> as = new HashSet<>();
+		as.add("act1");
+		StateFormula forAll = new ForAll(new Next(new AtomicProp("r"), as));
+		
+		for (State s: m.getInitStates()) {
+			StateFormula childTrue = forAll.childConstraint(new TransitionTo(s));
+			assertTrue(childTrue instanceof BoolProp);
+			assertFalse(childTrue.holdsIn(null));
+			for (TransitionTo t: s.getTransitions()) {
+				childTrue = forAll.childConstraint(t);
+				if (t.isIn(as)) {
+					// permitted action, but end state breaches constraint
+					assertTrue(childTrue instanceof AtomicProp);
+					assertFalse(childTrue.holdsIn(t));
+				} else {
+					// forbidden action will fail
+					assertTrue(childTrue instanceof BoolProp);
+					assertFalse(childTrue.holdsIn(t));
+				}
+			}
+		}
+	}
 
+	@Test 
+	public void weakUntilActionSetTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		HashSet<String> as = new HashSet<>();
+		as.add("act1");
+		//StateFormula untilTrue = new ForAll(new WeakUntil(TRUE, new AtomicProp("q"), null, null));
+		StateFormula untilTrue = new ForAll(new WeakUntil(new AtomicProp("p"), new AtomicProp("r"), as, null));
+		StateFormula untilInstant = new ForAll(new WeakUntil(new AtomicProp("p"), TRUE, null, as));
+		StateFormula untilInstantFalse = new ForAll(new WeakUntil(FALSE, new AtomicProp("r"), new HashSet<String>(), as));
+		 
+		for (State s: m.getInitStates()) {
+			StateFormula childInstantFail = untilInstantFalse.childConstraint(new TransitionTo(s));
+			assertTrue(childInstantFail instanceof BoolProp);
+			assertFalse(childInstantFail.holdsIn(null));
+			for (TransitionTo t: s.getTransitions()) {				
+				
+				//transition does not violate constraint, and holds (because of AS)
+				StateFormula childTrue = untilTrue.childConstraint(t);
+				assertTrue(childTrue instanceof ForAll);
+				assertTrue(childTrue.holdsIn(t));
+				
+				//transition passes constraint, becomes stable in TRUE
+				StateFormula childInstant = untilInstant.childConstraint(t);
+				assertTrue(childInstant instanceof BoolProp);
+				assertTrue(childInstant.holdsIn(t));
+				
+			}
+		}
+	}
+	
+	@Test 
+	public void strongUntilActionSetTest() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		HashSet<String> as = new HashSet<>();
+		as.add("act1");
+		//StateFormula untilTrue = new ForAll(new WeakUntil(TRUE, new AtomicProp("q"), null, null));
+		StateFormula untilTrue = new ForAll(new Until(new AtomicProp("p"), new AtomicProp("r"), as, null));
+		StateFormula untilInstant = new ForAll(new Until(new AtomicProp("p"), TRUE, null, as));
+		StateFormula untilInstantFalse = new ForAll(new Until(FALSE, new AtomicProp("r"), new HashSet<String>(), as));
+		 
+		for (State s: m.getInitStates()) {
+			StateFormula childInstantFail = untilInstantFalse.childConstraint(new TransitionTo(s));
+			assertTrue(childInstantFail instanceof BoolProp);
+			assertFalse(childInstantFail.holdsIn(null));
+			for (TransitionTo t: s.getTransitions()) {				
+				
+				//transition does not violate constraint, but fails holds (because of strong until)
+				StateFormula childFalse = untilTrue.childConstraint(t);
+				assertTrue(childFalse instanceof ForAll);
+				assertFalse(childFalse.holdsIn(t));
+				
+				//transition passes constraint, becomes stable in TRUE
+				StateFormula childInstant = untilInstant.childConstraint(t);
+				assertTrue(childInstant instanceof BoolProp);
+				assertTrue(childInstant.holdsIn(t));
+				
+			}
+		}
+	}
 }

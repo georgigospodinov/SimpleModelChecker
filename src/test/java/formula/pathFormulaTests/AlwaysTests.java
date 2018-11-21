@@ -3,8 +3,6 @@ package formula.pathFormulaTests;
 import formula.pathFormula.Always;
 import formula.pathFormula.PathFormula;
 import formula.stateFormula.AtomicProp;
-import formula.stateFormula.BoolProp;
-import formula.stateFormula.StateFormula;
 import model.Model;
 import model.Path;
 import model.State;
@@ -13,44 +11,24 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import static formula.stateFormula.BoolProp.TRUE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AlwaysTests {
-    LinkedList<State> stateList = new LinkedList<>();
-    StateFormula t = new BoolProp(true);
-    StateFormula f = new BoolProp(false);
-
-    /*
-     * G _A a
-     * Always holds if:
-     * Only transitions from A occur and a is true in every state
-     *
-     * Accepts loops.
-     *
-     * Fails if and only if a transition from A leads to a state where a is false
-     *
-     * Corner case: transition not in A gives state where a is false
-     *
-     */
 
     @Test
     public void linearVarTest() throws IOException {
-        //TODO
         Model m = Model.parseModel("src/test/resources/ts/m1.json");
         PathFormula p = new Always(new AtomicProp("p"), null);
         for (State s : m.getInitStates()) {
             Path path = new Path();
             TransitionTo t = new TransitionTo(s);
             assertFalse(p.exists(t, path, TRUE));
-            System.out.println(path);
             assertTrue(path.size() == 0);
             path = new Path();
             assertFalse(p.forAll(t, path, TRUE));
-            System.out.println(path.size());
             assertTrue(path.size() == 3);
         }
     }
@@ -58,7 +36,7 @@ public class AlwaysTests {
     @Test
     public void linearBoolTest() throws IOException {
         Model m = Model.parseModel("src/test/resources/ts/m1.json");
-        PathFormula alwaysTrue = new Always(t, null);
+        PathFormula alwaysTrue = new Always(TRUE, null);
         for (State s : m.getInitStates()) {
             Path path = new Path();
             TransitionTo t = new TransitionTo(s);
@@ -79,7 +57,6 @@ public class AlwaysTests {
             Path path = new Path();
             TransitionTo t = new TransitionTo(s);
             assertTrue(a.exists(t, path, TRUE));
-            System.out.println(path);
             assertTrue(path.size() == 3);
             path = new Path();
             assertTrue(a.forAll(t, path, TRUE));
@@ -109,7 +86,7 @@ public class AlwaysTests {
     @Test
     public void noPossibleTransitions() throws IOException {
         Model m = Model.parseModel("src/test/resources/ts/m0.json");
-        PathFormula a = new Always(t, null);
+        PathFormula a = new Always(TRUE, null);
         for (State s : m.getInitStates()) {
             Path path = new Path();
             TransitionTo t = new TransitionTo(s);
@@ -138,7 +115,7 @@ public class AlwaysTests {
 
     @Test
     public void printTest() {
-        PathFormula a = new Always(t, null);
-        assertTrue(a.toString().equals("G" + t));
+        PathFormula a = new Always(TRUE, null);
+        assertTrue(a.toString().equals("G" + TRUE));
     }
 }
