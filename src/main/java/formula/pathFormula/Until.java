@@ -10,9 +10,11 @@ import model.TransitionTo;
 import java.util.LinkedList;
 import java.util.Set;
 
+import static formula.stateFormula.BoolProp.TRUE;
+
 public class Until extends PathFormula {
-	//TODO replace 
-	StateFormula constraint = new BoolProp(true);
+    //TODO replace
+    StateFormula constraint = new BoolProp(true);
     public final StateFormula left;
     public final StateFormula right;
     public final Set<String> leftActions;
@@ -36,19 +38,19 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean exists(TransitionTo t, Path p) {
+    public boolean exists(TransitionTo t, Path p, StateFormula constraint) {
         if (rightActions != null && rightActions.size() == 0) // no acceptable path
             return false;
 
         if (p.contains(t))
             return false;
 
-        if (rightActions == null && right.isValidIn(t, p, constraint)) {
+        if (rightActions == null && right.isValidIn(t, p, this.constraint)) {
             p.push(t);
             return true;
         }
 
-        if (!left.isValidIn(t, p, constraint)) {
+        if (!left.isValidIn(t, p, this.constraint)) {
             return false;
         }
 
@@ -57,7 +59,7 @@ public class Until extends PathFormula {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (rightActions == null || transition.isIn(rightActions)) {
-                if (right.isValidIn(transition, p, constraint)) {
+                if (right.isValidIn(transition, p, this.constraint)) {
                     p.push(transition);
                     return true;
                 }
@@ -66,7 +68,7 @@ public class Until extends PathFormula {
 
         for (TransitionTo transition : current.getTransitions()) {
             if (leftActions == null || transition.isIn(leftActions)) {
-                if (exists(transition, p))
+                if (exists(transition, p, TRUE))
                     return true;
             }
         }
@@ -76,18 +78,18 @@ public class Until extends PathFormula {
     }
 
     @Override
-    public boolean forAll(TransitionTo t, Path p) {
+    public boolean forAll(TransitionTo t, Path p, StateFormula constraint) {
         // Loop detection
         if (p.contains(t)) {
             return false;
         }
 
-        if (rightActions == null && right.isValidIn(t, p, constraint)) {
+        if (rightActions == null && right.isValidIn(t, p, this.constraint)) {
             return true;
         }
 
         p.push(t);
-        if (!left.isValidIn(t, p, constraint)) {
+        if (!left.isValidIn(t, p, this.constraint)) {
             return false;
         }
 
@@ -96,7 +98,7 @@ public class Until extends PathFormula {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (rightActions == null || transition.isIn(rightActions)) {
-                if (!right.isValidIn(transition, p, constraint)) {
+                if (!right.isValidIn(transition, p, this.constraint)) {
                     checkLeft.push(transition);
                 }
                 else passing++;
@@ -106,7 +108,7 @@ public class Until extends PathFormula {
 
         for (TransitionTo transition : checkLeft) {
             if (leftActions == null || transition.isIn(leftActions)) {
-                if (!forAll(transition, p)) {
+                if (!forAll(transition, p, TRUE)) {
                     return false;
                 }
                 passing++;

@@ -1,11 +1,12 @@
 package formula;
 
+import formula.pathFormulaTests.PathFormulaSuite;
+import formula.stateFormulaTests.StateFormulaSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import formula.pathFormulaTests.PathFormulaSuite;
-import formula.stateFormulaTests.StateFormulaSuite;;
+;
 
 
 @RunWith(Suite.class)

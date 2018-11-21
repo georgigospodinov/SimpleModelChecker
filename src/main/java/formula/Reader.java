@@ -1,10 +1,6 @@
 package formula;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PushbackReader;
+import java.io.*;
 
 public class Reader {
     private PushbackReader reader;
@@ -23,12 +19,12 @@ public class Reader {
         while (reader.ready()) {
             char nextChar = rawRead();
             switch (nextChar) {
-            case ' ':
-            case '\n':
-            case '\t':
-                continue;
-            default:
-                return nextChar;
+                case ' ':
+                case '\n':
+                case '\t':
+                    continue;
+                default:
+                    return nextChar;
             }
         }
         throw new IOException("Unexpected EOF.");

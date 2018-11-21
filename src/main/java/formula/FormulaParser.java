@@ -1,21 +1,17 @@
 package formula;
 
-import java.util.*;
-import java.io.*;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import formula.stateFormula.AtomicProp;
-import formula.pathFormula.Always;
-import formula.pathFormula.Eventually;
-import formula.pathFormula.Next;
-import formula.pathFormula.PathFormula;
-import formula.pathFormula.Until;
-import formula.pathFormula.WeakUntil;
+import formula.pathFormula.*;
 import formula.stateFormula.*;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class used to parse formulas from JSON. Create a instance of this class
@@ -60,7 +56,8 @@ public class FormulaParser {
     public StateFormula parse() throws IOException {
         try {
             return recursiveParseStateFormula();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IOException("Error at character position " + reader.getPosition() + ":\n" + e.getMessage());
         }
     }
@@ -70,7 +67,7 @@ public class FormulaParser {
      * formula string itself. For this reason, no action constraints may be
      * included using this method. Action constraints must be specified in JSON
      * and parsed by creating an instance of this object.
-     * 
+     *
      * @param formula
      * @return
      * @throws IOException
@@ -85,7 +82,8 @@ public class FormulaParser {
         char nextChar = reader.nextChar();
         if (nextChar == LEFT_BRACKET_TOKEN) {
             return recursiveParseStateFormulaHelper();
-        } else {
+        }
+        else {
             return parseStateFormula(nextChar);
         }
     }
@@ -95,22 +93,22 @@ public class FormulaParser {
         StateFormula subformula = recursiveParseStateFormula();
         char nextChar = reader.nextChar();
         switch (nextChar) {
-        case RIGHT_BRACKET_TOKEN:
-            return subformula;
-        case OR_TOKEN: {
-            validateNextChars(OR_TOKEN);
-            StateFormula subformula2 = recursiveParseStateFormula();
-            stateFormula = new Or(subformula, subformula2);
-        }
+            case RIGHT_BRACKET_TOKEN:
+                return subformula;
+            case OR_TOKEN: {
+                validateNextChars(OR_TOKEN);
+                StateFormula subformula2 = recursiveParseStateFormula();
+                stateFormula = new Or(subformula, subformula2);
+            }
             break;
-        case AND_TOKEN: {
-            validateNextChars(AND_TOKEN);
-            StateFormula subformula2 = recursiveParseStateFormula();
-            stateFormula = new And(subformula, subformula2);
-        }
+            case AND_TOKEN: {
+                validateNextChars(AND_TOKEN);
+                StateFormula subformula2 = recursiveParseStateFormula();
+                stateFormula = new And(subformula, subformula2);
+            }
             break;
-        default:
-            throw new IOException("unexpected character '" + nextChar + "'");
+            default:
+                throw new IOException("unexpected character '" + nextChar + "'");
         }
         validateNextChars(RIGHT_BRACKET_TOKEN);
         return stateFormula;
@@ -118,27 +116,27 @@ public class FormulaParser {
 
     private StateFormula parseStateFormula(char nextChar) throws IOException {
         switch (nextChar) {
-        case NOT_TOKEN:
-            return new Not(recursiveParseStateFormula());
-        case FORALL_TOKEN:
-            return new ForAll(parsePathFormula());
-        case THEREEXISTS_TOKEN:
-            return new ThereExists(parsePathFormula());
-        case TRUE_TOKEN_PREFIX:
-            validateNextChars("RUE".toCharArray());
-            return new BoolProp(true);
-        case FALSE_TOKEN_PREFIX:
-            validateNextChars("ALSE".toCharArray());
-            return new BoolProp(false);
-        default:
-            if (isLowerCase(nextChar)) {
-                reader.unread(nextChar);
-                String ident = parseOptionalIdentifier(true);
-                if (ident != null) {
-                    return new AtomicProp(ident);
+            case NOT_TOKEN:
+                return new Not(recursiveParseStateFormula());
+            case FORALL_TOKEN:
+                return new ForAll(parsePathFormula());
+            case THEREEXISTS_TOKEN:
+                return new ThereExists(parsePathFormula());
+            case TRUE_TOKEN_PREFIX:
+                validateNextChars("RUE".toCharArray());
+                return new BoolProp(true);
+            case FALSE_TOKEN_PREFIX:
+                validateNextChars("ALSE".toCharArray());
+                return new BoolProp(false);
+            default:
+                if (isLowerCase(nextChar)) {
+                    reader.unread(nextChar);
+                    String ident = parseOptionalIdentifier(true);
+                    if (ident != null) {
+                        return new AtomicProp(ident);
+                    }
                 }
-            }
-            throw new IOException("Expected state formula at this position.");
+                throw new IOException("Expected state formula at this position.");
         }
     }
 
@@ -147,20 +145,20 @@ public class FormulaParser {
         Set<String> actionSet1 = getActions(actionSet1Identifier);
         char nextChar = reader.nextChar();
         switch (nextChar) {
-        case ALWAYS_TOKEN:
-            return new Always(recursiveParseStateFormula(), actionSet1);
-        case NEXT_TOKEN:
-            return new Next(recursiveParseStateFormula(), actionSet1);
-        case EVENTUALLY_TOKEN:
-            String actionSet2Identifier = parseOptionalIdentifier(false);
-            Set<String> actionSet2 = getActions(actionSet2Identifier);
-            return new Eventually(recursiveParseStateFormula(), actionSet1, actionSet2);
-        case LEFT_BRACKET_TOKEN:
-        	PathFormula until = parseUntil();
-            validateNextChars(RIGHT_BRACKET_TOKEN);
-            return until;
-        default:
-            throw new IOException("Expected path quantifier");
+            case ALWAYS_TOKEN:
+                return new Always(recursiveParseStateFormula(), actionSet1);
+            case NEXT_TOKEN:
+                return new Next(recursiveParseStateFormula(), actionSet1);
+            case EVENTUALLY_TOKEN:
+                String actionSet2Identifier = parseOptionalIdentifier(false);
+                Set<String> actionSet2 = getActions(actionSet2Identifier);
+                return new Eventually(recursiveParseStateFormula(), actionSet1, actionSet2);
+            case LEFT_BRACKET_TOKEN:
+                PathFormula until = parseUntil();
+                validateNextChars(RIGHT_BRACKET_TOKEN);
+                return until;
+            default:
+                throw new IOException("Expected path quantifier");
         }
     }
 
@@ -169,22 +167,23 @@ public class FormulaParser {
         String actionSet1Identifier = parseOptionalIdentifier(true);
         boolean strong;
         try {
-        	validateNextChars(WEAK_UNTIL_TOKEN);
-        	strong = false;
-        } catch (IOException e) {
-        	validateNextChars(UNTIL_TOKEN);
-        	strong = true;
+            validateNextChars(WEAK_UNTIL_TOKEN);
+            strong = false;
+        }
+        catch (IOException e) {
+            validateNextChars(UNTIL_TOKEN);
+            strong = true;
         }
         String actionSet2Identifier = parseOptionalIdentifier(false);
         StateFormula rightFormula = recursiveParseStateFormula();
         Set<String> actionSet1 = getActions(actionSet1Identifier);
         Set<String> actionSet2 = getActions(actionSet2Identifier);
         if (strong)
-        	return new Until(leftFormula, rightFormula, actionSet1, actionSet2);
+            return new Until(leftFormula, rightFormula, actionSet1, actionSet2);
         else
-        	return new WeakUntil(leftFormula, rightFormula, actionSet1, actionSet2);
+            return new WeakUntil(leftFormula, rightFormula, actionSet1, actionSet2);
     }
-    
+
 
     private void validateNextChars(char... chars) throws IOException {
         for (char charIn : chars) {
@@ -199,16 +198,17 @@ public class FormulaParser {
     /**
      * Parses sequence of lower case characters into a string. Keeps reading
      * from stream until the next character to be read is not in the range a-z.
-     * 
+     *
      * @return The string of lower case characters or null to denote that the
-     *         reader found no lower case characters at its position.
+     * reader found no lower case characters at its position.
      * @throws IOException
      */
     public String parseOptionalIdentifier(boolean allowWhitespacePrefix) throws IOException {
         char nextChar;
         if (allowWhitespacePrefix) {
             nextChar = reader.nextChar();
-        } else {
+        }
+        else {
             nextChar = reader.rawRead();
         }
         if (isLowerCase(nextChar) || isNumericDigit(nextChar)) {
@@ -217,13 +217,15 @@ public class FormulaParser {
                 nextChar = reader.rawRead();
                 if (isLowerCase(nextChar) || isNumericDigit(nextChar)) {
                     buffer.append(nextChar + "");
-                } else {
+                }
+                else {
                     reader.unread(nextChar);
                     break;
                 }
             }
             return buffer.toString();
-        } else {
+        }
+        else {
             reader.unread(nextChar);
             return null;
         }
@@ -244,7 +246,8 @@ public class FormulaParser {
         String[] actionsArray = gson.fromJson(jsonFormula.get(actionSetIdentifier), String[].class);
         if (actionsArray == null) {
             return new HashSet<String>();
-        } else {
+        }
+        else {
             return new HashSet<String>(Arrays.asList(actionsArray));
         }
     }

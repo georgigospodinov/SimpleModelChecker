@@ -1,6 +1,5 @@
 package modelChecker;
 
-import formula.FormulaParser;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
@@ -32,7 +31,8 @@ public class ModelCheckerTest {
 
             // TODO IMPLEMENT
             assertTrue(mc.check(model, constr, ctl));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             fail(e.toString());
         }

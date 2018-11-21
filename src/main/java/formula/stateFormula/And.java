@@ -33,13 +33,13 @@ public class And extends StateFormula {
     }
 
     public boolean holdsInLeaf(TransitionTo t) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
+    @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new And(left.childConstraint(t), right.childConstraint(t));
-	}
+    }
 
 }

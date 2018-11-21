@@ -11,7 +11,7 @@ public class Always extends WeakUntil {
     public final StateFormula stateFormula;
 
     public Always(StateFormula stateFormula, Set<String> actions) {
-    	super(stateFormula, new BoolProp(false), actions, new HashSet<String>());
+        super(stateFormula, new BoolProp(false), actions, new HashSet<String>());
         this.stateFormula = stateFormula;
     }
 

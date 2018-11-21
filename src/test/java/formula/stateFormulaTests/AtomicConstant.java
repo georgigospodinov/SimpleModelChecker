@@ -4,34 +4,31 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Path;
 import model.State;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedList;
-
 public class AtomicConstant {
-	
-	 @Test
+
+    @Test
     public void boolTrueFalse() {
-    	StateFormula constraint = new BoolProp(true);
-    	BoolProp t = new BoolProp(true);
-    	BoolProp f = new BoolProp(false);
-    	assertTrue(t.isValidIn(null, constraint));
-    	assertFalse(f.isValidIn(null, constraint));
+        StateFormula constraint = new BoolProp(true);
+        BoolProp t = new BoolProp(true);
+        BoolProp f = new BoolProp(false);
+        assertTrue(t.isValidIn(null, constraint));
+        assertFalse(f.isValidIn(null, constraint));
     }
- 
+
     @Test
     public void boolPathLength() {
-    	// TODO 
-    	// check returned path is correct length
-    	
-    	StateFormula constraint = new BoolProp(true);
-    	Path path = new Path();
-    	BoolProp t = new BoolProp(true);
-    	BoolProp f = new BoolProp(false);
+        // TODO
+        // check returned path is correct length
+
+        StateFormula constraint = new BoolProp(true);
+        Path path = new Path();
+        BoolProp t = new BoolProp(true);
+        BoolProp f = new BoolProp(false);
         State state = new State();
         /*
     	assertTrue(t.isValidIn(state, constraint, path));
@@ -40,13 +37,13 @@ public class AtomicConstant {
     	assertTrue(path.size() == 1);
     	*/
     }
-    
+
     @Test
     public void printBool() {
-    	BoolProp t = new BoolProp(true);
-    	BoolProp f = new BoolProp(false);
-    	assertTrue(t.toString().equals(" True "));
-    	assertTrue(f.toString().equals(" False "));
+        BoolProp t = new BoolProp(true);
+        BoolProp f = new BoolProp(false);
+        assertTrue(t.toString().equals(" True "));
+        assertTrue(f.toString().equals(" False "));
     }
 
 }

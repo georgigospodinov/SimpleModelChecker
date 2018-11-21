@@ -1,5 +1,6 @@
 package formula.pathFormula;
 
+import formula.stateFormula.StateFormula;
 import model.Path;
 import model.TransitionTo;
 
@@ -40,9 +41,9 @@ public abstract class PathFormula {
 //     * @return true if there is a path, in which case the path argument contains a path
 //     * false if there isn't such a path, in which case the path argument is empty
 //     */
-    public abstract boolean exists(TransitionTo t, Path p);
+    public abstract boolean exists(TransitionTo t, Path p, StateFormula constraint);
 
-    public abstract boolean forAll(TransitionTo t, Path p);
+    public abstract boolean forAll(TransitionTo t, Path p, StateFormula constraint);
 
     @Override
     public String toString() {

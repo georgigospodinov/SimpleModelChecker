@@ -32,7 +32,7 @@ public abstract class StateFormula {
 
     // constraint is satisfied in this state
     public abstract boolean holdsIn(TransitionTo t);
-    
+
     // constraint is satisfied in this state as an end state
     public abstract boolean holdsInLeaf(TransitionTo t);
 
@@ -41,7 +41,7 @@ public abstract class StateFormula {
      * TODO javadoc
      */
     public abstract StateFormula childConstraint(TransitionTo t);
-    
+
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();

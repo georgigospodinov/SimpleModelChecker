@@ -31,17 +31,17 @@ public class AtomicProp extends StateFormula {
     @Override
     public boolean holdsIn(TransitionTo t) {
         return isValidIn(t, new Path(), new BoolProp(true));
-	}
+    }
 
-	@Override
+    @Override
     public boolean holdsInLeaf(TransitionTo t) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
+    @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new BoolProp(holdsIn(t));
-	}
+    }
 
 }

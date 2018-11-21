@@ -27,11 +27,11 @@ public class Next extends PathFormula {
     }
 
     @Override
-    public boolean exists(TransitionTo t, Path p) {
+    public boolean exists(TransitionTo t, Path p, StateFormula constraint) {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (actions == null || transition.isIn(actions)) {
-                if (stateFormula.isValidIn(transition, p, constraint)) {
+                if (stateFormula.isValidIn(transition, p, this.constraint)) {
                     p.push(transition);
                     return true;
                 }
@@ -42,7 +42,7 @@ public class Next extends PathFormula {
     }
 
     @Override
-    public boolean forAll(TransitionTo t, Path p) {
+    public boolean forAll(TransitionTo t, Path p, StateFormula constraint) {
         if (actions != null && actions.isEmpty())
             return false;
 
@@ -50,7 +50,7 @@ public class Next extends PathFormula {
         for (TransitionTo transition : t.getTrg().getTransitions()) {
             if (actions == null || transition.isIn(actions)) {
                 paths++;
-                if (!stateFormula.isValidIn(transition, p, constraint)) {
+                if (!stateFormula.isValidIn(transition, p, this.constraint)) {
                     p.push(transition);
                     return false;
                 }
