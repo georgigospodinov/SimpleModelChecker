@@ -27,16 +27,6 @@ public class And extends StateFormula {
     }
 
     @Override
-    public boolean holdsIn(TransitionTo t) {
-        return left.holdsIn(t) && right.holdsIn(t);
-    }
-
-    public boolean holdsInLeaf(TransitionTo t) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new And(left.childConstraint(t), right.childConstraint(t));
     }

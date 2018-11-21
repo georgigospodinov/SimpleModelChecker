@@ -27,17 +27,6 @@ public class Or extends StateFormula {
     }
 
     @Override
-    public boolean holdsIn(TransitionTo t) {
-        return left.holdsIn(t) || right.holdsIn(t);
-    }
-
-    @Override
-    public boolean holdsInLeaf(TransitionTo t) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new Or(left.childConstraint(t), right.childConstraint(t));
     }

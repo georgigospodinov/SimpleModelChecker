@@ -25,17 +25,6 @@ public class Not extends StateFormula {
     }
 
     @Override
-    public boolean holdsIn(TransitionTo t) {
-        return isValidIn(t, new Path(), new BoolProp(true));
-    }
-
-    @Override
-    public boolean holdsInLeaf(TransitionTo t) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new Not(stateFormula.childConstraint(t));
     }

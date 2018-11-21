@@ -8,25 +8,6 @@ public abstract class PathFormula {
 
     public abstract void writeToBuffer(StringBuilder buffer);
 
-    // TODO: Do we need to return true or false? The path argument says it all.
-    /*
-    Sample code:
-    protected LinkedList<State> exists(State s, LinkedList path) {
-        if (path == null)
-            path = new LinkedList<>();
-
-        ...
-    }
-    public LinkedList<State> exists(State s) {
-        return exists(s, null);
-    }
-     */
-    // TODO: should we save transitions instead of states?
-    /*
-     * Each transition knows its target
-     * And we thus avoid confusion if two states are connected with multiple transitions.
-     */
-
     //    /**
 //     * Checks that at least one path exists that satisfies the formula.
 //     * The sequence of {@link State}s that make up that path are stacked in the given {@link LinkedList}.

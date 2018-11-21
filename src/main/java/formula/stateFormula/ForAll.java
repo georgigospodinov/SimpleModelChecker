@@ -28,7 +28,6 @@ public class ForAll extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        //return constraint.holdsIn(t) && pathFormula.forAll(t, p, TRUE);
         if (!constraint.holdsIn(t))
         	return false;
         p.push(t);
@@ -38,17 +37,6 @@ public class ForAll extends StateFormula {
         }
         return false;
         
-    }
-
-    @Override
-    public boolean holdsIn(TransitionTo t) {
-        return isValidIn(t, new Path(), new BoolProp(true));
-    }
-
-    @Override
-    public boolean holdsInLeaf(TransitionTo t) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override
@@ -77,19 +65,6 @@ public class ForAll extends StateFormula {
             else return FALSE;
         }
         throw new UnsupportedOperationException("All pathFormulas are instances of one of the three.");
-        /*
-         * Next: stateformula of pathformula
-         *
-         *
-         * Always: true if right.isValidin(s) else self
-         * Eventually: true if right.isValidin(s) else self
-         * Until: true if right.isValidin(s) else self		 *
-         * Weak Until: true if right.isValidin(s) else self
-         *
-         *
-         *
-         * Also need transition checks
-         */
     }
 
 }
