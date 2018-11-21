@@ -12,7 +12,7 @@ public abstract class StateFormula {
     public abstract boolean isValidIn(TransitionTo t, StateFormula constraint, LinkedList<State> path);
 
     public boolean isValidIn(State s, StateFormula constraint) {
-        TransitionTo t = new TransitionTo(s, null);
+        TransitionTo t = new TransitionTo(s);
         return isValidIn(t, constraint, new LinkedList<State>());
     }
 
@@ -24,7 +24,7 @@ public abstract class StateFormula {
 
     /**
      * Given the current state, what is the constraint from here onwards
-     * TODO
+     * TODO javadoc
      */
     public abstract StateFormula childConstraint(TransitionTo t);
     

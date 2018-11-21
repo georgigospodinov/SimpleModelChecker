@@ -5,12 +5,16 @@ import java.util.Set;
 
 public class TransitionTo {
 
-    private State trg;
-    private String[] actions;
+    private final State trg;
+    private final String[] actions;
 
-    public TransitionTo(State trg, String[] actions) {
-        this.trg = trg;
+    public TransitionTo(State target, String[] actions) {
+        this.trg = target;
         this.actions = actions;
+    }
+
+    public TransitionTo(State target) {
+        this(target, null);
     }
 
     public State getTrg() {
@@ -18,6 +22,9 @@ public class TransitionTo {
     }
 
     public boolean isIn(Set<String> acts) {
+        if (actions == null)
+            return false;
+
         for (String action : actions) {
             if (acts.contains(action))
                 return true;

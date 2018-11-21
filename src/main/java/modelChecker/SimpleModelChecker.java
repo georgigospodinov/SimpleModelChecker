@@ -17,7 +17,7 @@ public class SimpleModelChecker implements ModelChecker {
     	LinkedList<State> stateList = new LinkedList<>();
         // check true for all init states
         for (State initState : model.getInitStates()) {
-            TransitionTo t = new TransitionTo(initState, null);
+            TransitionTo t = new TransitionTo(initState);
             if (!query.isValidIn(t, constraint, stateList))
                 return false;
         }

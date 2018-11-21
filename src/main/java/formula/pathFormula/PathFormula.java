@@ -1,5 +1,6 @@
 package formula.pathFormula;
 
+import model.Path;
 import model.State;
 import model.TransitionTo;
 
@@ -49,19 +50,36 @@ public abstract class PathFormula {
     public abstract boolean exists(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath);
 
     public boolean exists(State s, LinkedList<State> path) {
-        TransitionTo t = new TransitionTo(s, null);
+        TransitionTo t = new TransitionTo(s);
         return exists(t, path, new LinkedList<State>());
+    }
+
+    public void exists(TransitionTo t, Path p) {
+    }
+
+    public Path exists(State s) {
+        Path p = new Path();
+        TransitionTo t = new TransitionTo(s);
+        exists(t, p);
+        return p;
     }
 
     public abstract boolean forAll(TransitionTo t, LinkedList<State> path, LinkedList<State> basePath);
 
     public boolean forAll(State s, LinkedList<State> path) {
-        TransitionTo t = new TransitionTo(s, null);
+        TransitionTo t = new TransitionTo(s);
         return forAll(t, path, new LinkedList<State>());
     }
-    // TODO: If we replace the "LinkedList<State> path" parameter with a "LinkedHashSet<State>"
-    // we will have constant time contains()
-    // and still iterate in insertion order.
+
+    public void forAll(TransitionTo t, Path p) {
+    }
+
+    public Path forAll(State s) {
+        Path p = new Path();
+        TransitionTo t = new TransitionTo(s);
+        exists(t, p);
+        return p;
+    }
 	
     @Override
     public String toString() {
