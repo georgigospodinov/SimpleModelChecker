@@ -5,6 +5,7 @@ import formula.stateFormula.StateFormula;
 import model.Model;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
 
@@ -22,5 +23,6 @@ public class Main {
 
         boolean checked = mc.check(model, fairnessConstraint, query);
         System.out.println("checked = " + checked);
+        System.out.println(Arrays.toString(mc.getTrace()));
     }
 }

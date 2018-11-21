@@ -24,7 +24,6 @@ public class And extends StateFormula {
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
         return constraint.holdsIn(t) && left.isValidIn(t, p, constraint) && right.isValidIn(t, p, constraint);
-
     }
 
     @Override

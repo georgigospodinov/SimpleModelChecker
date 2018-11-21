@@ -6,20 +6,30 @@ import model.Path;
 import model.State;
 import model.TransitionTo;
 
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+
 public class SimpleModelChecker implements ModelChecker {
+
+    private LinkedList<LinkedList<String>> traces;
 
     @Override
     public boolean check(Model model, StateFormula constraint, StateFormula query) {
-        // TODO: must satisfy constraint
         System.out.println(query);
 
         // check true for all init states
-        for (State initState : model.getInitStates()) {
+        LinkedHashSet<State> initStates = model.getInitStates();
+        traces = new LinkedList<>();
+
+        for (State initState : initStates) {
             TransitionTo t = new TransitionTo(initState);
             Path p = new Path();
-            if (!query.isValidIn(t, p, constraint))
+            boolean invalid = !query.isValidIn(t, p, constraint);
+            LinkedList<String> seq = p.getSequence();
+            System.out.println(seq);
+            traces.addLast(seq);
+            if (invalid)
                 return false;
-            System.out.println(p.getSequence());
         }
 
         return true;
@@ -27,8 +37,9 @@ public class SimpleModelChecker implements ModelChecker {
 
     @Override
     public String[] getTrace() {
-        // TODO Auto-generated method stub
-        return null;
+        LinkedList<String> first = traces.peekFirst();
+        String[] t = new String[first.size()];
+        return first.toArray(t);
     }
 
 }

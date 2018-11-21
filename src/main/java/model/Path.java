@@ -1,6 +1,9 @@
 package model;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Path implements Iterable<TransitionTo> {
     public static final boolean DEBUGGING = false;
@@ -45,12 +48,13 @@ public class Path implements Iterable<TransitionTo> {
         return list.toString();
     }
 
-    public ArrayList<String> getSequence() {
-        ArrayList<String> seq = new ArrayList<>(size() * 2);
+    public LinkedList<String> getSequence() {
+        LinkedList<String> seq = new LinkedList<>();
         for (TransitionTo t : list) {
             seq.add(Arrays.toString(t.getActions()));
             seq.add(t.getTrg().getName());
         }
+        seq.pollFirst();
         return seq;
     }
 }

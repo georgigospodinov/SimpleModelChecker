@@ -7,13 +7,6 @@ import model.TransitionTo;
 public abstract class StateFormula {
     public abstract void writeToBuffer(StringBuilder buffer);
 
-    // formula is true and does not breach the constraint
-
-//    protected boolean isValidInInternal(TransitionTo t, Path p) {
-//        throw new UnsupportedOperationException("Not yet implemented!");
-//    }
-//
-
     /**
      * TODO
      * On fail, add the given transition t to Path p.
@@ -25,6 +18,13 @@ public abstract class StateFormula {
      */
     public abstract boolean isValidIn(TransitionTo t, Path p, StateFormula constraint);
 
+    /**
+     * Determines if this {@link StateFormula} is valid in the given {@link State}, abiding the constraint.
+     *
+     * @param s          the {@link State} where this {@link StateFormula} is to be checked
+     * @param constraint the {@link StateFormula} representing the constraint which must hold true
+     * @return
+     */
     public boolean isValidIn(State s, StateFormula constraint) {
         TransitionTo t = new TransitionTo(s);
         return isValidIn(t, new Path(), constraint);

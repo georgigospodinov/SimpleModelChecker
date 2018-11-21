@@ -1,7 +1,6 @@
 package formula.pathFormula;
 
 import formula.FormulaParser;
-import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Path;
 import model.State;
@@ -10,11 +9,7 @@ import model.TransitionTo;
 import java.util.LinkedList;
 import java.util.Set;
 
-import static formula.stateFormula.BoolProp.TRUE;
-
 public class WeakUntil extends PathFormula {
-    //TODO replace
-    StateFormula constraint = new BoolProp(true);
 
     public final StateFormula left;
     public final StateFormula right;
@@ -44,19 +39,19 @@ public class WeakUntil extends PathFormula {
             return true;
         }
 
-        if (rightActions == null && right.isValidIn(t, p, this.constraint)) {
+        if (rightActions == null && right.isValidIn(t, p, constraint)) {
             p.push(t);
             return true;
         }
 
-        if (!left.isValidIn(t, p, this.constraint))
+        if (!left.isValidIn(t, p, constraint))
             return false;
 
         p.push(t);
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (rightActions == null || transition.isIn(rightActions)) {
-                if (right.isValidIn(transition, p, this.constraint)) {
+                if (right.isValidIn(transition, p, constraint)) {
                     p.push(transition);
                     return true;
                 }
@@ -67,7 +62,7 @@ public class WeakUntil extends PathFormula {
         for (TransitionTo transition : current.getTransitions()) {
             if (leftActions == null || transition.isIn(leftActions)) {
                 onwards++;
-                if (exists(transition, p, TRUE))
+                if (exists(transition, p, constraint.childConstraint(transition)))
                     return true;
             }
         }
@@ -97,11 +92,11 @@ public class WeakUntil extends PathFormula {
             return true;
         }
 
-        if (rightActions == null && right.isValidIn(t, p, this.constraint))
+        if (rightActions == null && right.isValidIn(t, p, constraint))
             return true;
 
         p.push(t);
-        if (!left.isValidIn(t, p, this.constraint)) {
+        if (!left.isValidIn(t, p, constraint)) {
             return false;
         }
 
@@ -109,7 +104,7 @@ public class WeakUntil extends PathFormula {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (rightActions == null || transition.isIn(rightActions)) {
-                if (!right.isValidIn(transition, p, this.constraint)) {
+                if (!right.isValidIn(transition, p, constraint)) {
                     checkLeft.push(transition);
                 }
             }
@@ -118,7 +113,7 @@ public class WeakUntil extends PathFormula {
 
         for (TransitionTo transition : checkLeft) {
             if (leftActions == null || transition.isIn(leftActions)) {
-                if (!forAll(transition, p, TRUE)) {
+                if (!forAll(transition, p, constraint.childConstraint(transition))) {
                     return false;
                 }
             }
