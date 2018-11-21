@@ -8,7 +8,10 @@ import formula.stateFormula.BoolProp;
 import formula.stateFormula.Not;
 import formula.stateFormula.StateFormula;
 import model.Model;
+import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,10 +26,10 @@ public class EventuallyTests {
 	@Test
 	public void eventTrueTest() throws IOException {	
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		PathFormula e = new Eventually(new AtomicProp("q"), null, null);	
-		LinkedList<State> path = new LinkedList<>();
+		PathFormula e = new Eventually(new AtomicProp("q"), null, null);
+		Path path = new Path();
 		for (State s: m.getInitStates()) {
-			assertTrue(e.exists(s, path));
+			assertTrue(e.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -35,9 +38,9 @@ public class EventuallyTests {
 	public void eventFalseEndTest() throws IOException {	
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		PathFormula e = new Eventually(new Not(new AtomicProp("p")), null, null);	
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		for (State s: m.getInitStates()) {
-			assertTrue(e.exists(s, path));
+			assertTrue(e.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -45,10 +48,10 @@ public class EventuallyTests {
 	@Test
 	public void eventFalseCycleTest() throws IOException {	
 		Model m = Model.parseModel("src/test/resources/ts/m3.json");
+		Path path = new Path();
 		PathFormula e = new Eventually(new BoolProp(false), null, null);	
-		LinkedList<State> path = new LinkedList<>();
 		for (State s: m.getInitStates()) {
-			assertFalse(e.exists(s, path));
+			assertFalse(e.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -57,10 +60,10 @@ public class EventuallyTests {
 	@Test
 	public void eventForAllTrueTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		PathFormula pathFormula = new Eventually(new AtomicProp("q"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.forAll(s, path));
+			assertTrue(pathFormula.forAll(new TransitionTo(s), path));
 			//assertTrue(path.size() == 0);
 		}
 	}
@@ -68,10 +71,10 @@ public class EventuallyTests {
 	@Test
 	public void eventForAllFalseTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		PathFormula pathFormula = new Eventually(new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			System.out.println("\n\n\n" + path.size() + "\n\n\n");
 			assertTrue(path.size() == 3);
 		}
@@ -80,10 +83,10 @@ public class EventuallyTests {
 	@Test
 	public void eventForAllAlwaysFalseTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		PathFormula pathFormula = new Eventually(new BoolProp(false), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -91,10 +94,10 @@ public class EventuallyTests {
 	@Test
 	public void eventForAllCycleTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		PathFormula pathFormula = new Until(new BoolProp(true), new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}

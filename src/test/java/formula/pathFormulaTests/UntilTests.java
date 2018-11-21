@@ -6,7 +6,10 @@ import formula.stateFormula.AtomicProp;
 import formula.stateFormula.BoolProp;
 import formula.stateFormula.StateFormula;
 import model.Model;
+import model.Path;
 import model.State;
+import model.TransitionTo;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -34,14 +37,14 @@ public class UntilTests {
 		
 		// true until true 
 		// should always accept (already in final state)
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new BoolProp(true), new BoolProp(true), null, null);
 		assertTrue(pathFormula.exists(null, path));
 		assertTrue(path.size() == 1);
 		
 		// false until true 
 		// should always accept (already in final state)
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(new BoolProp(false), new BoolProp(true), null, null);
 		assertTrue(pathFormula.exists(null, path));
 		assertTrue(path.size() == 1);
@@ -49,7 +52,7 @@ public class UntilTests {
 		
 		// false until false
 		// should always fail
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(new BoolProp(false), new BoolProp(false), null, null);
 		assertFalse(pathFormula.exists(null, path));	
 		assertTrue(path.size() == 0);	
@@ -58,22 +61,22 @@ public class UntilTests {
 	
 	@Test 
 	public void untilTrueTests() throws IOException {
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new AtomicProp("p"), new AtomicProp("q"), null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path));
+			assertTrue(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}
 	
 	@Test 
 	public void untilFalseEndTest() throws IOException {
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new AtomicProp("p"), new BoolProp(false), null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -81,11 +84,11 @@ public class UntilTests {
 	@Test 
 	public void untilFalseCycleTest() throws IOException {
 
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new AtomicProp("p"), new AtomicProp("q"), null, null);// , null, null);		
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -98,28 +101,28 @@ public class UntilTests {
 		StateFormula r = new AtomicProp("q");
 		Set<String> empty = new HashSet<String>();
 
-		LinkedList<State> path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(l, r, null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path));
+			assertTrue(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, empty, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, null, empty);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, empty, empty);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -139,28 +142,28 @@ public class UntilTests {
 		Set<String> rightRestr = new HashSet<String>();
 		rightRestr.add("act1");
 
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(l, r, leftFree, rightFree);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.exists(s, path));
+			assertTrue(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, leftRestr, rightFree);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, leftFree, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
-		path = new LinkedList<>();
+		path = new Path();
 		pathFormula = new Until(l, r, leftRestr, rightRestr);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.exists(s, path));
+			assertFalse(pathFormula.exists(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -168,10 +171,10 @@ public class UntilTests {
 	@Test
 	public void untilForAllTrueTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("q"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertTrue(pathFormula.forAll(s, path));
+			assertTrue(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 0);
 		}
 	}
@@ -179,10 +182,10 @@ public class UntilTests {
 	@Test
 	public void untilForAllFalseTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}
@@ -190,10 +193,10 @@ public class UntilTests {
 	@Test
 	public void untilForAllAlwaysFalseTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new BoolProp(false), new BoolProp(false), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 1);
 		}
 	}
@@ -201,10 +204,10 @@ public class UntilTests {
 	@Test
 	public void untilForAllCycleTest() throws IOException {
 		Model m = Model.parseModel("src/test/resources/ts/m2.json");
-		LinkedList<State>  path = new LinkedList<>();
+		Path path = new Path();
 		Until pathFormula = new Until(new BoolProp(true), new AtomicProp("r"), null, null);	
 		for (State s: m.getInitStates()) {
-			assertFalse(pathFormula.forAll(s, path));
+			assertFalse(pathFormula.forAll(new TransitionTo(s), path));
 			assertTrue(path.size() == 3);
 		}
 	}

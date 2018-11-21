@@ -87,10 +87,10 @@ public class Until extends PathFormula {
             return true;
         }
 
-        p.push(t);
         if (left.isValidIn(t, p, constraint)) {
             return false;
         }
+        p.push(t);
 
         int passing = 0;
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
