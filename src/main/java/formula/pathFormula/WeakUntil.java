@@ -88,10 +88,23 @@ public class WeakUntil extends PathFormula {
 
     @Override
     public boolean forAll(TransitionTo t, Path p, StateFormula constraint) {
+    	try {
+    		return forAllInternal(t, p, constraint);
+    	} catch (ConstraintBreachException e) {
+    		// no failing path
+    		return true;
+    	}
+    }
+
+    public boolean forAllInternal(TransitionTo t, Path p, StateFormula constraint) throws ConstraintBreachException {
         if (p.contains(t)) {
             return true;
         }
-
+        
+        if (!constraint.holdsIn(t)) {
+    		throw new ConstraintBreachException();
+        }
+        
         if (rightActions == null && right.isValidIn(t, p, constraint))
             return true;
 
@@ -113,9 +126,14 @@ public class WeakUntil extends PathFormula {
 
         for (TransitionTo transition : checkLeft) {
             if (leftActions == null || transition.isIn(leftActions)) {
-                if (!forAll(transition, p, constraint.childConstraint(transition))) {
-                    return false;
-                }
+            	try {
+	                if (!forAllInternal(transition, p, constraint.childConstraint(transition))) {
+	                    return false;
+	                }
+            	} catch (ConstraintBreachException e) {
+            		// don't fail
+            	}
+            	
             }
         }
 

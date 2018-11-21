@@ -31,7 +31,7 @@ public class ForAll extends StateFormula {
         if (!constraint.holdsIn(t))
         	return false;
         Path fa = new Path();
-        if (pathFormula.forAll(t, fa, TRUE)) {
+        if (pathFormula.forAll(t, fa, constraint)) {
         	return true;
         }
         p.push(t);
@@ -39,6 +39,16 @@ public class ForAll extends StateFormula {
         	p.push(tran);
         return false;
         
+    }
+    
+    @Override
+    public boolean holdsIn(TransitionTo t) {
+    	//TODO 
+    	// explain
+    	// 
+    	// 
+        StateFormula e = new ThereExists(pathFormula);
+        return e.isValidIn(t,  new Path(), TRUE);
     }
 
     @Override

@@ -71,4 +71,11 @@ public class Variable {
     	assertTrue(path.isEmpty());
     }
 
+
+	@Test
+    public void printTest() {
+        AtomicProp var = new AtomicProp("x");
+		assertTrue(var.toString().equals(" x "));
+
+    }
 }

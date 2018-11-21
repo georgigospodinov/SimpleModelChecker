@@ -18,15 +18,13 @@
       "init": false,
       "name": "s2",
       "label": [
-        "q",
-        "p"
+        "q"
       ]
     },
     {
       "init": false,
       "name": "s3",
       "label": [
-        "q",
         "r"
       ]
     }
@@ -50,7 +48,7 @@
       "source": "s0",
       "target": "s3",
       "actions": [
-        "act3"
+        "act2"
       ]
     }
   ]
