@@ -42,9 +42,7 @@ public class PathFormulaConstraints {
 	    for (State s : failing.getInitStates()) {
 	        TransitionTo t = new TransitionTo(s);
 	        Path path = new Path();
-	        boolean b = e.exists(t, path, constraint);
-    		System.out.println(path);
-	        assertFalse(b);
+	        assertFalse(e.exists(t, path, constraint));
 	        path = new Path();
 	        assertFalse(e.forAll(t, path, constraint));	        
 	    }

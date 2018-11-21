@@ -41,12 +41,14 @@ public class ForAll extends StateFormula {
         
     }
     
+    /*
+     * A for all constrain holds if there exists an execution path for which it is true.
+     * 
+     * (non-Javadoc)
+     * @see formula.stateFormula.StateFormula#holdsIn(model.TransitionTo)
+     */
     @Override
     public boolean holdsIn(TransitionTo t) {
-    	//TODO 
-    	// explain
-    	// 
-    	// 
         StateFormula e = new ThereExists(pathFormula);
         return e.isValidIn(t,  new Path(), TRUE);
     }
@@ -55,7 +57,7 @@ public class ForAll extends StateFormula {
     public StateFormula childConstraint(TransitionTo t) {
         if (pathFormula instanceof Next) {
             Next n = (Next) this.pathFormula;
-            if (t.isIn(n.actions))
+            if ((n.actions == null && t.getActions() != null) || t.isIn(n.actions))
                 return n.stateFormula;
             else return FALSE;
         }

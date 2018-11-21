@@ -28,6 +28,8 @@ public class TransitionTo {
     public boolean isIn(Set<String> acts) {
         if (actions == null)
             return false;
+        if (acts == null)
+        	return true;
 
         for (String action : actions) {
             if (acts.contains(action))
