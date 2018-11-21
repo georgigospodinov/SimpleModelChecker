@@ -78,7 +78,9 @@ public class AlwaysTests {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
 			assertTrue(a.exists(t, path));
+			System.out.println(path);
 			assertTrue(path.size() == 3);
+			path = new Path();
 			assertTrue(a.forAll(t, path));
 			assertTrue(path.isEmpty());
 		}
@@ -111,7 +113,8 @@ public class AlwaysTests {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
 			assertTrue(a.exists(t, path));
-			assertTrue(path.isEmpty());
+			assertTrue(path.size() == 1);
+			path = new Path();
 			assertTrue(a.forAll(t, path));
 			assertTrue(path.isEmpty());
 		}
@@ -125,7 +128,8 @@ public class AlwaysTests {
 			Path path = new Path();
 			TransitionTo t = new TransitionTo(s);
 			assertTrue(a.exists(t, path));
-			assertTrue(path.isEmpty());
+			assertTrue(path.size() == 2);
+			path = new Path();
 			assertFalse(a.forAll(t, path));
 			assertTrue(path.size() == 2);
 		}

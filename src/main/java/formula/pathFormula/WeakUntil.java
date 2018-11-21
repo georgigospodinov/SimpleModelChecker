@@ -39,7 +39,6 @@ public class WeakUntil extends PathFormula {
     @Override
     public boolean exists(TransitionTo t, Path p) {
         if (p.contains(t)) {
-            p.push(t);
             return true;
         }
 
@@ -99,10 +98,10 @@ public class WeakUntil extends PathFormula {
         if (rightActions == null && right.isValidIn(t, p, constraint))
             return true;
 
-        p.push(t);
         if (!left.isValidIn(t, p, constraint)) {
             return false;
         }
+        p.push(t);
 
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         State current = t.getTrg();
