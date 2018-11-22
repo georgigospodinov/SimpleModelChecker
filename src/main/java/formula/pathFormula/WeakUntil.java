@@ -105,11 +105,11 @@ public class WeakUntil extends PathFormula {
     		throw new ConstraintBreachException();
         }
         
-        if (rightActions == null && right.isValidIn(t, p, constraint))
+        if (rightActions == null && right.isValidIn(t, new Path(), constraint))
             return true;
 
         p.push(t);
-        if (!left.isValidIn(t, p, constraint)) {
+        if (!left.isValidIn(t, new Path(), constraint)) {
             return false;
         }
 
@@ -117,7 +117,7 @@ public class WeakUntil extends PathFormula {
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
             if (rightActions == null || transition.isIn(rightActions)) {
-                if (!right.isValidIn(transition, p, constraint)) {
+                if (!right.isValidIn(transition, new Path(), constraint)) {
                     checkLeft.push(transition);
                 }
             }

@@ -34,7 +34,6 @@ public class ForAll extends StateFormula {
         if (pathFormula.forAll(t, fa, constraint)) {
         	return true;
         }
-        //p.push(t);
         for (TransitionTo tran: fa)
         	p.push(tran);
         return false;
