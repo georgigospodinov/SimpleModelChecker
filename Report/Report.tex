@@ -34,7 +34,12 @@
 	\pagebreak
 	\pagenumbering{arabic}
 	\section{Introduction}
+	\subsection{Terminology}
+	All asCTL formula in this discussion follow the syntax accepted by the provided parser.
+	
 	\subsection{Structure}
+	
+	
 	
 	\section{Logic and Model Specifications}
 	\subsection{Model}
@@ -93,11 +98,40 @@
 	Exists -> evaluated to a boolean
 	For All -> evaluated to a boolean or another For All
 	
-	\section{Implementation}
+	For transitions that breached action set constraints, the child would be $False$. 
 	
-	\section{Testing}
+	Stable -> bool
 	
-	\section{Results}
+	\section{Verification Process}
+	A depth-first search (DFS) was used to find a satisfying or unsatisfying path. An asCTL formula was converted to an abstract syntax tree (AST). Each node was a state formula. 
+	
+	A model passed verification if each initial state satisfied the formula. For multiple initial states, each was tested separately, and the model failed if any failed.
+	
+	A state was verified by passing it to a node of the AST. For simple state formula (without quantifiers), the condition was checked for that state. For logical operators, this required recursive calls to the branches of the tree.
+	
+	Quantified state formula contained path formula. Path formula were checked by traversing the path until the formula was either satisfied or breached (according to the operators described above).
+	
+	$\forall$ formula searched for paths where the path formula did not hold, and returned true only if none were found, while $\exists$ formula searched for a single path that satisfied it.
+	
+	\subsubsection{Constraint Enforcement}
+	Constraints limited how the search tree grows, in particular for quantified formula. 
+	
+	For simple formula nodes, the constraint was checked for the given state. If it did not hold, the node failed, as only states fitting the constraint were acceptable.
+	
+	For quantified formula, the constraint limited both the transitions that can be taken, and the states to which they can move. 
+	
+	$\exists$ checked the constraint held in the current state, then produced a child constraint for each branch it searched (as described under Constraints).
+	
+	$\forall$ performed a similar process, except that it ignored states that breached constraints, rather than considering them path formula failures. This prevented a path the breached the constraint from causing the $\forall$ to fail.
+	
+	This method prunes the search tree as it grows. An alternative approach could be to produce a tree of all paths satisfying the constraint, the search it for a path meeting the formula. This would involve extra work, as the first tree generated would be unconstrained by the formula, so would perform constrain checks on branches that would breach the formula anyway. This approach narrows down the search space, so improves efficiency.
+	
+	\subsubsection{Trace Generation}
+	
+	\section{Checker Verification}
+	
+	\section{Efficiency Improvement}
+	Efficiency can be improved by narrowing the search space. As discuss, the constraints mechanism does this by limiting tree growth, allowing constraints to provide an improvement in efficiency.
 	
 	\pagebreak
 	\begin{thebibliography}{9}
