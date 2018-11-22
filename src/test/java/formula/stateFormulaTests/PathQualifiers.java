@@ -42,6 +42,21 @@ public class PathQualifiers {
 			assertFalse(ef.isValidIn(s, TRUE));
 		}
 	}
+	
+	@Test
+	public void existsNestedTests() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		StateFormula et = FormulaParser.parseRawFormulaString("E X A X TRUE");
+		StateFormula ef = FormulaParser.parseRawFormulaString("E X A X FALSE");
+		StateFormula eat = FormulaParser.parseRawFormulaString("E X E X TRUE");
+		StateFormula eaf = FormulaParser.parseRawFormulaString("E X E X FALSE");
+		for (State s : m.getInitStates()) {
+			assertTrue(et.isValidIn(s, TRUE));
+			assertFalse(ef.isValidIn(s, TRUE));
+			assertTrue(eat.isValidIn(s, TRUE));
+			assertFalse(eaf.isValidIn(s, TRUE));
+		}
+	}
 
 	@Test
 	public void existsPathTests() throws IOException {
@@ -67,6 +82,21 @@ public class PathQualifiers {
 		for (State s : m.getInitStates()) {
 			assertTrue(at.isValidIn(s, TRUE));
 			assertFalse(af.isValidIn(s, TRUE));
+		}
+	}
+	
+	@Test
+	public void forAllNestedTests() throws IOException {
+		Model m = Model.parseModel("src/test/resources/ts/m1.json");
+		StateFormula at = FormulaParser.parseRawFormulaString("A X A X TRUE");
+		StateFormula af = FormulaParser.parseRawFormulaString("A X A X FALSE");
+		StateFormula aet = FormulaParser.parseRawFormulaString("A X E X TRUE");
+		StateFormula aef = FormulaParser.parseRawFormulaString("A X E X FALSE");
+		for (State s : m.getInitStates()) {
+			assertTrue(at.isValidIn(s, TRUE));
+			assertFalse(af.isValidIn(s, TRUE));
+			assertTrue(aet.isValidIn(s, TRUE));
+			assertFalse(aef.isValidIn(s, TRUE));
 		}
 	}
 

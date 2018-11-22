@@ -26,6 +26,9 @@ public class Or extends StateFormula {
         return constraint.holdsIn(t) && (left.isValidIn(t, p, constraint) || right.isValidIn(t, p, constraint));
     }
 
+    public boolean holdsIn(TransitionTo t) {
+        return left.holdsIn(t) || right.holdsIn(t);
+    }
     @Override
     public StateFormula childConstraint(TransitionTo t) {
         return new Or(left.childConstraint(t), right.childConstraint(t));
