@@ -22,34 +22,33 @@
 
 %preamble
 \title{asCTL Model Checker}
-\author{Matrics: 150003282 and XXX}
+\author{Matrics: 150003282 and 150009974}
 \date{November 2018}
 
 %report starts
 \begin{document}
 	
 	\maketitle
-	\section*{Abstract}
+	%\section*{Abstract}
 	
 	\pagebreak
 	\pagenumbering{arabic}
 	\section{Introduction}
-	\subsection{Terminology}
+	This practical consisted of the implementation and testing of a asCTL model checker. All requirements of the basic specifications (Main Task) were completed. Some parts were done in such a way as to improve efficiency over a naive implementation.
+	
 	All asCTL formula in this discussion follow the syntax accepted by the provided parser.
 	
-	\subsection{Structure}
-	
-	
+	This project (both code and report) were completed as a group project with close collaboration within the team. An individual report section is included at the end. 
 	
 	\section{Logic and Model Specifications}
-	\subsection{Model}
-	\subsection{asCTL Formula}
 	\subsubsection{Action Sets}
 	Where action sets were provided, an empty list was interpreted as the set of no transitions. If no list was given, any transition was allowed, as there were no restraints on the operation.
 	
 	Action sets were treated as constraints on which paths to consider, rather than further logical conditions to check. For example, $\forall G{_Aa}$ would return true for a state from which all onwards paths of transitions from $A$ gave states where $a$ was true, and would not be violated if there was a transition from the state that was not included in $A$. Only the satisfiability of the state formula were verified.
 	
 	To verify that no transitions other than those in $A$ were possible, the condition $\exists _A F{_B}\texttt{True}$ would be verified, where $B$ is the set of all actions not in $A$ (or the set of all undesirable actions). 
+	
+	In the case of transitions associated with multiple actions, they were permitted if at least one action occurred in the action set. This was on the assumption that multiple labels represented different names for the same transition (or duplicate transitions between the same pair of states), and so only one had to match.
 	
 	\subsubsection{Strong Until}
 	$$a _A\bigcup{_B b} $$
@@ -85,22 +84,19 @@
 	
 	
 	\subsection{Constraints}
-	Constrains narrow down the search space by forbidding certain transitions.
+	Constrains narrow down the search space by forbidding certain transitions. In each node of the search tree, the constraint must hold. A child constraint can then be derived that applies to branches from that node. 
 	
-	In each node of the search tree, the constraint must hold. A child constraint can then be derived that applies to branches from that node. 
+	A child constraint is created for an onwards transition from the current state. If the condition is satisfied or violated by the current state, the child constraint will be $True$ or $False$, as the constraint becomes stable. For example, the constraint $p$ will be satisfied if $p$ is true in the initial state, so would become $True$ in child constraints.
 	
-	A child constraint is derived by simplifying the stable values of the constraint. For example, an atomic proposition applies only to the current state, so in child constraints will remain stable as either true or false, depending on whether or not it holds currently.
+	Boolean constants and atomic propositions always become stable in their children, as they either are or are not satisfied in the current state.	
 	
-	Constraint -> child 
-	Bool. Const. -> same constant
-	Atomic Proposition -> bool (is it true in the current state)
-	Neg/And/Or -> same operator on child constrains of sub expressions
-	Exists -> evaluated to a boolean
-	For All -> evaluated to a boolean or another For All
+	An $\exists$ constraint also becomes stable, as it only excludes states from which a certain path does not exist, and is unconcerned with whether or not it is taken.
 	
-	For transitions that breached action set constraints, the child would be $False$. 
+	Recursive constraints (and, or, and not) get the child constraints of their sub expressions, and perform the same operation on them.
 	
-	Stable -> bool
+	$\forall$ constraints do not always become stable. They constrain the search to paths fitting their path formula, but unlike normal formula, do not fail if they find a path that breaches them, so long as it is not taken. The final path that passes or fails a formula must not break the path formula. If it exceeds it (the path formula is fulfilled before the end of the search), the $\forall$ will become $True$. This happens for $\forall F p$ if $p$ is true at some point along the path. The constraint has been satisfied, so becomes stable. Always constraints on the other hand never become stable before the end of that search path. This generalises to the untils: strong until becomes stable once the right hand side is reached, while weak until may never become stable, as it does not need to reach the right hand side. 
+	
+	The child constraints of a $\forall$ are therefore more complex. If there does not exist a path from the current state that satisfies the path formula, the child constraint is false. If the onwards transition in in the right hand action set and the right hand condition is fulfilled in the next state, the child is $True$. If the transition is in the left action set, the child constraint is the same as the parent. Otherwise, the child is $False$ (there are no left transitions, and all right transitions lead to an unsatisfactory state). This allows constraints to enforce action set limits.
 	
 	\section{Verification Process}
 	A depth-first search (DFS) was used to find a satisfying or unsatisfying path. An asCTL formula was converted to an abstract syntax tree (AST). Each node was a state formula. 
@@ -127,14 +123,25 @@
 	This method prunes the search tree as it grows. An alternative approach could be to produce a tree of all paths satisfying the constraint, the search it for a path meeting the formula. This would involve extra work, as the first tree generated would be unconstrained by the formula, so would perform constrain checks on branches that would breach the formula anyway. This approach narrows down the search space, so improves efficiency.
 	
 	\subsubsection{Trace Generation}
+	Traces were generated from a stack of state transitions. The DFS pushed and poped transitions as it made recursive calls. If it failed, the stack contained all transitions needed to reach the failing state. Otherwise, the stack would be empty.
+	
+	For simple state formula, the traces contain the transition after which they do not hold. The same is true for $\exists$ formula (as there is no trace, as a path does not exist). $\forall$ formula produce a trace of a path for which the checked path formula is not true. 
+	
+	All stack manipulation was performed by quantified formula, as they used the stack for cycle checks. If model checking failed, either the path would be empty (for simple state formula and $\exists$), in which case the initial transition would be pushed on, or it would contain a trace that breached a $\forall$.
 	
 	\section{Checker Verification}
+	\subsection{Unit Tests}
+	The modular structure of an AST leant itself well to unit testing. A suite of JUnit tests are provided.
+	
+	\subsection{Integration Tests}
 	
 	\section{Efficiency Improvement}
 	Efficiency can be improved by narrowing the search space. As discuss, the constraints mechanism does this by limiting tree growth, allowing constraints to provide an improvement in efficiency.
 	
-	\pagebreak
-	\begin{thebibliography}{9}
+	\section{Individual Comments}
+	
+	%\pagebreak
+	%\begin{thebibliography}{9}
 		
 		% Vancover referancing
 		% each work is numbered by first appearance
@@ -151,7 +158,7 @@
 		
 		% Print Article/non-internet
 		% Author AA, Author BB, Author CC, Author DD. Title of article. Abbreviated title of journal. Date of publication YYYY Mon DD;volume number(issue number):page numbers.
-	\end{thebibliography}
+	%\end{thebibliography}
 \end{document}
 
 
