@@ -1,6 +1,5 @@
 package formula.stateFormula;
 
-import static formula.stateFormula.BoolProp.TRUE;
 
 import model.Path;
 import model.TransitionTo;
