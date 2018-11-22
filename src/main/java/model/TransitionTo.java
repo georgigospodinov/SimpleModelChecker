@@ -5,20 +5,25 @@ import java.util.Set;
 
 public class TransitionTo {
 
+    private final State src;
     private final State trg;
     private final String[] actions;
 
-    public TransitionTo(State target, String[] actions) {
+    public TransitionTo(State src, State target, String[] actions) {
+        this.src = src;
         this.trg = target;
         this.actions = actions;
     }
 
     public TransitionTo(State target) {
-        this(target, null);
+        this(null, target, null);
     }
 
     public State getTrg() {
         return trg;
+    }
+    public State getSrc() {
+        return src;
     }
 
     public String[] getActions() {

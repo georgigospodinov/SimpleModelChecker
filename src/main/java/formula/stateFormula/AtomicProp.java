@@ -30,7 +30,13 @@ public class AtomicProp extends StateFormula {
 
     @Override
     public StateFormula childConstraint(TransitionTo t) {
-        return new BoolProp(holdsIn(t));
+    	String[] labels = t.getSrc().getLabel();
+        for (String l : labels) {
+            if (label.equals(l))
+                return new BoolProp(true);
+        }
+        return new BoolProp(false);
+        //return new BoolProp(holdsIn(t));
     }
 
 }

@@ -68,13 +68,15 @@ public class ChildConstraintTests {
 		StateFormula varTrue = new AtomicProp("p");
 		StateFormula varFalse = new AtomicProp("q");
 		for (State s: m.getInitStates()) {
-			StateFormula childTrue = varTrue.childConstraint(new TransitionTo(s));
-			assertTrue(childTrue instanceof BoolProp);
-			assertTrue(childTrue.holdsIn(new TransitionTo(new State())));
-
-			StateFormula childFalse = varFalse.childConstraint(new TransitionTo(s));
-			assertTrue(childFalse instanceof BoolProp);
-			assertFalse(childFalse.holdsIn(new TransitionTo(new State())));
+			for (TransitionTo t: s.getTransitions()) {
+				StateFormula childTrue = varTrue.childConstraint(t);
+				assertTrue(childTrue instanceof BoolProp);
+				assertTrue(childTrue.holdsIn(new TransitionTo(new State())));
+	
+				StateFormula childFalse = varFalse.childConstraint(t);
+				assertTrue(childFalse instanceof BoolProp);
+				assertFalse(childFalse.holdsIn(new TransitionTo(new State())));
+			}
 		}
 	}
 	
