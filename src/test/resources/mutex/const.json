@@ -1,0 +1,9 @@
+{
+  "formula": "(AG!(c1 && c2) && (AFa c1 && AFb c2))",
+  "a": [
+    "take1"
+  ],
+  "b": [
+    "take2"
+  ]
+}

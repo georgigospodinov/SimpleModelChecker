@@ -21,7 +21,12 @@ public class Not extends StateFormula {
 
     @Override
     public boolean isValidIn(TransitionTo t, Path p, StateFormula constraint) {
-        return constraint.holdsIn(t) && !stateFormula.isValidIn(t, p, constraint);
+    	return constraint.holdsIn(t) && !stateFormula.isValidIn(t, p, constraint);
+    }
+    
+
+    public boolean holdsIn(TransitionTo t) {
+        return !stateFormula.holdsIn(t);
     }
 
     @Override
