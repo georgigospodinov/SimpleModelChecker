@@ -1,0 +1,204 @@
+{
+  "states": [
+    {
+      "init": true,
+      "name": "(nc1,nc2)",
+      "label": [
+        "nc1",
+        "nc2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(w1,nc2)",
+      "label": [
+        "w1",
+        "nc2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(c1,nc2)",
+      "label": [
+        "c1",
+        "nc2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(nc1,w2)",
+      "label": [
+        "nc1",
+        "w2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(w1,w2)",
+      "label": [
+        "w1",
+        "w2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(c1,w2)",
+      "label": [
+        "c1",
+        "w2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(nc1,c2)",
+      "label": [
+        "nc1",
+        "c2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(w1,c2)",
+      "label": [
+        "w1",
+        "c2"
+      ]
+    },
+    {
+      "init": false,
+      "name": "(c1,c2)",
+      "label": [
+        "c1",
+        "c2"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "source": "(nc1,nc2)",
+      "target": "(w1,nc2)",
+      "actions": [
+        "ready1"
+      ]
+    },
+    {
+      "source": "(w1,nc2)",
+      "target": "(c1,nc2)",
+      "actions": [
+        "take1"
+      ]
+    },
+    {
+      "source": "(c1,nc2)",
+      "target": "(nc1,nc2)",
+      "actions": [
+        "release1"
+      ]
+    },
+    {
+      "source": "(nc1,w2)",
+      "target": "(w1,w2)",
+      "actions": [
+        "ready1"
+      ]
+    },
+    {
+      "source": "(w1,w2)",
+      "target": "(c1,w2)",
+      "actions": [
+        "take1"
+      ]
+    },
+    {
+      "source": "(c1,w2)",
+      "target": "(nc1,w2)",
+      "actions": [
+        "release1"
+      ]
+    },
+    {
+      "source": "(nc1,c2)",
+      "target": "(w1,c2)",
+      "actions": [
+        "ready1"
+      ]
+    },
+    {
+      "source": "(w1,c2)",
+      "target": "(c1,c2)",
+      "actions": [
+        "take1"
+      ]
+    },
+    {
+      "source": "(c1,c2)",
+      "target": "(nc1,c2)",
+      "actions": [
+        "release1"
+      ]
+    },
+    {
+      "source": "(nc1,nc2)",
+      "target": "(nc1,w2)",
+      "actions": [
+        "ready2"
+      ]
+    },
+    {
+      "source": "(nc1,w2)",
+      "target": "(nc1,c2)",
+      "actions": [
+        "take2"
+      ]
+    },
+    {
+      "source": "(nc1,c2)",
+      "target": "(nc1,nc2)",
+      "actions": [
+        "release2"
+      ]
+    },
+    {
+      "source": "(w1,nc2)",
+      "target": "(w1,w2)",
+      "actions": [
+        "ready2"
+      ]
+    },
+    {
+      "source": "(w1,w2)",
+      "target": "(w1,c2)",
+      "actions": [
+        "take2"
+      ]
+    },
+    {
+      "source": "(w1,c2)",
+      "target": "(w1,nc2)",
+      "actions": [
+        "release2"
+      ]
+    },
+    {
+      "source": "(c1,nc2)",
+      "target": "(c1,w2)",
+      "actions": [
+        "ready2"
+      ]
+    },
+    {
+      "source": "(c1,w2)",
+      "target": "(c1,c2)",
+      "actions": [
+        "take2"
+      ]
+    },
+    {
+      "source": "(c1,c2)",
+      "target": "(c1,nc2)",
+      "actions": [
+        "release2"
+      ]
+    }
+  ]
+}

@@ -21,8 +21,8 @@ public class Model {
         return model;
     }
 
-    /*
-     * Add internal referances to the ts
+    /**
+     * Builds relations between {@link State}s and {@link TransitionTo}s, as need for optimization.
      */
     private void build() {
         for (Transition t : transitions) {
