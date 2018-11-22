@@ -33,15 +33,6 @@ public class Model {
     }
 
     /**
-     * Returns the list of the states
-     *
-     * @return list of state for the given model
-     */
-    public State[] getStates() {
-        return states;
-    }
-
-    /**
      * Returns the {@link State} object with the given name.
      *
      * @param name the name of the state
@@ -53,15 +44,6 @@ public class Model {
                 return s;
 
         return null;
-    }
-
-    /**
-     * Returns the list of transitions
-     *
-     * @return list of transition for the given model
-     */
-    public Transition[] getTransitions() {
-        return transitions;
     }
 
     /**
@@ -77,24 +59,6 @@ public class Model {
         }
 
         return inits;
-    }
-
-    /**
-     * Returns a {@link LinkedHashSet} of all the {@link Transition}s in the model that originate from the given {@link State}.
-     *
-     * @param s the state of origin
-     * @return the transitions leaving that state
-     */
-    public LinkedHashSet<Transition> getTransitionsFrom(State s) {
-        LinkedHashSet<Transition> possibleTransitions = new LinkedHashSet<>();
-        for (Transition t : transitions) {
-            // TODO: Compare states to strings?
-//            if (s.equals(t.getSource())) { // Java complains about inconvertible types (this may have warning in the compilation).
-            if (t.getSource().equals(s.getName())) {
-                possibleTransitions.add(t);
-            }
-        }
-        return possibleTransitions;
     }
 
     @Override

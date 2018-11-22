@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -88,14 +87,6 @@ public class Path implements Iterable<TransitionTo> {
         return list.iterator();
     }
 
-    /**
-     * @return the string representation of the internal list
-     * @see LinkedList#toString()
-     */
-    @Override
-    public String toString() {
-        return list.toString();
-    }
 
     /**
      * Creates and returns a {@link LinkedList} of {@link String}s that represent {@link State}s and {@link TransitionTo} between.
@@ -103,21 +94,11 @@ public class Path implements Iterable<TransitionTo> {
      *
      * @return a {@link LinkedList} of {@link State#name}s and {@link TransitionTo#actions}.
      */
-    public LinkedList<String> getSequence() {
-        LinkedList<String> seq = new LinkedList<>();
-        for (TransitionTo t : list) {
-            seq.add(Arrays.toString(t.getActions()));
-            seq.add(t.getTrg().getName());
-        }
-        seq.pollFirst();
-        return seq;
-    }
-
 	public String[] toTrace() {
 		String[] trace = new String[size()];
 		int n=0;
 		for (TransitionTo t: list)
-			trace[n++] = t.toTrace();
+			trace[n++] = t.toString();
 		return trace;
 	}
 }

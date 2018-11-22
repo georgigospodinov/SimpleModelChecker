@@ -7,7 +7,6 @@ import org.junit.Test;
 
 
 import static formula.stateFormula.BoolProp.TRUE;
-import static formula.stateFormula.BoolProp.FALSE;
 
 import java.io.IOException;
 
@@ -75,16 +74,4 @@ public class IntegrationTests {
         ModelChecker mc = new SimpleModelChecker();
         assertFalse(mc.check(model, constr, ctl));
     }
-    
-    /*
-    @Test
-    public void failAATest() throws IOException {
-    	//TODO
-        Model model = Model.parseModel(path + "m4.json");
-        // for all paths, it is always the case that all paths eventually give r is true
-        StateFormula ctl = FormulaParser.parseRawFormulaString("A G A F p ");
-        StateFormula constr = FormulaParser.parseRawFormulaString("A G p ");
-        ModelChecker mc = new SimpleModelChecker();
-        assertTrue(mc.check(model, constr, ctl));
-    }*/
 }

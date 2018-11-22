@@ -58,7 +58,7 @@ public class Until extends PathFormula {
 
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
-            if (rightActions == null || transition.isIn(rightActions)) {
+            if (transition.isIn(rightActions)) {
                 if (right.isValidIn(transition, p, constraint)) {
                     p.push(transition);
                     return true;
@@ -67,7 +67,7 @@ public class Until extends PathFormula {
         }
 
         for (TransitionTo transition : current.getTransitions()) {
-            if (leftActions == null || transition.isIn(leftActions)) {
+            if (transition.isIn(leftActions)) {
                 if (exists(transition, p, constraint.childConstraint(transition)))
                     return true;
             }
@@ -111,7 +111,7 @@ public class Until extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
-            if (rightActions == null || transition.isIn(rightActions)) {
+            if (transition.isIn(rightActions)) {
                 if (!right.isValidIn(transition, new Path(), constraint)) {
                     checkLeft.push(transition);
                 }
@@ -121,7 +121,7 @@ public class Until extends PathFormula {
         }
 
         for (TransitionTo transition : checkLeft) {
-            if (leftActions == null || transition.isIn(leftActions)) {
+            if (transition.isIn(leftActions)) {
             	try {
 	                if (!forAllInternal(transition, p, constraint.childConstraint(transition))) {
 	                    return false;

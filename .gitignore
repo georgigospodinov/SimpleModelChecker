@@ -5,6 +5,7 @@ out
 00-readme.pdf
 *.swp
 
+build
 .classpath
 .project
 

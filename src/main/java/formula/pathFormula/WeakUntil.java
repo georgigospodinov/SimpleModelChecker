@@ -50,7 +50,7 @@ public class WeakUntil extends PathFormula {
         p.push(t);
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
-            if (rightActions == null || transition.isIn(rightActions)) {
+        	if (transition.isIn(rightActions)) {
                 if (right.isValidIn(transition, p, constraint)) {
                     p.push(transition);
                     return true;
@@ -60,7 +60,7 @@ public class WeakUntil extends PathFormula {
 
         int onwards = 0;
         for (TransitionTo transition : current.getTransitions()) {
-            if (leftActions == null || transition.isIn(leftActions)) {
+            if (transition.isIn(leftActions)) {
                 onwards++;
                 if (exists(transition, p, constraint.childConstraint(transition)))
                     return true;
@@ -77,7 +77,7 @@ public class WeakUntil extends PathFormula {
          */
 
         //onwards: number of transitions from s in leftActions
-        if (onwards == 0) // || (leftActions != null && leftActions.isEmpty()) ||s.getTransitions().isEmpty())
+        if (onwards == 0) 
             //dead end
             return true;
         else {
@@ -116,7 +116,7 @@ public class WeakUntil extends PathFormula {
         LinkedList<TransitionTo> checkLeft = new LinkedList<>();
         State current = t.getTrg();
         for (TransitionTo transition : current.getTransitions()) {
-            if (rightActions == null || transition.isIn(rightActions)) {
+            if (transition.isIn(rightActions)) {
                 if (!right.isValidIn(transition, new Path(), constraint)) {
                     checkLeft.push(transition);
                 }
@@ -125,7 +125,7 @@ public class WeakUntil extends PathFormula {
         }
 
         for (TransitionTo transition : checkLeft) {
-            if (leftActions == null || transition.isIn(leftActions)) {
+            if (transition.isIn(leftActions)) {
             	try {
 	                if (!forAllInternal(transition, p, constraint.childConstraint(transition))) {
 	                    return false;
