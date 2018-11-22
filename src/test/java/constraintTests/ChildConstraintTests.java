@@ -147,7 +147,6 @@ public class ChildConstraintTests {
 	
 	@Test 
 	public void forAllStrongUntilTest() throws IOException {
-		//TODO
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		StateFormula untilTrue = new ForAll(new Until(TRUE, new AtomicProp("q"), null, null));
 		StateFormula untilFalse = new ForAll(new Until(new AtomicProp("p"), new AtomicProp("r"), null, null));
@@ -221,7 +220,6 @@ public class ChildConstraintTests {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		HashSet<String> as = new HashSet<>();
 		as.add("act1");
-		//StateFormula untilTrue = new ForAll(new WeakUntil(TRUE, new AtomicProp("q"), null, null));
 		StateFormula untilTrue = new ForAll(new WeakUntil(new AtomicProp("p"), new AtomicProp("r"), as, null));
 		StateFormula untilInstant = new ForAll(new WeakUntil(new AtomicProp("p"), TRUE, null, as));
 		StateFormula untilInstantFalse = new ForAll(new WeakUntil(FALSE, new AtomicProp("r"), new HashSet<String>(), as));
@@ -251,7 +249,6 @@ public class ChildConstraintTests {
 		Model m = Model.parseModel("src/test/resources/ts/m1.json");
 		HashSet<String> as = new HashSet<>();
 		as.add("act1");
-		//StateFormula untilTrue = new ForAll(new WeakUntil(TRUE, new AtomicProp("q"), null, null));
 		StateFormula untilTrue = new ForAll(new Until(new AtomicProp("p"), new AtomicProp("r"), as, null));
 		StateFormula untilInstant = new ForAll(new Until(new AtomicProp("p"), TRUE, null, as));
 		StateFormula untilInstantFalse = new ForAll(new Until(FALSE, new AtomicProp("r"), new HashSet<String>(), as));
