@@ -22,8 +22,8 @@
 
 %preamble
 \title{asCTL Model Checker}
-\author{Matrics: 150003282 and 150009974}
-\date{November 2018}
+\author{Matriculation Numbers: 150003282 and 150009974}
+\date{22 November 2018}
 
 %report starts
 \begin{document}
@@ -34,7 +34,7 @@
 	\pagebreak
 	\pagenumbering{arabic}
 	\section{Introduction}
-	This practical consisted of the implementation and testing of a asCTL model checker. All requirements of the basic specifications (Main Task) were completed. Some parts were done in such a way as to improve efficiency over a naive implementation.
+	This practical consisted of the implementation and testing of a asCTL model checker. All requirements of the basic specifications (Main Task) were completed. Additionally, two extensions were implemented. The logical operator weak until ($W$) is supported by both the model checker and the formula parser. Query and constraint checking were implemented in a way as to improve efficiency over a naive implementation.
 	
 	All asCTL formula in this discussion follow the syntax accepted by the provided parser.
 	
@@ -46,35 +46,35 @@
 	
 	Action sets were treated as constraints on which paths to consider, rather than further logical conditions to check. For example, $\forall G{_Aa}$ would return true for a state from which all onwards paths of transitions from $A$ gave states where $a$ was true, and would not be violated if there was a transition from the state that was not included in $A$. Only the satisfiability of the state formula were verified.
 	
-	To verify that no transitions other than those in $A$ were possible, the condition $\exists _A F{_B}\texttt{True}$ would be verified, where $B$ is the set of all actions not in $A$ (or the set of all undesirable actions). 
+	To verify that no transitions other than those in $A$ were possible, the condition $\neg \exists _A F{_B}\texttt{True}$ would be verified, where $B$ is the set of all actions not in $A$ (or the set of all undesirable actions). If an action in $B$ is taken, the exists statement will return true, which will be negated to false. If an action in $B$ is never possible, the eventually statement will return false because it will never get to its right side.
 	
 	In the case of transitions associated with multiple actions, they were permitted if at least one action occurred in the action set. This was on the assumption that multiple labels represented different names for the same transition (or duplicate transitions between the same pair of states), and so only one had to match.
 	
 	\subsubsection{Strong Until}
 	$$a _A\bigcup{_B b} $$
-	$a$ holds until $b$. If a transition from $B$ is possible and leads to a state where $b$ holds, the expression is true. If not, transitions from $A$ to states where $a$ is true are made until it is possible. If such a path exists, the expression holds. If a final transition cannot occur, and no transitions from $A$ are possible, the expression is false. A path of $A$ transitions resulting to a cycle also fails to satisfy the expression.
+	$a$ holds until $b$. If a transition from $B$ is possible and leads to a state where $b$ holds, the expression is true. If not, transitions from $A$ to states where $a$ is true are made until it is possible. If such a path exists, the expression holds. If a transition from $B$ cannot occur, and no transitions from $A$ are possible, the expression is false. A path of $A$ transitions resulting to a cycle also fails to satisfy the expression.
 	
-	This implements strong until, as the only accepted paths are those that end in a transition from $B$ to a state where $b$ holds, and all other transitions are from $A$ and end in states where $a$ holds.
+	This implements strong until, as the only accepted paths are those that end with a transition from $B$ in a state where $b$ holds, and all previous transitions are from $A$ and end in states where $a$ holds.
 	
 	If $B$ is not specified, the expression can be true before the first transition, if the initial state satisfies $b$. If $B$ is given, at least one transition must occur.
 	
 	\subsubsection{Eventually}
 	$$_A F{_Ba} \equiv \texttt{True} _A\bigcup{_B a} $$
-	Eventually is true if a transition from $B$ ends in a state where $a$ is true, and all other transitions are from $B$. This is logically equivalent to the given strong until clause.
+	Eventually is true if a transition from $B$ ends in a state where $a$ is true, and all other transitions are from $A$. This is logically equivalent to the given strong until clause. States after transitions from $A$ are accepted unconditionally, but the right side of the until must be satisfied at some point.
 	
 	As with strong until, eventually can be true before the first transition if and only if $B$ is not specified.
 	
 	\subsubsection{Weak Until}
 	$$a _A W{_B b} $$
-	Weak until is true for paths where a transition from $B$ leads to a state where $b$ is satisfied, and all transitions until then are from $A$ and end in states satisfying $a$. It also accepts cyclic paths of transitions from $A$ in which every state satisfied $a$, and any path leading to a state from which no transition in $B$ gives a state where $b$ is true and no transitions from $A$ are possible.
+	Weak until is true for paths where a transition from $B$ leads to a state where $b$ is satisfied, and all transitions until then are from $A$ and end in states satisfying $a$. It also accepts cyclic paths of transitions from $A$ in which every state satisfies $a$, and it accepts any path leading to a state from which no transition in $B$ gives a state where $b$ is true and no transitions from $A$ are possible.
 	
 	As with strong until, if $B$ is not specified the expression can be true before the first transition, but if it is, at least one transition is needed.
 	
 	\subsubsection{Always}
 	$$G{_Aa} \equiv a _A W{_{[]} \texttt{False}} $$
-	Always holds if all transitions from $A$ lead to states where $a$ is true, and all onwards transitions from $A$ continue to lead to states where $a$ is satisfied. It fails only for paths of transitions from $A$ containing a state the does not satisfy $a$.
+	Always holds if all transitions from $A$ lead to states where $a$ is true, and all onwards transitions from $A$ continue to lead to states where $a$ is satisfied. It fails only for paths of transitions from $A$ containing to a state that does not satisfy $a$.
 	
-	It is equivalent to the given weak until clause.
+	It is equivalent to the given weak until clause. No actions allow transitioning to the right side, so only actions in $A$ are taken and $a$ must be satisfied.
 	
 	\subsubsection{Next}
 	$$X{_Aa}$$
@@ -83,18 +83,19 @@
 	\subsubsection{Existential and Universal Qualifiers}
 	
 	
-	\subsection{Constraints}
-	Constrains narrow down the search space by forbidding certain transitions. In each node of the search tree, the constraint must hold. A child constraint can then be derived that applies to branches from that node. 
 	
-	A child constraint is created for an onwards transition from the current state. If the condition is satisfied or violated by the current state, the child constraint will be $True$ or $False$, as the constraint becomes stable. For example, the constraint $p$ will be satisfied if $p$ is true in the initial state, so would become $True$ in child constraints.
+	\subsection{Constraints}
+	Constrains narrow down the search space by forbidding certain transitions. In each node of the search tree, the constraint must hold. A child constraint can then be derived and applied to branches from that node. 
+	
+	A child constraint is created for an onwards transition from the current state. If the condition is satisfied or violated by the current state, the child constraint will be $True$ or $False$, thus the constraint becomes stable. For example, the constraint $p$ will be satisfied if $p$ is true in the initial state, so would become $True$ in child constraints.
 	
 	Boolean constants and atomic propositions always become stable in their children, as they either are or are not satisfied in the current state.	
 	
-	An $\exists$ constraint also becomes stable, as it only excludes states from which a certain path does not exist, and is unconcerned with whether or not it is taken.
+	An $\exists$ constraint also becomes stable, as it only excludes states from which a certain path does not exist, and is unconcerned with whether or not the found path is taken.
 	
-	Recursive constraints (and, or, and not) get the child constraints of their sub expressions, and perform the same operation on them.
+	Recursive constraints (and, or, and not) get the child constraints of their sub expressions, and perform the same operation on them. For example, in state with label $p$, the child constraint of $p \lor q$ becomes $True \lor False$.
 	
-	$\forall$ constraints do not always become stable. They constrain the search to paths fitting their path formula, but unlike normal formula, do not fail if they find a path that breaches them, so long as it is not taken. The final path that passes or fails a formula must not break the path formula. If it exceeds it (the path formula is fulfilled before the end of the search), the $\forall$ will become $True$. This happens for $\forall F p$ if $p$ is true at some point along the path. The constraint has been satisfied, so becomes stable. Always constraints on the other hand never become stable before the end of that search path. This generalises to the untils: strong until becomes stable once the right hand side is reached, while weak until may never become stable, as it does not need to reach the right hand side. 
+	$\forall$ constraints do not always become stable. They constrain the search to paths fitting their path formula, but unlike normal formula, do not fail if they find a path that breaches them, so long as it is not taken. The final path that passes or fails a formula must not break the constraint path formula. If it exceeds it (the constraint path formula is fulfilled before the end of the search), the $\forall$ will become $True$. This happens for $\forall F p$ if $p$ is true at some point along the path. The constraint has been satisfied, so becomes stable. Always constraints on the other hand never become stable before the end of that search path. This generalises to the untils: strong until becomes stable once the right hand side is reached, while weak until may never become stable, as it does not need to reach the right hand side. 
 	
 	The child constraints of a $\forall$ are therefore more complex. If there does not exist a path from the current state that satisfies the path formula, the child constraint is false. If the onwards transition in in the right hand action set and the right hand condition is fulfilled in the next state, the child is $True$. If the transition is in the left action set, the child constraint is the same as the parent. Otherwise, the child is $False$ (there are no left transitions, and all right transitions lead to an unsatisfactory state). This allows constraints to enforce action set limits.
 	
@@ -116,27 +117,27 @@
 	
 	For quantified formula, the constraint limited both the transitions that can be taken, and the states to which they can move. 
 	
-	$\exists$ checked the constraint held in the current state, then produced a child constraint for each branch it searched (as described under Constraints).
+	$\exists$ formula checked the given constraint held in the current state, then produced a child constraint for each branch it searched (as described under Constraints).
 	
-	$\forall$ performed a similar process, except that it ignored states that breached constraints, rather than considering them path formula failures. This prevented a path the breached the constraint from causing the $\forall$ to fail.
+	$\forall$ formula performed a similar process, except that it ignored states that breached constraints, rather than considering them path formula failures. This prevented a path that breached the constraint from causing the $\forall$ to fail.
 	
-	This method prunes the search tree as it grows. An alternative approach could be to produce a tree of all paths satisfying the constraint, the search it for a path meeting the formula. This would involve extra work, as the first tree generated would be unconstrained by the formula, so would perform constrain checks on branches that would breach the formula anyway. This approach narrows down the search space, so improves efficiency.
+	This method prunes the search tree as it grows. An alternative approach could be to produce a tree of all paths satisfying the constraint, then search it for a path meeting the query. This would involve extra work, as the first tree generated would be unconstrained by the query, so would perform constrain checks on branches that would breach the formula anyway. This approach narrows down the search space by checking the query and constraint simultaneously, so improves efficiency.
 	
 	\subsubsection{Trace Generation}
-	Traces were generated from a stack of state transitions. The DFS pushed and poped transitions as it made recursive calls. If it failed, the stack contained all transitions needed to reach the failing state. Otherwise, the stack would be empty.
+	Traces were generated from a stack of state transitions. The DFS pushed and popped transitions as it made recursive calls. If it failed, the stack contained all transitions needed to reach the failing state. Otherwise, the stack would be empty.
 	
-	For simple state formula, the traces contain the transition after which they do not hold. The same is true for $\exists$ formula (as there is no trace, as a path does not exist). $\forall$ formula produce a trace of a path for which the checked path formula is not true. 
+	For simple state formula, the traces contain the transition after which they do not hold. The same is true for $\exists$ formula (if a path does not exist, then there is no further trace to return). $\forall$ formula produce a trace of a path for which the checked path formula is not true. 
 	
 	All stack manipulation was performed by quantified formula, as they used the stack for cycle checks. If model checking failed, either the path would be empty (for simple state formula and $\exists$), in which case the initial transition would be pushed on, or it would contain a trace that breached a $\forall$.
 	
 	\section{Checker Verification}
 	\subsection{Unit Tests}
-	The modular structure of an AST leant itself well to unit testing. A suite of JUnit tests are provided.
+	The modular structure of an AST lends itself well to unit testing. A suite of JUnit tests are provided.
 	
 	\subsection{Integration Tests}
 	
 	\section{Efficiency Improvement}
-	Efficiency can be improved by narrowing the search space. As discuss, the constraints mechanism does this by limiting tree growth, allowing constraints to provide an improvement in efficiency.
+	Efficiency can be improved by narrowing the search space. As discussed, the constraints mechanism does this by limiting tree growth, allowing constraints to provide an improvement in efficiency.
 	
 	\section{Individual Comments}
 	
