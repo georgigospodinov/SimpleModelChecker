@@ -5,6 +5,7 @@ import formula.pathFormula.PathFormula;
 import model.Path;
 import model.TransitionTo;
 
+import static formula.stateFormula.BoolProp.TRUE;
 
 public class ThereExists extends StateFormula {
     public final PathFormula pathFormula;
@@ -28,7 +29,7 @@ public class ThereExists extends StateFormula {
 
     @Override
     public StateFormula childConstraint(TransitionTo t) {
-        return new BoolProp(holdsIn(t));
+        return new BoolProp(pathFormula.exists(new TransitionTo(t.getSrc()), new Path(), TRUE));
     }
 
 }

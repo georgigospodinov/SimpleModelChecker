@@ -87,13 +87,15 @@ public class ChildConstraintTests {
 		StateFormula notExists = new ThereExists(new Eventually(new AtomicProp("r"), null, null));
 		
 		for (State s: m.getInitStates()) {
-			StateFormula childTrue = exists.childConstraint(new TransitionTo(s));
-			assertTrue(childTrue instanceof BoolProp);
-			assertTrue(childTrue.holdsIn(new TransitionTo(new State())));
-
-			StateFormula childFalse = notExists.childConstraint(new TransitionTo(s));
-			assertTrue(childFalse instanceof BoolProp);
-			assertFalse(childFalse.holdsIn(new TransitionTo(new State())));
+			for (TransitionTo t: s.getTransitions()) {
+				StateFormula childTrue = exists.childConstraint(t);
+				assertTrue(childTrue instanceof BoolProp);
+				assertTrue(childTrue.holdsIn(new TransitionTo(new State())));
+	
+				StateFormula childFalse = notExists.childConstraint(t);
+				assertTrue(childFalse instanceof BoolProp);
+				assertFalse(childFalse.holdsIn(new TransitionTo(new State())));
+			}
 		}
 	}
 	
